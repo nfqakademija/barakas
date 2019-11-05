@@ -1,10 +1,10 @@
 body{
-  background: url(background.jpg) no-repeat center center fixed; 
+  /*background: url(background.jpg) no-repeat center center fixed !important;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-	font-family: 'Raleway', sans-serif;
+  font-family: 'Raleway', sans-serif;*/
 }
 .main-section{
 	margin:0 auto;
