@@ -1,8 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ someVariable }}{% endblock %}
+{% block title %}Kaimyne padėk!{% endblock %}
 
 {% block body %}
+
+	<p class="intro-text">
+	Lorem ipsum, dolor sit amet consectetur adipisicing elit. Perferendis ad, perspiciatis aut dolores eum rerum, a molestias ratione odit eligendi ut! Deleniti.
+	</p>
 
 	<div class="row main-section">
 		<div class="dashbord">
@@ -12,7 +16,7 @@
 				<p>10</p>
 			</div>
 			<div class="detail-section">
-				<a href="#">Pridėkite organizaciją</a>
+				<a href="{{ path('organisation-registration') }}">Pridėkite organizaciją</a>
 			</div>
 		</div>
 		<div class="dashbord dashbord-green">
@@ -66,5 +70,4 @@
 			</div>
 		</div>
 	</div>
-
 {% endblock %}
