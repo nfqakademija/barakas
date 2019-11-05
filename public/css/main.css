@@ -1,6 +1,5 @@
 body {
     background: #1d2e5a !important;
-    color: white !important;
 }
 
 .container {
@@ -15,17 +14,21 @@ body {
     color: white;
 }
 
+.panel {
+    background: white;
+    border-radius: 4px;
+    border: 1px solid gainsboro;
+}
+
+label {
+    color: black !important;
+}
+
 .panel-header p {
     background: #3655a5;
     padding: 10px;
     border-radius: 2px;
     color: white;
-}
-
-.panel {
-    background: white;
-    border-radius: 4px;
-    border: 1px solid gainsboro;
 }
 
 .panel-content {
