@@ -21,7 +21,8 @@ trait AcademiesTrait
         'ISM Vadybos ir ekonomikos universitetas' => 'ISM Vadybos ir ekonomikos universitetas',
         'LCC tarptautinis universitetas' => 'LCC tarptautinis universitetas',
         'Kazimiero Simonavičiaus universitetas' => 'Kazimiero Simonavičiaus universitetas',
-        'Telšių Vyskupo Vincento Borisevičiaus kunigų seminarija' => 'Telšių Vyskupo Vincento Borisevičiaus kunigų seminarija',
+        'Telšių Vyskupo Vincento Borisevičiaus kunigų seminarija' =>
+            'Telšių Vyskupo Vincento Borisevičiaus kunigų seminarija',
         'Europos Humanitarinis Universitetas' => 'Europos Humanitarinis Universitetas',
         'Vilniaus Šv. Juozapo kunigų seminarija' => 'Vilniaus Šv. Juozapo kunigų seminarija'
     ];
