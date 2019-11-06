@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\College;
 use App\Entity\Organisation;
+use App\Entity\University;
 use App\Form\OrganisationRegisterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -35,19 +37,21 @@ class OrganisationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $organisation->generateRandomPassword();
+            $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
 
-            $encoded = $encoder->encodePassword($organisation, $plainPassword);
-            $organisation->setPassword($encoded);
+            $organisation = Organisation::create(
+                $organisation->getOwner(),
+                $organisation->getEmail(),
+                $organisation->getAcademyTitle(),
+                $encodedPassword
+            );
 
             $entityManager->persist($organisation);
             $entityManager->flush();
 
-            $email = $form->getData()->getEmail();
-            $academy = $form->getData()->getAcademyTitle();
-
             return $this->render('organisation/register/success.html.twig', [
-                'email' => $email,
-                'academy' => $academy,
+                'email' => $organisation->getEmail(),
+                'academy' => $organisation->getAcademyTitle()
             ]);
         }
 

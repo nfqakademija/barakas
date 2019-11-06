@@ -4,10 +4,125 @@ $primary: darken(#428bca, 20%);
 // the ~ allows you to reference things in node_modules
 @import "~bootstrap/scss/bootstrap";
 
-.nfq-academy {
-  margin: 20px auto;
+body {
+  background: #1d2e5a;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+.navbar {
+  background-color: #000000 !important;
+}
+
+.intro-text {
+  color: white;
+}
+
+.panel {
+  background: white;
+  border-radius: 4px;
+  border: 1px solid gainsboro;
+}
+
+label {
+  color: black !important;
+}
+
+.panel-header p {
+  background: #3655a5;
+  padding: 10px;
+  border-radius: 2px;
+  color: white;
+}
+
+.panel-content {
+  padding: 15px;
+}
+
+a:hover {
+  color: white !important;
+  text-decoration: none !important;
+}
+
+footer {
+  margin-top: 50px;
+  background: #0f182d;
+}
+
+.main-section{
+  margin:0 auto;
   text-align: center;
-  font-size: 96px;
-  font-weight: 100;
-  font-family: 'Lato', serif;
+  padding: 0px 5px;
+}
+.dashbord{
+  width: 49%;
+  display: inline-block;
+  background-color:#34495E;
+  color:#fff;
+  margin-top: 50px;
+  margin-left: 1%;
+}
+.icon-section i{
+  font-size: 30px;
+  padding:10px;
+  border:1px solid #fff;
+  border-radius:50%;
+  margin-top:-25px;
+  margin-bottom: 10px;
+  background-color:#34495E;
+}
+.icon-section p{
+  margin:0px;
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+.detail-section{
+  background-color: #2F4254;
+  padding: 5px 0px;
+}
+.dashbord .detail-section:hover{
+  background-color: #5a5a5a;
+  cursor: pointer;
+}
+.detail-section a{
+  color:#fff;
+  text-decoration: none;
+}
+
+.detail-section a:hover{
+  text-decoration: none;
+  color: white;
+}
+
+.dashbord-green .icon-section,.dashbord-green .icon-section i{
+  background-color: #16A085;
+}
+.dashbord-green .detail-section{
+  background-color: #149077;
+}
+.dashbord-orange .icon-section,.dashbord-orange .icon-section i{
+  background-color: #F39C12;
+}
+.dashbord-orange .detail-section{
+  background-color: #DA8C10;
+}
+.dashbord-blue .icon-section,.dashbord-blue .icon-section i{
+  background-color: #2980B9;
+}
+.dashbord-blue .detail-section{
+  background-color:#2573A6;
+}
+.dashbord-red .icon-section,.dashbord-red .icon-section i{
+  background-color:#E74C3C;
+}
+.dashbord-red .detail-section{
+  background-color:#CF4436;
+}
+.dashbord-skyblue .icon-section,.dashbord-skyblue .icon-section i{
+  background-color:#8E44AD;
+}
+.dashbord-skyblue .detail-section{
+  background-color:#803D9B;
 }

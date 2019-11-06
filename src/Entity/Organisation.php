@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Organisation implements UserInterface
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -41,10 +42,6 @@ class Organisation implements UserInterface
     private $academyTitle;
 
     /**
-     * @Assert\Email(
-     *     message = "'{{ value }}' yra neteisngai nurodytas el. pašto adresas.",
-     *     checkMX = true
-     * )
      * @ORM\Column(type="string", length=255)
      */
     private $email;
@@ -117,6 +114,17 @@ class Organisation implements UserInterface
         }
 
         return $randomString;
+    }
+
+    public static function create($owner, $email, $academyTitle, $password)
+    {
+        $self = new self();
+        $self->owner = $owner;
+        $self->email = $email;
+        $self->academyTitle = $academyTitle;
+        $self->password = $password;
+
+        return $self;
     }
 
     /**

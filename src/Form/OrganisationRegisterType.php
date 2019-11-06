@@ -6,7 +6,6 @@ use App\Entity\Organisation;
 use App\Entity\Traits\AcademiesTrait;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
@@ -15,8 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OrganisationRegisterType extends AbstractType
 {
-    use AcademiesTrait;
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -32,13 +29,13 @@ class OrganisationRegisterType extends AbstractType
                     'placeholder' => 'pvz. jonas@example.com'
                 ]
             ])
-            ->add('academyTitle', ChoiceType::class, [
+         /*   ->add('academyTitle', ChoiceType::class, [
                 'label' => 'Mokymo įstaigos pavadinimas',
                 'choices' => [
-                    'Universitetai' => $this->universities,
-                    'Kolegijos' => $this->colleges
+                    'Universitetai' => Academies::getUniversities(),
+                    'Kolegijos' => Academies::getColleges()
                 ]
-            ])
+            ])*/
             ->add('Registruoti organizaciją', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-success'
