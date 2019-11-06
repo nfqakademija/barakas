@@ -18,5 +18,4 @@ class OrganisationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Organisation::class);
     }
-
 }

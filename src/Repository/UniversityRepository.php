@@ -18,5 +18,4 @@ class UniversityRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, University::class);
     }
-
 }
