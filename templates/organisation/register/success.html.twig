@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="col-md-8 mx-auto">
+        <div class="panel">
+            <div class="panel-header">
+                <p>Organizacija užregistruota</p>
+            </div>
+            <div class="panel-content">
+               <div class="alert alert-success">
+                   Registracija sėkminga!
+               </div>
+                Sveikiname prisijungus prie <strong>Kaimynė padėk!</strong> aplikacijos.
+                Tolimesnė instrukcija kaip prisijungti prie aplikacijos ir pradėti valdyti savo
+                organizaciją Jums buvo išsiųsta jūsų nurodytu el. pašto adresu.
+                <br><br>
+                El. paštas: <strong>{{ email }}</strong>
+                <br>
+                Jūsų organizacija: <strong>{{ academy }}</strong>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

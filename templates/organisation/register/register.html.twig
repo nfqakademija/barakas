@@ -3,6 +3,7 @@
 {% block title %}Registruoti organizaciją{% endblock %}
 
 {% block body %}
+
     <p class="intro-text text-center">
         Užregistruokite savo organizaciją ir <strong>Kaimyne padėk!</strong> aplikacija
         galėsi naudotis iš karto!
@@ -13,8 +14,20 @@
             <p>Organizacijos registracija</p>
         </div>    
         <div class="panel-content">
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
             {{ form(form) }}
         </div>    
         </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    let kazkas = 'hey';
+    alert(kazkas);
 {% endblock %}
