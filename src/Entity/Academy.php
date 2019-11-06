@@ -24,7 +24,12 @@ class Academy
     /**
      * @ORM\Column(type="boolean")
      */
-    private $college;
+    private $academyType;
+
+    /**
+     * @return int|null
+     * @var int|string
+     */
 
     public function getId(): ?int
     {
@@ -43,14 +48,14 @@ class Academy
         return $this;
     }
 
-    public function getCollege(): ?bool
+    public function getAcademyType()
     {
-        return $this->college;
+        return AcademyType::fromId($this->academyType);
     }
 
-    public function setCollege(bool $college): self
+    public function setAcademyType(AcademyType $academyType)
     {
-        $this->college = $college;
+        $this->academyType = $academyType->id();
 
         return $this;
     }

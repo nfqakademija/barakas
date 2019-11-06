@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "25093c5fd3e98f1dfbaeb6e3290a5c99",
+    "content-hash": "14f2a1efc2c98321232e3528eecec73b",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1207,6 +1207,51 @@
                 "reflection"
             ],
             "time": "2018-06-14T14:45:07+00:00"
+        },
+        {
+            "name": "happy-types/enumerable-type",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/antanas-arvasevicius/enumerable-type.git",
+                "reference": "ca1846478d8597ed349e429e01dbf87b5908e0f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/antanas-arvasevicius/enumerable-type/zipball/ca1846478d8597ed349e429e01dbf87b5908e0f6",
+                "reference": "ca1846478d8597ed349e429e01dbf87b5908e0f6",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8 || ^5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HappyTypes\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Antanas Arvasevicius",
+                    "email": "antanas.arvasevicius@gmail.com"
+                }
+            ],
+            "description": "Strongly typed implementation of enumerable type in PHP which helps us to write a safer more readable code.",
+            "keywords": [
+                "enum",
+                "enumerable",
+                "enumerable type",
+                "java enum"
+            ],
+            "time": "2019-02-18T14:39:26+00:00"
         },
         {
             "name": "jdorn/sql-formatter",

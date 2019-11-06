@@ -19,32 +19,8 @@ class AcademyRepository extends ServiceEntityRepository
         parent::__construct($registry, Academy::class);
     }
 
-    // /**
-    //  * @return Academy[] Returns an array of Academy objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getUniversities()
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return Academy::university();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Academy
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

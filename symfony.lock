@@ -93,6 +93,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "happy-types/enumerable-type": {
+        "version": "v1.0.2"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
