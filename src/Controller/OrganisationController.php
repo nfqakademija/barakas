@@ -39,7 +39,6 @@ class OrganisationController extends AbstractController
             $encoded = $encoder->encodePassword($organisation, $plainPassword);
             $organisation->setPassword($encoded);
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($organisation);
             $entityManager->flush();
 
