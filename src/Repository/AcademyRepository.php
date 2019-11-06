@@ -18,9 +18,4 @@ class AcademyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Academy::class);
     }
-
-    public function getUniversities()
-    {
-        return Academy::university();
-    }
 }

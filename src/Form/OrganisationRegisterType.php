@@ -29,13 +29,13 @@ class OrganisationRegisterType extends AbstractType
                     'placeholder' => 'pvz. jonas@example.com'
                 ]
             ])
-            ->add('academyTitle', ChoiceType::class, [
+          /*  ->add('academyTitle', ChoiceType::class, [
                 'label' => 'Mokymo įstaigos pavadinimas',
                 'choices' => [
                     'Universitetai' => Academy::university(),
                     'Kolegijos' => Academy::college()
                 ]
-            ])
+            ])*/
             ->add('Registruoti organizaciją', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-success'
