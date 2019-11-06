@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Academy;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\Entity\University;
@@ -61,14 +62,16 @@ class AppFixtures extends Fixture
         ];
 
         foreach ($colleges as $value) {
-            $college = new College();
+            $college = new Academy();
             $college->setTitle($value);
+            $college->setCollege(true);
             $manager->persist($college);
         }
 
         foreach ($universities as $value) {
-            $university = new University();
+            $university = new Academy();
             $university->setTitle($value);
+            $university->setCollege(false);
             $manager->persist($university);
         }
 

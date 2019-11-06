@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\CollegeRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\AcademyRepository")
  */
-class College
+class Academy
 {
     /**
      * @ORM\Id()
@@ -20,6 +20,11 @@ class College
      * @ORM\Column(type="string", length=255)
      */
     private $title;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $college;
 
     public function getId(): ?int
     {
@@ -34,6 +39,18 @@ class College
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getCollege(): ?bool
+    {
+        return $this->college;
+    }
+
+    public function setCollege(bool $college): self
+    {
+        $this->college = $college;
 
         return $this;
     }
