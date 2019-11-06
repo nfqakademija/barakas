@@ -32,12 +32,6 @@ class OrganisationRegisterType extends AbstractType
                     'placeholder' => 'pvz. jonas@example.com'
                 ]
             ])
-            ->add('password', PasswordType::class, [
-                'label' => 'Slaptažodis',
-                'attr' => [
-                    'placeholder' => 'Įveskite savo slaptažodį'
-                ]
-            ])
             ->add('academyTitle', ChoiceType::class, [
                 'label' => 'Mokymo įstaigos pavadinimas',
                 'choices' => [

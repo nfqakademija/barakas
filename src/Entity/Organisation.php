@@ -50,10 +50,6 @@ class Organisation implements UserInterface
     private $email;
 
     /**
-     * @Assert\Length(
-     *     min = 6,
-     *     minMessage = "Slaptažodis negali būti trumpesnis nei {{ limit }} simboliai",
-     * )
      * @ORM\Column(type="string", length=255)
      */
     private $password;
@@ -109,6 +105,18 @@ class Organisation implements UserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    public function generateRandomPassword()
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < 10; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+
+        return $randomString;
     }
 
     /**
