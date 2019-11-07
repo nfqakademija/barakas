@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\OrganisationRepository")
  * @UniqueEntity(fields = "owner", message="Šis vadovas jau užregistruotas!")
  * @UniqueEntity(fields = "email", message="Šis el. pašto adresas jau užregistruotas!")
- * @UniqueEntity(fields = "academyTitle", message="Ši aukštoji mokykla jau užregistruota!
+ * @UniqueEntity(fields = "academy", message="Ši aukštoji mokykla jau užregistruota!
   Jei norite išsamesnės informacijos - susisiekite su administracija.")
  */
 class Organisation implements UserInterface
@@ -47,6 +47,7 @@ class Organisation implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Academy")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $academy;
 
@@ -63,18 +64,6 @@ class Organisation implements UserInterface
     public function setOwner(string $owner): self
     {
         $this->owner = $owner;
-
-        return $this;
-    }
-
-    public function getAcademy()
-    {
-        return $this->academy;
-    }
-
-    public function setAcademy(string $academy)
-    {
-        $this->academy = $academy;
 
         return $this;
     }
@@ -115,12 +104,12 @@ class Organisation implements UserInterface
         return $randomString;
     }
 
-    public static function create($owner, $email, $academyTitle, $password)
+    public static function create($owner, $email, $academy, $password)
     {
         $self = new self();
         $self->owner = $owner;
         $self->email = $email;
-        $self->academyTitle = $academyTitle;
+        $self->academy = $academy;
         $self->password = $password;
 
         return $self;
@@ -176,5 +165,17 @@ class Organisation implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getAcademy(): ?Academy
+    {
+        return $this->academy;
+    }
+
+    public function setAcademy(?Academy $academy): self
+    {
+        $this->academy = $academy;
+
+        return $this;
     }
 }
