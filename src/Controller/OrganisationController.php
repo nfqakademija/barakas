@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\EmailSend;
 use App\Entity\Organisation;
 use App\Form\OrganisationRegisterType;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,23 +55,8 @@ class OrganisationController extends AbstractController
             $email = (new Email())
                 ->from($this->getParameter('serverEmail'))
                 ->to($organisation->getEmail())
-                ->subject('Kaimyne padėk!')
-                ->html('<p>Sveiki!
-                                <br><br>
-                                Džiaugiamės, jog nusprendėte pradėti naudotis mūsų Kaimyne padėk aplikacija.
-                                <br>
-                                Spauskite <a href="#">šią</a> nuorodą ir prisijungimui naudokite šiuos duomenis:
-                                <br>
-                                Prisijungimo vardas: <strong>'.$organisation->getEmail().'</strong>
-                                <br>
-                                Laikinas slaptažodis: <strong>'.$plainPassword.'</strong>
-                                <br>
-                                Tikimės, kad bendrabučio gyventojams aplikacija bus naudinga ir pravers kiekvieną dieną.
-                                <br><br>
-                                Gero naudojimosi linki
-                                <br>
-                                Kaimyne padėk administracija
-                                </p>');
+                ->subject(EmailSend::getSubject())
+                ->html(EmailSend::signupOrganisationEmail($organisation->getEmail(), $plainPassword));
 
             $mailer->send($email);
 
