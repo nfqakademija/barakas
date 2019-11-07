@@ -32,7 +32,7 @@ class OrganisationRegisterType extends AbstractType
                     'placeholder' => 'pvz. jonas@example.com'
                 ]
             ])
-            ->add('academyTitle', EntityType::class, [
+            ->add('academy', EntityType::class, [
                 'label' => 'Mokymo įstaiga',
                 'class' => Academy::class,
                 'choice_label' => 'title',

@@ -45,6 +45,11 @@ class Organisation implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Academy")
+     */
+    private $academy;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,14 +67,14 @@ class Organisation implements UserInterface
         return $this;
     }
 
-    public function getAcademyTitle(): ?string
+    public function getAcademy()
     {
-        return $this->academyTitle;
+        return $this->academy;
     }
 
-    public function setAcademyTitle(string $academyTitle): self
+    public function setAcademy(string $academy)
     {
-        $this->academyTitle = $academyTitle;
+        $this->academy = $academy;
 
         return $this;
     }
