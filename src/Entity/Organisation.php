@@ -34,7 +34,7 @@ class Organisation implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $owner;
-    
+
     /**
      * @ORM\Column(type="string", length=255)
      */
