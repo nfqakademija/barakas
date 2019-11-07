@@ -22,7 +22,7 @@ class Academy
     private $title;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $academyType;
 
