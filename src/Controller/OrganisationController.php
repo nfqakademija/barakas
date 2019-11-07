@@ -42,7 +42,7 @@ class OrganisationController extends AbstractController
             $organisation = Organisation::create(
                 $organisation->getOwner(),
                 $organisation->getEmail(),
-                $organisation->getAcademyTitle(),
+                $organisation->getAcademy(),
                 $encodedPassword
             );
 
@@ -51,7 +51,7 @@ class OrganisationController extends AbstractController
 
             return $this->render('organisation/register/success.html.twig', [
                 'email' => $organisation->getEmail(),
-                'academy' => $organisation->getAcademyTitle()
+                'academy' => $organisation->getAcademy()->getTitle()
             ]);
         }
 
