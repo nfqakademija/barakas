@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Organisation implements UserInterface
 {
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

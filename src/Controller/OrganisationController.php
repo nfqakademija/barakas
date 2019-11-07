@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\College;
+use App\Entity\AcademyType;
 use App\Entity\Organisation;
-use App\Entity\University;
 use App\Form\OrganisationRegisterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

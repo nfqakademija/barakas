@@ -2,7 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\Academy;
+use App\Entity\AcademyType;
 use App\Entity\Organisation;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -10,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use App\Entity\Academy;
 
 class OrganisationRegisterType extends AbstractType
 {
@@ -29,14 +32,15 @@ class OrganisationRegisterType extends AbstractType
                     'placeholder' => 'pvz. jonas@example.com'
                 ]
             ])
-          /*  ->add('academyTitle', ChoiceType::class, [
-                'label' => 'Mokymo įstaigos pavadinimas',
-                'choices' => [
-                    'Universitetai' => Academy::university(),
-                    'Kolegijos' => Academy::college()
-                ]
-            ])*/
-            ->add('Registruoti organizaciją', SubmitType::class, [
+            ->add('academyTitle', EntityType::class, [
+                'label' => 'Mokymo įstaiga',
+                'class' => Academy::class,
+                'choice_label' => 'title',
+                'choice_value' => 'title'
+
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Registruoti organizaciją',
                 'attr' => [
                     'class' => 'btn btn-success'
                 ]
