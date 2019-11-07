@@ -31,5 +31,4 @@ class EmailSend
     {
         return 'Kaimyne padėk!';
     }
-
 }
