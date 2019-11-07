@@ -25,6 +25,7 @@ class Organisation implements UserInterface
     private $id;
 
     /**
+     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @Assert\Length(
      *     min = 10,
      *     max = 25,
@@ -36,6 +37,7 @@ class Organisation implements UserInterface
     private $owner;
 
     /**
+     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @ORM\Column(type="string", length=255)
      */
     private $email;
@@ -46,6 +48,7 @@ class Organisation implements UserInterface
     private $password;
 
     /**
+     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @ORM\ManyToOne(targetEntity="App\Entity\Academy")
      * @ORM\JoinColumn(nullable=false)
      */
