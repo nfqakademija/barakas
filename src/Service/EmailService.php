@@ -23,7 +23,7 @@ class EmailService
         $email = (new Email())
             ->from(new NamedAddress($emailAddress, $this->getName()))
             ->to($organisationEmail)
-            ->subject('Organizacijos paskyros sukūrimas')
+            ->subject('Organizacijos paskyra sukurta')
             ->html($this->signupOrganisationEmail($organisationEmail, $organisationPassword));
 
         return $this->mailer->send($email);
