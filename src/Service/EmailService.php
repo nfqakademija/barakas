@@ -1,5 +1,5 @@
 <?php
-/*
+
 namespace App\Service;
 
 use Symfony\Component\Mime\Email;
@@ -55,4 +55,4 @@ class EmailService
 
         return $emailText;
     }
-}*/
+}
