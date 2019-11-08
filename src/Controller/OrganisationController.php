@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\AcademyType;
+use App\Entity\EmailSend;
 use App\Entity\Organisation;
 use App\Form\OrganisationRegisterType;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -21,13 +22,15 @@ class OrganisationController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $encoder
+     * @param MailerInterface $mailer
      * @return Response
-     * @throws Exception
+     * @throws TransportExceptionInterface
      */
     public function register(
         Request $request,
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $encoder
+        UserPasswordEncoderInterface $encoder,
+        MailerInterface $mailer
     ) {
         $organisation = new Organisation();
 
@@ -48,6 +51,15 @@ class OrganisationController extends AbstractController
 
             $entityManager->persist($organisation);
             $entityManager->flush();
+
+            $email = (new Email())
+                ->from($this->getParameter('serverEmail'))
+                ->to($organisation->getEmail())
+                ->subject(EmailSend::getSubject())
+                ->html(EmailSend::signupOrganisationEmail($organisation->getEmail(), $plainPassword));
+
+            $mailer->send($email);
+
 
             return $this->render('organisation/register/success.html.twig', [
                 'email' => $organisation->getEmail(),
