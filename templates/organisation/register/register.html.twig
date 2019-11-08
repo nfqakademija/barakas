@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registruoti organizaciją{% endblock %}
+
+{% block body %}
+
+    <p class="intro-text text-center">
+        Užregistruokite savo organizaciją ir <strong>Kaimyne padėk!</strong> aplikacija
+        galėsi naudotis iš karto!
+    </p>
+    <div class="col-md-5 mx-auto nfq-academy">
+        <div class="panel">
+        <div class="panel-header">
+            <p>Organizacijos registracija</p>
+        </div>    
+        <div class="panel-content">
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {{ form(form) }}
+
+        </div>    
+        </div>
+    </div>
+{% endblock %}
