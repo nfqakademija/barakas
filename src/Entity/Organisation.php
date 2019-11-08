@@ -49,7 +49,7 @@ class Organisation implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Academy")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $academy;
 
