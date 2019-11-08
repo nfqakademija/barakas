@@ -133,7 +133,7 @@ class Organisation implements UserInterface
      */
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        return array('ROLE_USER');
     }
 
     /**
@@ -145,7 +145,7 @@ class Organisation implements UserInterface
      */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
     /**
@@ -155,7 +155,7 @@ class Organisation implements UserInterface
      */
     public function getUsername()
     {
-        // TODO: Implement getUsername() method.
+        return $this->owner;
     }
 
     /**
@@ -166,7 +166,6 @@ class Organisation implements UserInterface
      */
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
     }
 
     public function getAcademy(): ?Academy
