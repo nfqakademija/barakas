@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-//use App\Entity\Academy;
+use App\Entity\Academy;
 use App\Entity\Organisation;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -29,13 +29,13 @@ class OrganisationRegisterType extends AbstractType
                     'placeholder' => 'pvz. jonas@example.com'
                 ]
             ])
-            /*->add('academy', EntityType::class, [
+            ->add('academy', EntityType::class, [
                 'label' => 'Mokymo įstaiga',
                 'class' => Academy::class,
                 'choice_label' => 'title',
                 'choice_value' => 'title'
 
-            ])*/
+            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Registruoti organizaciją',
                 'attr' => [
