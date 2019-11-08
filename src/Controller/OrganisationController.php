@@ -42,9 +42,8 @@ class OrganisationController extends AbstractController
             $entityManager->persist($organisation);
             $entityManager->flush();
 
-            $serverEmail = $this->getParameter('serverEmail');
 
-            $emailService->sendOrganisationSignupMail($serverEmail, $organisation->getEmail(), $plainPassword);
+            $emailService->sendOrganisationSignupMail($organisation->getEmail(), $plainPassword);
 
             return $this->render('organisation/register/success.html.twig', [
                 'email' => $organisation->getEmail(),
