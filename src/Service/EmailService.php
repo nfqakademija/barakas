@@ -9,19 +9,23 @@ use \Symfony\Component\Mailer\MailerInterface;
 class EmailService
 {
     private $mailer;
+    private $serverEmail;
 
-    public function __construct(MailerInterface $mailer)
+    public function __construct(MailerInterface $mailer, string $serverEmail)
     {
         $this->mailer = $mailer;
+        $this->serverEmail = $serverEmail;
     }
 
     public function sendOrganisationSignupMail(
-        string $emailAddress,
         string $organisationEmail,
         string $organisationPassword
     ) {
+
+        $serverEmail = $this->serverEmail;
+
         $email = (new Email())
-            ->from(new NamedAddress($emailAddress, $this->getName()))
+            ->from(new NamedAddress($serverEmail, $this->getName()))
             ->to($organisationEmail)
             ->subject('Organizacijos paskyra sukurta')
             ->html($this->signupOrganisationEmail($organisationEmail, $organisationPassword));
