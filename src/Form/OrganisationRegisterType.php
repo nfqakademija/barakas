@@ -33,8 +33,11 @@ class OrganisationRegisterType extends AbstractType
                 'label' => 'Mokymo įstaiga',
                 'class' => Academy::class,
                 'choice_label' => 'title',
-                'choice_value' => 'title'
-
+                'choice_value' => 'title',
+                'choices' => [
+                    'Universitetai' => $options['universities'],
+                    'Kolegijos' => $options['colleges']
+                ]
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Registruoti organizaciją',
@@ -49,6 +52,8 @@ class OrganisationRegisterType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Organisation::class,
+            'colleges' => null,
+            'universities' => null
         ]);
     }
 }
