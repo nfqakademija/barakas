@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Academy;
+use App\Entity\AcademyType;
 use App\Entity\Organisation;
 use App\Form\OrganisationRegisterType;
+use App\Repository\AcademyRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,9 +33,19 @@ class OrganisationController extends AbstractController
     ) {
         $organisation = new Organisation();
 
-        $form = $this->createForm(OrganisationRegisterType::class, $organisation);
+        $academyRepository = $this->getDoctrine()->getRepository(Academy::class);
+
+        $universities = $academyRepository->findBy(['academyType' => AcademyType::university()->id()]);
+        $colleges = $academyRepository->findBy(['academyType' => AcademyType::college()->id()]);
+
+
+        $form = $this->createForm(OrganisationRegisterType::class, $organisation, array(
+            'universities' => $universities,
+            'colleges' => $colleges
+        ));
 
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $organisation->generateRandomPassword();
