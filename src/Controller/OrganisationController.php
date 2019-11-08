@@ -2,16 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\EmailSend;
 use App\Entity\Organisation;
 use App\Form\OrganisationRegisterType;
+use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -22,15 +19,14 @@ class OrganisationController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $encoder
-     * @param MailerInterface $mailer
+     * @param EmailService $emailService
      * @return Response
-     * @throws TransportExceptionInterface
      */
     public function register(
         Request $request,
         EntityManagerInterface $entityManager,
         UserPasswordEncoderInterface $encoder,
-        MailerInterface $mailer
+        EmailService $emailService
     ) {
         $organisation = new Organisation();
 
@@ -41,25 +37,14 @@ class OrganisationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $organisation->generateRandomPassword();
             $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
-
-            $organisation = Organisation::create(
-                $organisation->getOwner(),
-                $organisation->getEmail(),
-                $organisation->getAcademy(),
-                $encodedPassword
-            );
+            $organisation->setPassword($encodedPassword);
 
             $entityManager->persist($organisation);
             $entityManager->flush();
 
-            $email = (new Email())
-                ->from($this->getParameter('serverEmail'))
-                ->to($organisation->getEmail())
-                ->subject(EmailSend::getSubject())
-                ->html(EmailSend::signupOrganisationEmail($organisation->getEmail(), $plainPassword));
+            $serverEmail = $this->getParameter('serverEmail');
 
-            $mailer->send($email);
-
+            $emailService->sendOrganisationSignupMail($serverEmail, $organisation->getEmail(), $plainPassword);
 
             return $this->render('organisation/register/success.html.twig', [
                 'email' => $organisation->getEmail(),
