@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Organisation;
 use App\Form\OrganisationRegisterType;
-use App\Service\EmailService;
+//use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,14 +19,13 @@ class OrganisationController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $encoder
-     * @param EmailService $emailService
      * @return Response
      */
     public function register(
         Request $request,
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $encoder,
-        EmailService $emailService
+        UserPasswordEncoderInterface $encoder
+        //EmailService $emailService
     ) {
         $organisation = new Organisation();
 
@@ -42,9 +41,9 @@ class OrganisationController extends AbstractController
             $entityManager->persist($organisation);
             $entityManager->flush();
 
-            $serverEmail = $this->getParameter('serverEmail');
+           // $serverEmail = $this->getParameter('serverEmail');
 
-            $emailService->sendOrganisationSignupMail($serverEmail, $organisation->getEmail(), $plainPassword);
+            //$emailService->sendOrganisationSignupMail($serverEmail, $organisation->getEmail(), $plainPassword);
 
             return $this->render('organisation/register/success.html.twig', [
                 'email' => $organisation->getEmail(),
