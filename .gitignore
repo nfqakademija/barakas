@@ -32,4 +32,4 @@ yarn-error.log
 /.phpcs-cache
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
-scripts/docker-compose.yml
+###scripts/docker-compose.yml
