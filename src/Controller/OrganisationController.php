@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\AcademyType;
 use App\Entity\Organisation;
 use App\Form\OrganisationRegisterType;
+use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,13 +19,14 @@ class OrganisationController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $encoder
+     * @param EmailService $emailService
      * @return Response
-     * @throws Exception
      */
     public function register(
         Request $request,
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $encoder
+        UserPasswordEncoderInterface $encoder,
+        EmailService $emailService
     ) {
         $organisation = new Organisation();
 
@@ -38,20 +37,17 @@ class OrganisationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $organisation->generateRandomPassword();
             $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
-
-            $organisation = Organisation::create(
-                $organisation->getOwner(),
-                $organisation->getEmail(),
-                $organisation->getAcademyTitle(),
-                $encodedPassword
-            );
+            $organisation->setPassword($encodedPassword);
 
             $entityManager->persist($organisation);
             $entityManager->flush();
 
+
+            $emailService->sendOrganisationSignupMail($organisation->getEmail(), $plainPassword);
+
             return $this->render('organisation/register/success.html.twig', [
                 'email' => $organisation->getEmail(),
-                'academy' => $organisation->getAcademyTitle()
+                'academy' => $organisation->getAcademy()->getTitle()
             ]);
         }
 
