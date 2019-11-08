@@ -48,7 +48,6 @@ class Organisation implements UserInterface
     private $password;
 
     /**
-     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @ORM\ManyToOne(targetEntity="App\Entity\Academy")
      * @ORM\JoinColumn(nullable=false)
      */
