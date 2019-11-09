@@ -10,12 +10,6 @@
         <div class="alert alert-danger">Neteisingi Duomenys</div>
     {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            Jūs prisijunge kaip {{ app.user.username }}, <a href="{{ path('app_logout') }}">Atsijungti</a>
-        </div>
-    {% endif %}
-
     <h1 class="h3 mb-3 text-white">Prisijunkite</h1>
     <label for="inputEmail" class="text-white">Elektroninis paštas</label>
     <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control mb-3" placeholder="Elektroninis paštas" required autofocus>
