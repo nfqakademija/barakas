@@ -64,7 +64,7 @@ class OrganisationController extends AbstractController
             $plainPassword = $organisation->generateRandomPassword();
             $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
             $organisation->setPassword($encodedPassword);
-
+            $organisation->setRoles(array('ROLE_ADMIN'));
             $entityManager->persist($organisation);
             $entityManager->flush();
 
