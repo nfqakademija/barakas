@@ -53,6 +53,12 @@ class Organisation implements UserInterface
      */
     private $academy;
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -129,11 +135,23 @@ class Organisation implements UserInterface
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return (Role|string)[] The user roles
+     * @return array (Role|string)[] The user roles
      */
-    public function getRoles()
+
+    public function getRoles(): array
     {
-        // TODO: Implement getRoles() method.
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     /**
@@ -145,7 +163,7 @@ class Organisation implements UserInterface
      */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
     /**
@@ -155,7 +173,7 @@ class Organisation implements UserInterface
      */
     public function getUsername()
     {
-        // TODO: Implement getUsername() method.
+        return $this->owner;
     }
 
     /**
@@ -166,7 +184,6 @@ class Organisation implements UserInterface
      */
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
     }
 
     public function getAcademy(): ?Academy

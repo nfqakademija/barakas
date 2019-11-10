@@ -17,6 +17,19 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class OrganisationController extends AbstractController
 {
+
+    /**
+     * @Route("/organisation", name="organisation")
+     */
+    public function index()
+    {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('organisation/pages/organisation.html.twig', []);
+    }
+
     /**
      * @Route("/organizacijos-registracija", name="organisation-registration")
      * @param Request $request
@@ -51,7 +64,7 @@ class OrganisationController extends AbstractController
             $plainPassword = $organisation->generateRandomPassword();
             $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
             $organisation->setPassword($encodedPassword);
-
+            $organisation->setRoles(array('ROLE_ADMIN'));
             $entityManager->persist($organisation);
             $entityManager->flush();
 

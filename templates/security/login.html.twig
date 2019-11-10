@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-5 mx-auto">
+<form method="post">
+    {% if error %}
+        <div class="alert alert-danger">Neteisingi Duomenys</div>
+    {% endif %}
+
+    <h1 class="h3 mb-3 text-white">Prisijunkite</h1>
+    <label for="inputEmail" class="text-white">Elektroninis paštas</label>
+    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control mb-3" placeholder="Elektroninis paštas" required autofocus>
+    <label for="inputPassword" class="text-white">Slaptažodis</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Slaptažodis" required>
+
+    <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}"
+    >
+
+        <div class="checkbox mb-3 mt-2">
+            <label class="text-white">
+                <input type="checkbox" name="_remember_me"> Prisiminti
+            </label>
+        </div>
+
+    <button class="btn btn-lg btn-primary" type="submit">
+        Prisijungti
+    </button>
+</form>
+        </div>
+    </div>
+{% endblock %}
