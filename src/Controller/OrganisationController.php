@@ -6,6 +6,7 @@ use App\Entity\Academy;
 use App\Entity\AcademyType;
 use App\Entity\Organisation;
 use App\Form\OrganisationRegisterType;
+use App\Form\DormAddFormType;
 use App\Repository\AcademyRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +18,21 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class OrganisationController extends AbstractController
 {
-
+	/**
+     * @Route("/organisation/add", name="addOrganisation")
+     */
+    public function addDormitory(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $form = $this->createForm(DormAddFormType::class);
+		$form->handleRequest($request);
+		if($form->isSubmitted() && $form->isValid()) {
+			dd($form->getData());
+		}
+        return $this->render('organisation/pages/addDormitory.html.twig', [
+            'DormAddFormType' => $form->createView()
+        ]);
+    }
     /**
      * @Route("/organisation", name="organisation")
      */
