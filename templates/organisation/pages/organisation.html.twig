@@ -1,46 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Organizacija{% endblock %}
+{% block title %}Organizacija {% endblock %}
 
 {% block body %}
-
     <div class="container">
-        <div class="card border-0 shadow my-5">
-            <div class="card-body p-5">
-                <h1 class="h3 font-weight-light text-center">Bendrabučiai</h1>
-
+        <div class="panel">
+            <div class="panel-header">
+                <p>Bendrabučiai</p>
+            </div>
+            <div class="panel-content">
                 <div class="row">
-                    <div class="col-md m-1">
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">Bendrabutis</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">P.Višinskio g. 6</h6>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <button type="button" class="btn btn-primary">Primary</button>
-                        </div>
-                    </div>
-                    </div>
                     <div class="col-md m-1">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                                <h5 class="card-title">Bendrabutis</h5>
+                                <h5 class="card-title">I Bendrabutis</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">P.Višinskio g. 6</h6>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <button type="button" class="btn btn-primary">Primary</button>
+                                <p class="card-text">Prisijungusių prie sistemos: <b>2</b></p>
+                                <p class="card-text">Aktyvių prašymų: <b>2</b></p>
+                                <p class="card-text">Įvykę prašymai: <b>4</b></p>
+                                <p class="card-text">Viso pranešimų bendrabutyje: <b>44</b></p>
+                                <button type="button" class="btn btn-primary"><i class="fas fa-wrench"></i> Valdyti</button>
                             </div>
                         </div>
                     </div>
                     <div class="col-md m-1">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                                <h5 class="card-title">Bendrabutis</h5>
+                                <h5 class="card-title">II Bendrabutis</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">P.Višinskio g. 6</h6>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <button type="button" class="btn btn-primary">Primary</button>
+                                <p class="card-text">Prisijungusių prie sistemos: <b>7</b></p>
+                                <p class="card-text">Aktyvių prašymų: <b>7</b></p>
+                                <p class="card-text">Įvykę prašymai: <b>20</b></p>
+                                <p class="card-text">Viso pranešimų bendrabutyje: <b>15</b></p>
+                                <button type="button" class="btn btn-primary"><i class="fas fa-wrench"></i> Valdyti</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md m-1">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">IV Bendrabutis</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">P.Višinskio g. 6</h6>
+                                <p class="card-text">Prisijungusių prie sistemos: <b>2</b></p>
+                                <p class="card-text">Aktyvių prašymų: <b>1</b></p>
+                                <p class="card-text">Įvykę prašymai: <b>20</b></p>
+                                <p class="card-text">Viso pranešimų bendrabutyje: <b>20</b></p>
+                                <button type="button" class="btn btn-primary"><i class="fas fa-wrench"></i> Valdyti</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                <br>
+                <a href=organisation/add>
+                    <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Pridėti bendrabutį</button>
+                </a>
             </div>
         </div>
     </div>

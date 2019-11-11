@@ -5,19 +5,40 @@ $primary: darken(#428bca, 20%);
 @import "~bootstrap/scss/bootstrap";
 
 body {
-  background: #1d2e5a;
+  background: #2e2552;
+}
+
+header {
+  background: #000000;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.5);
+  border-top: 3px solid rgba(255, 255, 255, 0.5);
+}
+
+.header-content {
+  padding: 5px;
+  display: flex;
+  justify-content: center;
 }
 
 .container {
-  margin-top: 50px;
+  margin-top: 1%;
 }
 
 .navbar {
-  background-color: #000000 !important;
+  background-color: #2e2552 !important;
+}
+
+.logo {
+  height: 125px;
+  margin-top: 1px;
+  margin-left: 15%;
 }
 
 .intro-text {
   color: white;
+  width: 50%;
+  margin-top: 36px;
+  margin-right: 10%;
 }
 
 .panel {
@@ -26,12 +47,28 @@ body {
   border: 1px solid gainsboro;
 }
 
+.index-panel {
+  margin-right:-30px;
+  margin-top:10px;
+}
+
+.index-panel-bg {
+  background: #6046c7;
+}
+
+.index-panel-img {
+  height: 100px;
+  background: #000000;
+  padding: 10px;
+  border-radius: 21px;
+}
+
 label {
   color: black !important;
 }
 
 .panel-header p {
-  background: #3655a5;
+  background: #6046c7;
   padding: 10px;
   border-radius: 2px;
   color: white;
@@ -42,7 +79,7 @@ label {
 }
 
 a:hover {
-  color: white !important;
+  color: white;
   text-decoration: none !important;
 }
 
@@ -51,83 +88,68 @@ footer {
   background: #0f182d;
 }
 
-.main-section{
+.main-section {
   margin:0 auto;
   text-align: center;
   padding: 0px 5px;
-}
-.dashbord{
-  width: 49%;
-  display: inline-block;
-  background-color:#34495E;
-  color:#fff;
-  margin-top: 50px;
-  margin-left: 1%;
-}
-.icon-section i{
-  font-size: 30px;
-  padding:10px;
-  border:1px solid #fff;
-  border-radius:50%;
-  margin-top:-25px;
-  margin-bottom: 10px;
-  background-color:#34495E;
-}
-.icon-section p{
-  margin:0px;
-  font-size: 20px;
-  padding-bottom: 10px;
-}
-.detail-section{
-  background-color: #2F4254;
-  padding: 5px 0px;
-}
-.dashbord .detail-section:hover{
-  background-color: #5a5a5a;
-  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.detail-section {
-  color: #fff;
+hr {
+  border: none;
+  border-left: 1px solid hsla(200, 10%, 50%,100);
+  height: 15vh;
+  width: 1px;
 }
 
-.detail-section a{
-  color:#fff;
-  text-decoration: none;
+input {
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
 }
 
-.detail-section a:hover{
-  text-decoration: none;
-  color: white;
+.statistic {
+  background: black;
+  border-radius: 5px;
+  padding: 5px;
 }
 
-.dashbord-green .icon-section,.dashbord-green .icon-section i{
-  background-color: #16A085;
+.nav-link {
+  color: white !important;
 }
-.dashbord-green .detail-section{
-  background-color: #149077;
+
+.nav-link:hover {
+  color: grey !important;
 }
-.dashbord-orange .icon-section,.dashbord-orange .icon-section i{
-  background-color: #F39C12;
+
+@media only screen and (max-width: 767px) {
+  header {
+    width: 100%;
+  }
+  .header-content {
+    display: block;
+  }
+  .intro-text {
+    width: 100%;
+  }
+  hr {
+    height: 0;
+  }
 }
-.dashbord-orange .detail-section{
-  background-color: #DA8C10;
-}
-.dashbord-blue .icon-section,.dashbord-blue .icon-section i{
-  background-color: #2980B9;
-}
-.dashbord-blue .detail-section{
-  background-color:#2573A6;
-}
-.dashbord-red .icon-section,.dashbord-red .icon-section i{
-  background-color:#E74C3C;
-}
-.dashbord-red .detail-section{
-  background-color:#CF4436;
-}
-.dashbord-skyblue .icon-section,.dashbord-skyblue .icon-section i{
-  background-color:#8E44AD;
-}
-.dashbord-skyblue .detail-section{
-  background-color:#803D9B;
+
+@media only screen and (max-width: 767px) and (orientation: portrait) {
+  header {
+    width: 100%;
+  }
+  .header-content {
+    display: block;
+  }
+  .intro-text {
+    width: 100%;
+  }
+  hr {
+    height: 0;
+  }
 }

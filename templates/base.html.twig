@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
 
         <title>{% block title %}Studentų prašymų bei skolinimosi platforma - Kaimynė padėk!{% endblock %}</title>
         {% block stylesheets %}
@@ -12,8 +12,15 @@
         {% endblock %}
     </head>
     <body>
+    {% include "includes/navbar.html.twig" %}
     <header>
-        {% include "includes/navbar.html.twig" %}
+        <div class="header-content">
+        <img src="/logo.png" class="img-fluid logo">
+        <hr>
+        <p class="intro-text">
+            Tai prašymų ir skolinimosi platforma, kuri skirta lietuvos aukštųjų  mokyklų bendabučiams bei jų studentams palengvinti komunikaciją tarp kaimynų.
+        </p>
+        </div>
     </header>
     <div class="container">
         {% block body %}      

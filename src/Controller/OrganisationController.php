@@ -5,8 +5,11 @@ namespace App\Controller;
 use App\Entity\Academy;
 use App\Entity\AcademyType;
 use App\Entity\Organisation;
+use App\Entity\Dormitory;
 use App\Form\OrganisationRegisterType;
+use App\Form\DormAddFormType;
 use App\Repository\AcademyRepository;
+use App\Repository\DormitoryRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +20,30 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class OrganisationController extends AbstractController
 {
-
+    /**
+     * @Route("/organisation/add", name="addOrganisation")
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return Response
+     */
+    public function addDormitory(EntityManagerInterface $em, Request $request)
+    {
+        $user = $this->getUser();
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $form = $this->createForm(DormAddFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+        /*  $data = $form->getData();
+            $add = new Dormitory();
+            $add->setAddress($data['daddr']);
+            $add->setOrganisationId($user->getId());
+            $em->persist($add);
+            $em->flush();*/
+        }
+        return $this->render('organisation/pages/addDormitory.html.twig', [
+            'DormAddFormType' => $form->createView(),
+        ]);
+    }
     /**
      * @Route("/organisation", name="organisation")
      */

@@ -4,82 +4,53 @@
 
 {% block body %}
 
-	<p class="intro-text">
-	Lorem ipsum, dolor sit amet consectetur adipisicing elit. Perferendis ad, perspiciatis aut dolores eum rerum, a molestias ratione odit eligendi ut! Deleniti.
+	<p class="text-white text-center statistic"><strong>Kaimyne padėk!</strong> statistika:
+		<strong>8</strong> Lietuvos aukštosios mokyklos |
+		<strong>10</strong> bendrabučių |
+		<strong>1215</strong> studentų |
+		<strong>3521</strong> prašymų |
+		<strong>354</strong> apdovanojimai
 	</p>
 
 	<div class="row main-section">
-		<div class="dashbord">
-			<div class="icon-section">
-				<i class="fa fa-users" aria-hidden="true"></i><br>
-				<small>Lietuvos aukštųjų mokyklų bendrabučiai besinaudojantys <b>Kaimyne Padėk</b></small>
-				<p>10</p>
+		<div class="card text-white index-panel index-panel-bg mb-3 col-md-3">
+			<div class="card-body text-center">
+				<h5 class="card-title">Bendrabučiai</h5>
+				<p class="card-text text-white">
+					<img src="https://image.flaticon.com/icons/svg/904/904846.svg" class="index-panel-img">
+					<br>
+					Kiekviena Lietuvos aukštoji mokykla sukūrusi savo organizaciją gali valdyti savo bendrabučius.</p>
 			</div>
-			<a href="{{ path('organisation-registration') }}">
-				<div class="detail-section">
-					Pridėkite organizaciją
-				</div>
-			</a>
 		</div>
-		<div class="dashbord dashbord-green">
-			<div class="icon-section">
-				<i class="fa fa-comments" aria-hidden="true"></i><br>
-				<small>Šiuo metu prisijungusių studentų skaičius <b>Kaimyne Padėk</b> platformoje </small>
-				<p>8</p>
+		<div class="card text-white index-panel index-panel-bg mb-3 col-md-3">
+			<div class="card-body text-center">
+				<h5 class="card-title">Studentai</h5>
+				<p class="card-text text-white">
+					<img src="https://image.flaticon.com/icons/svg/167/167750.svg" class="index-panel-img">
+					<br>
+					Organizacijos į savo bendrabučius kviečia studentus ir jų gyvenimą padaro interaktyvesni.</p>
 			</div>
-			<a href="#">
-				<div class="detail-section">
-					Sukurkite paskyrą
-				</div>
-			</a>
 		</div>
-		<div class="dashbord dashbord-orange">
-			<div class="icon-section">
-				<i class="fa fa-bell" aria-hidden="true"></i><br>
-				<small>Platformoje palikti bendrabučių gyventojų prašymai</small>
-				<p>9</p>
+		<div class="card text-white index-panel index-panel-bg mb-3 col-md-3">
+			<div class="card-body text-center">
+				<h5 class="card-title">Prašymai</h5>
+				<p class="card-text text-white">
+					<img src="https://image.flaticon.com/icons/svg/2126/2126347.svg" class="index-panel-img">
+					<br>
+					Studentas esantis bendrabutyje gali parašyti prašymą, kurį mato visi bendrabučio gyventojai.</p>
 			</div>
-			<a href="#">
-				<div class="detail-section">
-					More Info
-				</div>
-			</a>
 		</div>
-		<div class="dashbord dashbord-blue">
-			<div class="icon-section">
-				<i class="fa fa-globe" aria-hidden="true"></i><br>
-				<small>Sužinokite daugiau apie <b>Kaimyne Padėk</b> platformą ir jos </small>
-				<p>naudą</p>
+		<div class="card text-white index-panel index-panel-bg mb-3 col-md-3">
+			<div class="card-body text-center">
+				<h5 class="card-title">Apdovanojimai</h5>
+				<p class="card-text text-white">
+					<img src="https://image.flaticon.com/icons/svg/2206/2206446.svg" class="index-panel-img">
+					<br>
+					Už suteiktą pagalbą kitam, bendrabučių gyventojai užsidirba taškus už kuriuos gauna apdovanojimus.</p>
 			</div>
-			<a href="#">
-				<div class="detail-section">
-					Skaityti plačiau
-				</div>
-			</a>
 		</div>
-		<div class="dashbord dashbord-red">
-			<div class="icon-section">
-				<i class="fa fa-sign-in" aria-hidden="true"></i><br>
-				<small>Jau esate platformos</small>
-				<p>naudotojas? </p>
-			</div>
-			<a href="#">
-				<div class="detail-section">
-					Prisijunkite
-				</div>
-			</a>
-		</div>
-		<div class="dashbord dashbord-skyblue">
-			<div class="icon-section">
-				<i class="fa fa-paper-plane-o" aria-hidden="true"></i><br>
-				<small>Išsiųsta bendra žinučių suma</small>
-				<p>96</p>
-			</div>
-			<a href="#">
-				<div class="detail-section">
-					Tai šaunu!
-				</div>
-			</a>
-		</div>
+
+		<button class="btn btn-lg btn-primary"><i class="fas fa-user-plus"></i> Registruoti organizaciją</button>
+		<button class="btn btn-lg btn-danger"><i class="fas fa-sign-in-alt"></i> Prisijungti</button>
 	</div>
 {% endblock %}
