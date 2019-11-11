@@ -6,6 +6,7 @@ use App\Entity\Academy;
 use App\Entity\AcademyType;
 use App\Entity\User;
 use App\Entity\Dormitory;
+use App\Form\PasswordChangeType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
 use App\Repository\AcademyRepository;
@@ -13,10 +14,12 @@ use App\Repository\DormitoryRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends AbstractController
 {
@@ -115,6 +118,47 @@ class UserController extends AbstractController
         }
 
         return $this->render('organisation/register/register.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/user/changepassword", name="passwordChange")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @param EntityManagerInterface $entityManager
+     * @param UserInterface $user
+     * @return Response
+     */
+    public function passwordChange(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        EntityManagerInterface $entityManager,
+        UserInterface $user
+    ): Response {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $form = $this->createForm(PasswordChangeType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            if ($encoder->isPasswordValid($user, $data['oldPassword']) && $data['password']===$data['newPassword']) {
+                $newPassword = $encoder->encodePassword($user, $data['password']);
+                $user->setPassword($newPassword);
+                $entityManager->persist($user);
+                $entityManager->flush();
+                $this->addFlash(
+                    'success',
+                    'Slaptažodis pakeistas!'
+                );
+            } else {
+                $form->addError(new FormError('Slaptažodis netinka'));
+            }
+        }
+
+        return $this->render('user/passwordChange.html.twig', [
             'form' => $form->createView(),
         ]);
     }
