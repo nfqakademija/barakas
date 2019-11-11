@@ -4,16 +4,18 @@
 
 {% block body %}
 
-<div class="container">
-    <div class="card border-0 shadow my-5">
-        <div class="card-body p-5">
-            <h1 class="h3 font-weight-light text-center">Pridėti bendrabutį</h1>
-			
-			    {{ form_start(DormAddFormType) }}
-				{{ form_widget(DormAddFormType) }}
-				<button type="submit" class="btn btn-primary">Pridėti bendrabutį</button>
-				{{ form_end(DormAddFormType) }}
+    <div class="container">
+        <div class="panel">
+            <div class="panel-header">
+                <p>Pridėti bendrabutį</p>
+            </div>
+            <div class="panel-content">
+                {{ form_start(DormAddFormType) }}
+                {{ form_widget(DormAddFormType) }}
+                <button type="submit" class="btn btn-primary">Pridėti bendrabutį</button>
+                {{ form_end(DormAddFormType) }}
+            </div>
         </div>
     </div>
-</div>
+
 {% endblock %}

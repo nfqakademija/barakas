@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
-use App\Entity\Organisation;
+use App\Entity\User;
 use App\Entity\Dormitory;
-use App\Form\OrganisationRegisterType;
+use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
 use App\Repository\AcademyRepository;
 use App\Repository\DormitoryRepository;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class OrganisationController extends AbstractController
+class UserController extends AbstractController
 {
     /**
      * @Route("/organisation/add", name="addOrganisation")
@@ -81,7 +81,7 @@ class OrganisationController extends AbstractController
         if ($this->getUser()) {
             return $this->redirectToRoute('home');
         }
-        $organisation = new Organisation();
+        $organisation = new User();
 
         $academyRepository = $this->getDoctrine()->getRepository(Academy::class);
 
@@ -89,7 +89,7 @@ class OrganisationController extends AbstractController
         $colleges = $academyRepository->findBy(['academyType' => AcademyType::college()->id()]);
 
 
-        $form = $this->createForm(OrganisationRegisterType::class, $organisation, array(
+        $form = $this->createForm(UserRegisterType::class, $organisation, array(
             'universities' => $universities,
             'colleges' => $colleges
         ));
