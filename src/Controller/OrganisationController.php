@@ -20,28 +20,28 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class OrganisationController extends AbstractController
 {
-	/**
+    /**
      * @Route("/organisation/add", name="addOrganisation")
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return Response
      */
     public function addDormitory(EntityManagerInterface $em, Request $request)
     {
+        $user = $this->getUser();
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(DormAddFormType::class);
-		$form->handleRequest($request);
-		if($form->isSubmitted() && $form->isValid()) {
-			
-		/*	$data = $form->getData();
-			$add = new Dormitory();
-			$add->setAddress($data['daddr']);
-			$add->setAcademyId($udata->academy->id);
-			$em->persist($add);
-			$em->flush();*/
-			
-			
-			
-		}
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+        /*  $data = $form->getData();
+            $add = new Dormitory();
+            $add->setAddress($data['daddr']);
+            $add->setOrganisationId($user->getId());
+            $em->persist($add);
+            $em->flush();*/
+        }
         return $this->render('organisation/pages/addDormitory.html.twig', [
-            'DormAddFormType' => $form->createView()
+            'DormAddFormType' => $form->createView(),
         ]);
     }
     /**
