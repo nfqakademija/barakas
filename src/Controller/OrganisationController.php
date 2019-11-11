@@ -57,7 +57,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/organizacijos-registracija", name="organisation-registration")
+     * @Route("/registration", name="organisation-registration")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $encoder
@@ -70,6 +70,10 @@ class OrganisationController extends AbstractController
         UserPasswordEncoderInterface $encoder,
         EmailService $emailService
     ) {
+		
+		if ($this->getUser()) {
+			return $this->redirectToRoute('home');
+        }
         $organisation = new Organisation();
 
         $academyRepository = $this->getDoctrine()->getRepository(Academy::class);
