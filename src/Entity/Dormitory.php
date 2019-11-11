@@ -24,7 +24,7 @@ class Dormitory
     /**
      * @ORM\Column(type="integer")
      */
-    private $academy_id;
+    private $organisation_id;
 
     public function getId(): ?int
     {
@@ -43,15 +43,23 @@ class Dormitory
         return $this;
     }
 
-    public function getAcademyId(): ?int
+    /**
+     * @return mixed
+     */
+    public function getOrganisationId(): self
     {
-        return $this->academy_id;
+        return $this->organisation_id;
     }
 
-    public function setAcademyId(int $academy_id): self
+    /**
+     * @param mixed $organisation_id
+     * @return Dormitory
+     */
+    public function setOrganisationId($organisation_id): self
     {
-        $this->academy_id = $academy_id;
+        $this->organisation_id = $organisation_id;
 
         return $this;
     }
+
 }
