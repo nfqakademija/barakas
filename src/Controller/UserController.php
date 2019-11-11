@@ -40,6 +40,8 @@ class UserController extends AbstractController
             $add->setTitle($data['dname']);
             $em->persist($add);
             $em->flush();
+
+            return $this->redirectToRoute('organisation');
         }
         return $this->render('organisation/pages/addDormitory.html.twig', [
             'DormAddFormType' => $form->createView(),
