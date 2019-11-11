@@ -49,5 +49,4 @@ class PasswordChangeType extends AbstractType
                 'label' => 'Keisti',
             ]);
     }
-
 }
