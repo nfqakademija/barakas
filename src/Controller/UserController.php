@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
-use App\Entity\Organisation;
+use App\Entity\User;
 use App\Entity\Dormitory;
-use App\Form\OrganisationRegisterType;
+use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
 use App\Repository\AcademyRepository;
 use App\Repository\DormitoryRepository;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class OrganisationController extends AbstractController
+class UserController extends AbstractController
 {
     /**
      * @Route("/organisation/add", name="addOrganisation")
@@ -33,12 +33,13 @@ class OrganisationController extends AbstractController
         $form = $this->createForm(DormAddFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-        /*  $data = $form->getData();
+            $data = $form->getData();
             $add = new Dormitory();
             $add->setAddress($data['daddr']);
             $add->setOrganisationId($user->getId());
+            $add->setTitle($data['dname']);
             $em->persist($add);
-            $em->flush();*/
+            $em->flush();
         }
         return $this->render('organisation/pages/addDormitory.html.twig', [
             'DormAddFormType' => $form->createView(),
@@ -53,11 +54,17 @@ class OrganisationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('organisation/pages/organisation.html.twig', []);
+        $repository = $this->getDoctrine()->getRepository(Dormitory::class);
+
+        $dormitories = $repository->findAll();
+
+        return $this->render('organisation/pages/organisation.html.twig', [
+            'dormitories' => $dormitories
+        ]);
     }
 
     /**
-     * @Route("/organizacijos-registracija", name="organisation-registration")
+     * @Route("/registration", name="organisation-registration")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $encoder
@@ -70,7 +77,11 @@ class OrganisationController extends AbstractController
         UserPasswordEncoderInterface $encoder,
         EmailService $emailService
     ) {
-        $organisation = new Organisation();
+        
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');
+        }
+        $organisation = new User();
 
         $academyRepository = $this->getDoctrine()->getRepository(Academy::class);
 
@@ -78,7 +89,7 @@ class OrganisationController extends AbstractController
         $colleges = $academyRepository->findBy(['academyType' => AcademyType::college()->id()]);
 
 
-        $form = $this->createForm(OrganisationRegisterType::class, $organisation, array(
+        $form = $this->createForm(UserRegisterType::class, $organisation, array(
             'universities' => $universities,
             'colleges' => $colleges
         ));

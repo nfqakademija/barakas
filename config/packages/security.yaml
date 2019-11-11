@@ -2,13 +2,13 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
 
     encoders:
-        App\Entity\Organisation:
+        App\Entity\User:
             algorithm: auto
 
     providers:
             users:
                 entity:
-                    class: 'App\Entity\Organisation'
+                    class: 'App\Entity\User'
                     property: 'email'
     firewalls:
         dev:

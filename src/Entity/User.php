@@ -9,13 +9,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\OrganisationRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields = "owner", message="Šis vadovas jau užregistruotas!")
  * @UniqueEntity(fields = "email", message="Šis el. pašto adresas jau užregistruotas!")
  * @UniqueEntity(fields = "academy", message="Ši aukštoji mokykla jau užregistruota!
   Jei norite išsamesnės informacijos - susisiekite su administracija.")
  */
-class Organisation implements UserInterface
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
