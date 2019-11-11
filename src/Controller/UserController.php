@@ -9,8 +9,6 @@ use App\Entity\Dormitory;
 use App\Form\PasswordChangeType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
-use App\Repository\AcademyRepository;
-use App\Repository\DormitoryRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,6 +41,8 @@ class UserController extends AbstractController
             $add->setTitle($data['dname']);
             $em->persist($add);
             $em->flush();
+
+            return $this->redirectToRoute('organisation');
         }
         return $this->render('organisation/pages/addDormitory.html.twig', [
             'DormAddFormType' => $form->createView(),
