@@ -70,9 +70,9 @@ class OrganisationController extends AbstractController
         UserPasswordEncoderInterface $encoder,
         EmailService $emailService
     ) {
-		
-		if ($this->getUser()) {
-			return $this->redirectToRoute('home');
+        
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');
         }
         $organisation = new Organisation();
 
