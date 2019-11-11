@@ -8,8 +8,6 @@ use App\Entity\User;
 use App\Entity\Dormitory;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
-use App\Repository\AcademyRepository;
-use App\Repository\DormitoryRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
