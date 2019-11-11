@@ -44,7 +44,8 @@ class EmailService
                       <br><br>
                       Džiaugiamės, jog nusprendėte pradėti naudotis mūsų Kaimyne padėk aplikacija.
                       <br>
-                      Spauskite <a href="#">šią</a> nuorodą ir prisijungimui naudokite šiuos duomenis:
+                      Spauskite <a href="http://barakas.projektai.nfqakademija.lt/login">šią</a> 
+                      nuorodą ir prisijungimui naudokite šiuos duomenis:
                       <br>
                       Prisijungimo vardas: <strong>'.$email.'</strong>
                       <br>
