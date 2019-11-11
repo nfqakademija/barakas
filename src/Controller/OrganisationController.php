@@ -33,12 +33,13 @@ class OrganisationController extends AbstractController
         $form = $this->createForm(DormAddFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-        /*  $data = $form->getData();
+            $data = $form->getData();
             $add = new Dormitory();
             $add->setAddress($data['daddr']);
             $add->setOrganisationId($user->getId());
+            $add->setTitle($data['dname']);
             $em->persist($add);
-            $em->flush();*/
+            $em->flush();
         }
         return $this->render('organisation/pages/addDormitory.html.twig', [
             'DormAddFormType' => $form->createView(),
@@ -53,7 +54,13 @@ class OrganisationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('organisation/pages/organisation.html.twig', []);
+        $repository = $this->getDoctrine()->getRepository(Dormitory::class);
+
+        $dormitories = $repository->findAll();
+
+        return $this->render('organisation/pages/organisation.html.twig', [
+            'dormitories' => $dormitories
+        ]);
     }
 
     /**
@@ -70,9 +77,9 @@ class OrganisationController extends AbstractController
         UserPasswordEncoderInterface $encoder,
         EmailService $emailService
     ) {
-		
-		if ($this->getUser()) {
-			return $this->redirectToRoute('home');
+        
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');
         }
         $organisation = new Organisation();
 

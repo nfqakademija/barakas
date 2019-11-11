@@ -10,11 +10,12 @@
             </div>
             <div class="panel-content">
                 <div class="row">
+                    {% for dormitory in dormitories %}
                     <div class="col-md m-1">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                                <h5 class="card-title">I Bendrabutis</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">P.Višinskio g. 6</h6>
+                                <h5 class="card-title">{{ dormitory.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ dormitory.address }}</h6>
                                 <p class="card-text">Prisijungusių prie sistemos: <b>2</b></p>
                                 <p class="card-text">Aktyvių prašymų: <b>2</b></p>
                                 <p class="card-text">Įvykę prašymai: <b>4</b></p>
@@ -23,32 +24,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md m-1">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">II Bendrabutis</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">P.Višinskio g. 6</h6>
-                                <p class="card-text">Prisijungusių prie sistemos: <b>7</b></p>
-                                <p class="card-text">Aktyvių prašymų: <b>7</b></p>
-                                <p class="card-text">Įvykę prašymai: <b>20</b></p>
-                                <p class="card-text">Viso pranešimų bendrabutyje: <b>15</b></p>
-                                <button type="button" class="btn btn-primary"><i class="fas fa-wrench"></i> Valdyti</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md m-1">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">IV Bendrabutis</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">P.Višinskio g. 6</h6>
-                                <p class="card-text">Prisijungusių prie sistemos: <b>2</b></p>
-                                <p class="card-text">Aktyvių prašymų: <b>1</b></p>
-                                <p class="card-text">Įvykę prašymai: <b>20</b></p>
-                                <p class="card-text">Viso pranešimų bendrabutyje: <b>20</b></p>
-                                <button type="button" class="btn btn-primary"><i class="fas fa-wrench"></i> Valdyti</button>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
                 <br>
                 <a href=organisation/add>
