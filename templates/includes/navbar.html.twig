@@ -1,29 +1,38 @@
 <nav class="navbar navbar-expand-md navbar-dark">
-    <a class="navbar-brand" href="{{ path('home') }}"><i>Kaimyne padėk!</i></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ path('home') }}">Pradinis<span class="sr-only">(current)</span></a>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('home') }}"><i class="fas fa-home"></i> Pradinis<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Kontaktai</a>
+                <a class="nav-link" href="#"><i class="fas fa-question"></i> Apie</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fas fa-scroll"></i> Taisyklės</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fas fa-list"></i> Kontaktai</a>
             </li>
         </ul>
-        {% if app.user %}
         <ul class="navbar-nav mr-4">
+        {% if app.user %}
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ app.user.username }}
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user"></i> {{ app.user.username }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="/organisation">Administravimas</a>
-                    <a class="dropdown-item" href="{{ path('app_logout') }}">Atsijungti</a>
+                    <a class="dropdown-item" href="/organisation"><i class="fas fa-tools"></i> Administravimas</a>
+                    <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Atsijungti</a>
                 </div>
             </li>
-        </ul>
+            {% else %}
+            <li>
+                <a href="/login" class="nav-link text-white"><i class="fas fa-sign-in-alt"></i> Prisijungti</a>
+            </li>
         {% endif %}
+        </ul>
     </div>
 </nav>

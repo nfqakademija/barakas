@@ -18,5 +18,4 @@ class DormitoryRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Dormitory::class);
     }
-
 }
