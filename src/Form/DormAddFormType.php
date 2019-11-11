@@ -21,7 +21,6 @@ class DormAddFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'P. Višinskio 15a'
                 ]
-            ])
-        ;
+            ]);
     }
 }
