@@ -65,7 +65,16 @@ class UserController extends AbstractController
             'dormitories' => $dormitories
         ]);
     }
-
+    /**
+     * @Route("/organisation/invite", name="Invite Students", methods={"POST"})
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return Response
+     */
+    public function generateStudentAccount(EntityManagerInterface $em, Request $request)
+    {
+		return new Response('Labas');
+    }
     /**
      * @Route("/registration", name="organisation-registration")
      * @param Request $request

@@ -53,13 +53,13 @@ class Dormitory
     /**
      * @return mixed
      */
-    public function getOrganisationId(): self
+    public function getOrganisationId(): int
     {
         return $this->organisation_id;
     }
 
     /**
-     * @param mixed $organisation_id
+
      * @return Dormitory
      */
     public function setOrganisationId($organisation_id): self
