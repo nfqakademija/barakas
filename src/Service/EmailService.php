@@ -41,5 +41,4 @@ class EmailService
     {
         return 'Kaimyne padėk!';
     }
-
 }
