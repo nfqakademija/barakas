@@ -73,7 +73,7 @@ class UserController extends AbstractController
         return new Response('Labas');
     }
     /**
-     * @Route("/registration", name="organisation-registration")
+     * @Route("/registration", name="org_registration")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $encoder
