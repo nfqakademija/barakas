@@ -54,10 +54,9 @@ class UserController extends AbstractController
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
-
-        $repository = $this->getDoctrine()->getRepository(Dormitory::class);
-
-        $dormitories = $repository->findAll();
+        $user = $this->getUser();
+        $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
+        $dormitories = $dormitoryRepository->getUserDormitories($user->getId());
 
         return $this->render('organisation/pages/organisation.html.twig', [
             'dormitories' => $dormitories

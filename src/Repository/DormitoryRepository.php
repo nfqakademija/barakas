@@ -30,4 +30,16 @@ class DormitoryRepository extends ServiceEntityRepository
         );
         return $dormitory;
     }
+
+    public function getUserDormitories($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $repo = $entityManager->getRepository(Dormitory::class);
+
+        $dormitories = $repo->findBy(
+            ['organisation_id' => $id]
+        );
+
+        return $dormitories;
+    }
 }
