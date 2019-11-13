@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -35,13 +36,13 @@ class Invite
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $url; 
+    private $url;
     
     /**
      * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @ORM\Column(type="string", length=255)
      */
-    private $email; 
+    private $email;
     
      /**
      * @Assert\NotNull(message="Šis laukelis yra privalomas.")
@@ -52,7 +53,7 @@ class Invite
      /**
      * @ORM\Column(type="integer", length=255)
      */
-    private $dorm; 
+    private $dorm;
     
     public function generateUrl()
     {
@@ -64,7 +65,7 @@ class Invite
         }
 
         return $randomString;
-    }   
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -73,25 +74,25 @@ class Invite
     public function getName(): ?string
     {
         return $this->name;
-    } 
+    }
     public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
-    } 
+    }
      
     public function setDorm(int $dorm): self
     {
         $this->dorm = $dorm;
 
         return $this;
-    } 
+    }
  
     public function getEmail(): ?string
     {
         return $this->email;
-    } 
+    }
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -102,7 +103,7 @@ class Invite
     public function getUrl(): ?string
     {
         return $this->url;
-    } 
+    }
     public function setUrl(string $url): self
     {
         $this->url = $url;
@@ -113,7 +114,7 @@ class Invite
     public function getRoom(): ?string
     {
         return $this->room;
-    } 
+    }
     public function setRoom(string $room): self
     {
         $this->room = $room;
