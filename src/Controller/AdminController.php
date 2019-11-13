@@ -27,6 +27,9 @@ class AdminController extends AbstractController
         $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
         $dormitories = $dormitoryRepository->findAll();
 
+        $invitesRepository = $this->getDoctrine()->getRepository(Invite::class);
+        $invites = $invitesRepository->findAll();
+
         $id = $request->query->get('id');
         $dormitoryInfo = $dormitoryRepository->find($id);
 
@@ -51,12 +54,14 @@ class AdminController extends AbstractController
             $invitation->setDorm($dormitoryInfo->getId());
             $entityManager->persist($invitation);
             $entityManager->flush();
+           // return $this->redirect('/organisation/admin?id={{ dormitory.id }}');
             
         }
         
         return $this->render('admin/index.html.twig', [
             'dormitories' => $dormitories,
             'dormitoryInfo' => $dormitoryInfo,
+            'invites' => $invites,
             'dormitory' => $dormitory,
             'SendInvitationType' => $form->createView()
         ]);

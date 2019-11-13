@@ -20,7 +20,12 @@
                     {{ form_end(SendInvitationType) }}
 				   <br><br>
                    <h6>Išsiųsti pakvietimai studentams</h6>
-                   <div style='height:1px; width:100%; background:#e0e0e0;'></div><br>				   	   
+                   <div style='height:1px; width:100%; background:#e0e0e0;'></div>	
+			   	    {% for invite in invites %}
+
+                        Studentas <b>{{ invite.name}}</b> pakviestas į <b>{{ invite.room}}</b> kambarį <br>
+                                
+                    {% endfor %}
                    <h5>Bendrabučio administratorius: {{ dormitory.owner }}</h5>
 				   <h5>Bendrabučio adresas: {{ dormitoryInfo.address }}</h5>
 				   <h5>Bendrabučio studentai: {{ dormitoryInfo.address }}</h5><br>
