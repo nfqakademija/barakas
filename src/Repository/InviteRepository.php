@@ -18,4 +18,14 @@ class InviteRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Invite::class);
     }
+
+    public function getInvitations($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $repo = $entityManager->getRepository(Invite::class);
+
+        $invites = $repo->findBy(['dorm' => $id]);
+
+        return $invites;
+    }
 }

@@ -29,10 +29,12 @@ class AdminController extends AbstractController
 
         $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
         $invitesRepository = $this->getDoctrine()->getRepository(Invite::class);
+        $studentsRepository = $this->getDoctrine()->getRepository(User::class);
 
         $id = $request->query->get('id');
 
-        $invites = $invitesRepository->findBy(['dorm' => $id]);
+        $invites = $invitesRepository->getInvitations($id);
+        $students = $studentsRepository->getStudents($id);
 
         $dormitoryInfo = $dormitoryRepository->find($id);
 
@@ -67,6 +69,7 @@ class AdminController extends AbstractController
         return $this->render('admin/index.html.twig', [
             'dormitoryInfo' => $dormitoryInfo,
             'invites' => $invites,
+            'students' => $students,
             'dormitory' => $dormitory,
             'SendInvitationType' => $form->createView()
         ]);

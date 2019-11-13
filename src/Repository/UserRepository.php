@@ -18,4 +18,14 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+
+    public function getStudents($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $repo = $entityManager->getRepository(User::class);
+
+        $invites = $repo->findBy(['dorm_id' => $id]);
+
+        return $invites;
+    }
 }

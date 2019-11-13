@@ -28,7 +28,8 @@
 				   <br><br>
                    <h6>Išsiųsti pakvietimai studentams</h6>
                    <div style='height:1px; width:100%; background:#e0e0e0;'></div>
-                <table class="table table-striped">
+                <div class="row">
+                <table class="table table-primary table-striped col-md-6">
                     <tr>
                         <th>Studentas</th>
                         <th>Kambarys</th>
@@ -41,6 +42,19 @@
                     {% endfor %}
                 </table>
 
+                <table class="table table-success table-striped col-md-6">
+                    <tr>
+                        <th>Studentas</th>
+                        <th>Kambarys</th>
+                    </tr>
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ student.owner }}</td>
+                            <td>{{ student.RoomNr }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                </div>
             </div>
         </div>
     </div>
