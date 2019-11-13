@@ -31,7 +31,10 @@
             </li>
             {% else %}
             <li>
-                <a href="/login" class="nav-link text-white"><i class="fas fa-sign-in-alt"></i> Prisijungti</a>
+                <a href="{{ path('org_registration') }}" class="nav-link text-white"><i class="fas fa-user-plus"></i> Registruoti organizaciją</a>
+            </li>
+            <li>
+                <a href="{{ path('app_login') }}" class="nav-link text-white"><i class="fas fa-sign-in-alt"></i> Prisijungti</a>
             </li>
         {% endif %}
         </ul>

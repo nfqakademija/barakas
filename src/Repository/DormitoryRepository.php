@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Dormitory;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -17,5 +18,28 @@ class DormitoryRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Dormitory::class);
+    }
+
+    public function findDormitory($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $repo = $entityManager->getRepository(User::class);
+
+        $dormitory = $repo->findOneBy(
+            ['id' => $id]
+        );
+        return $dormitory;
+    }
+
+    public function getUserDormitories($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $repo = $entityManager->getRepository(Dormitory::class);
+
+        $dormitories = $repo->findBy(
+            ['organisation_id' => $id]
+        );
+
+        return $dormitories;
     }
 }

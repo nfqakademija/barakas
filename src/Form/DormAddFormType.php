@@ -10,13 +10,13 @@ class DormAddFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dname', TextType::class, [
+            ->add('title', TextType::class, [
                 'label' => 'Bendrabučio pavadinimas',
                 'attr' => [
                     'placeholder' => 'II Bendrabutis'
                 ]
             ])
-            ->add('daddr', TextType::class, [
+            ->add('address', TextType::class, [
                 'label' => 'Bendrabučio adresas',
                 'attr' => [
                     'placeholder' => 'P. Višinskio 15a'

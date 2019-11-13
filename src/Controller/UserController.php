@@ -31,15 +31,18 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $form = $this->createForm(DormAddFormType::class);
+
+        $dormitory = new Dormitory();
+
+        $form = $this->createForm(DormAddFormType::class, $dormitory);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $add = new Dormitory();
-            $add->setAddress($data['daddr']);
-            $add->setOrganisationId($user->getId());
-            $add->setTitle($data['dname']);
-            $em->persist($add);
+            $dormitory->setAddress($dormitory->getAddress());
+            $dormitory->setOrganisationId($user->getId());
+            $dormitory->setTitle($dormitory->getTitle());
+
+            $em->persist($dormitory);
             $em->flush();
 
             return $this->redirectToRoute('organisation');
@@ -56,18 +59,26 @@ class UserController extends AbstractController
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
-
-        $repository = $this->getDoctrine()->getRepository(Dormitory::class);
-
-        $dormitories = $repository->findAll();
+        $user = $this->getUser();
+        $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
+        $dormitories = $dormitoryRepository->getUserDormitories($user->getId());
 
         return $this->render('organisation/pages/organisation.html.twig', [
             'dormitories' => $dormitories
         ]);
     }
-
     /**
-     * @Route("/registration", name="organisation-registration")
+     * @Route("/organisation/invite", name="Invite Students", methods={"POST"})
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return Response
+     */
+    public function generateStudentAccount(EntityManagerInterface $em, Request $request)
+    {
+        return new Response('Labas');
+    }
+    /**
+     * @Route("/registration", name="org_registration")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $encoder
@@ -99,7 +110,6 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $organisation->generateRandomPassword();
             $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
@@ -107,7 +117,6 @@ class UserController extends AbstractController
             $organisation->setRoles(array('ROLE_ADMIN'));
             $entityManager->persist($organisation);
             $entityManager->flush();
-
 
             $emailService->sendOrganisationSignupMail($organisation->getEmail(), $plainPassword);
 
