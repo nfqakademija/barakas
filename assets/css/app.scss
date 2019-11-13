@@ -5,11 +5,13 @@ $primary: darken(#428bca, 20%);
 @import "~bootstrap/scss/bootstrap";
 
 body {
-  background: #2e2552;
+  background: #e8e8e8;
+  height: 100%;
+  position: relative;
 }
 
 header {
-  background: #000000;
+  background: white;
   border-bottom: 3px solid rgba(255, 255, 255, 0.5);
   border-top: 3px solid rgba(255, 255, 255, 0.5);
 }
@@ -22,10 +24,8 @@ header {
 
 .container {
   margin-top: 1%;
-}
-
-.navbar {
-  background-color: #2e2552 !important;
+  height: calc(100% - 56px);
+  min-height: 100vh;
 }
 
 .logo {
@@ -34,11 +34,23 @@ header {
   margin-left: 15%;
 }
 
+.index-about-text {
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.index-about-article {
+  width: 65%;
+  text-align: center;
+  margin: 0 auto;
+}
+
 .intro-text {
-  color: white;
   width: 50%;
   margin-top: 36px;
   margin-right: 10%;
+  text-align: center;
 }
 
 .panel {
@@ -53,14 +65,12 @@ header {
 }
 
 .index-panel-bg {
-  background: #6046c7;
+  background: white;
 }
 
 .index-panel-img {
   height: 100px;
-  background: #000000;
   padding: 10px;
-  border-radius: 21px;
 }
 
 label {
@@ -68,7 +78,7 @@ label {
 }
 
 .panel-header p {
-  background: #6046c7;
+  background: #343a40;
   padding: 10px;
   border-radius: 2px;
   color: white;
@@ -81,11 +91,6 @@ label {
 a:hover {
   color: white;
   text-decoration: none !important;
-}
-
-footer {
-  margin-top: 50px;
-  background: #0f182d;
 }
 
 .main-section {
@@ -109,18 +114,20 @@ input {
   border-right: none !important;
 }
 
-.statistic {
-  background: black;
-  border-radius: 5px;
-  padding: 5px;
-}
-
 .nav-link {
   color: white !important;
 }
 
 .nav-link:hover {
   color: grey !important;
+}
+
+footer {
+  padding: 10px;
+  color: white;
+  background-color: #343a40;
+  position: absolute;
+  width: 100%;
 }
 
 @media only screen and (max-width: 767px) {
