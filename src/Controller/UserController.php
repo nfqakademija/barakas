@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
+use App\Entity\Invite;
 use App\Entity\User;
 use App\Entity\Dormitory;
 use App\Form\PasswordChangeType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
+use App\Repository\InviteRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,16 +69,7 @@ class UserController extends AbstractController
             'dormitories' => $dormitories
         ]);
     }
-    /**
-     * @Route("/organisation/invite", name="Invite Students", methods={"POST"})
-     * @param EntityManagerInterface $em
-     * @param Request $request
-     * @return Response
-     */
-    public function generateStudentAccount(EntityManagerInterface $em, Request $request)
-    {
-        return new Response('Labas');
-    }
+
     /**
      * @Route("/registration", name="org_registration")
      * @param Request $request
@@ -170,5 +163,29 @@ class UserController extends AbstractController
         return $this->render('user/passwordChange.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/register/invite", name="invite")
+     * @param Request $request
+     * @return Response
+     */
+    public function generateStudentAccount(Request $request)
+    {
+        $invitation = $this
+            ->getDoctrine()
+            ->getRepository(Invite::class)
+            ->findOneBy(array('url' => $request->get('invite')));
+
+        if (!$invitation) {
+            return $this->redirectToRoute('home');
+        }
+
+
+            //$invitation->getName();
+           // $invitation->getId();
+            //$invitation->getRoom();
+
+        return new Response($invitation->getName());
     }
 }

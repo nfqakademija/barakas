@@ -6,6 +6,7 @@ use App\Entity\Dormitory;
 use App\Entity\User;
 use App\Entity\Invite;
 use App\Form\SendInvitationType;
+use App\Repository\UserRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,8 +26,7 @@ class AdminController extends AbstractController
      */
     public function index(Request $request, EntityManagerInterface $entityManager, EmailService $emailService)
     {
-        
-        
+
         $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
         $dormitories = $dormitoryRepository->findAll();
 
@@ -46,10 +46,10 @@ class AdminController extends AbstractController
         
         $invitation = new Invite();
         $form = $this->createForm(SendInvitationType::class, $invitation);
-        
+        $repository = $this->getDoctrine()->getRepository(User::class);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
             $url = $invitation->generateUrl();
             $invitation->setName($invitation->getName());
             $invitation->setEmail($invitation->getEmail());
@@ -59,7 +59,6 @@ class AdminController extends AbstractController
             $entityManager->persist($invitation);
             $entityManager->flush();
             $emailService->sendInviteMail($invitation->getEmail(), $url, $invitation->getName());
-           // return $this->redirect('/organisation/admin?id={{ dormitory.id }}');
         }
         
         return $this->render('admin/index.html.twig', [
