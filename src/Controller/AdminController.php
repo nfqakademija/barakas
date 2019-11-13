@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Dormitory;
 use App\Entity\User;
+use App\Form\SendInvitationType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,8 @@ class AdminController extends AbstractController
      */
     public function index(Request $request)
     {
+        
+        
         $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
         $dormitories = $dormitoryRepository->findAll();
 
@@ -32,11 +35,18 @@ class AdminController extends AbstractController
         if (!$dormitory) {
             return $this->redirectToRoute('home');
         }
-
+        $form = $this->createForm(SendInvitationType::class);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            dump($data);
+        }
         return $this->render('admin/index.html.twig', [
             'dormitories' => $dormitories,
             'dormitoryInfo' => $dormitoryInfo,
-            'dormitory' => $dormitory
+            'dormitory' => $dormitory,
+            'SendInvitationType' => $form->createView()
         ]);
     }
 }

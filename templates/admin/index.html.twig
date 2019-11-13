@@ -12,14 +12,13 @@
                
                    <h5>Bendrabučio administratorius: {{ dormitory.owner }}</h5>
 				   <h5>Bendrabučio adresas: {{ dormitoryInfo.address }}</h5>
-				   <h5>Bendrabučio studentai: {{ dormitoryInfo.address }}</h5>
-				   <div style='height:1px; width:100%; background:#e0e0e0;'></div><br>
-				   <h6>Įveskite studentų el paštus. Galima naudoti kelis vienu metu. Po kiekvieno el pašto nepamirškite padėti kabliataškio.</h6>
-				   <form action='/organisation/invite' method='POST'>
-				   <input required placeholder="El pašto adresas" type="text" name="studentmail">
-                   <br><br>
-                   <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-wrench"></i> Pridėti studentus</button>
-				   </form>
+				   <h5>Bendrabučio studentai: {{ dormitoryInfo.address }}</h5><br>
+				   <div style='height:1px; width:100%; background:#e0e0e0;'></div>
+				   <h6>Studento pridėjimas į bendrabutį</h6>
+                    {{ form_start(SendInvitationType) }}
+                    {{ form_widget(SendInvitationType) }}
+                    <button type="submit" class="btn btn-primary">Pridėti siuntimui</button>
+                    {{ form_end(SendInvitationType) }}
 				   	   
 
             </div>
