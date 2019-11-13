@@ -10,17 +10,20 @@
             </div>
             <div class="panel-content">
                
+
+				   <h6>Studento pridėjimas į bendrabutį</h6>
+                   <div style='height:1px; width:100%; background:#e0e0e0;'></div><br>
+				   
+                    {{ form_start(SendInvitationType) }}
+                    {{ form_widget(SendInvitationType) }}
+                    <button type="submit" class="btn-sm btn-primary">Siųsti pakvietimo nuorodą</button>
+                    {{ form_end(SendInvitationType) }}
+				   <br><br>
+                   <h6>Išsiųsti pakvietimai studentams</h6>
+                   <div style='height:1px; width:100%; background:#e0e0e0;'></div><br>				   	   
                    <h5>Bendrabučio administratorius: {{ dormitory.owner }}</h5>
 				   <h5>Bendrabučio adresas: {{ dormitoryInfo.address }}</h5>
 				   <h5>Bendrabučio studentai: {{ dormitoryInfo.address }}</h5><br>
-				   <div style='height:1px; width:100%; background:#e0e0e0;'></div>
-				   <h6>Studento pridėjimas į bendrabutį</h6>
-                    {{ form_start(SendInvitationType) }}
-                    {{ form_widget(SendInvitationType) }}
-                    <button type="submit" class="btn btn-primary">Pridėti siuntimui</button>
-                    {{ form_end(SendInvitationType) }}
-				   	   
-
             </div>
         </div>
     </div>

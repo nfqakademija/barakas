@@ -19,7 +19,7 @@ class SendInvitationType extends AbstractType
                     'autocomplete' => 'off'
                 ]
             ])
-            ->add('mail', EmailType::class, [
+            ->add('email', EmailType::class, [
                 'label' => false,
                 'attr' => [
                     'style' => 'width:40%;',
