@@ -6,7 +6,7 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
         <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
 
-        <title>{% block title %}Studentų prašymų bei skolinimosi platforma - Kaimynė padėk!{% endblock %}</title>
+        <title>{% block title %}Studentų prašymų bei skolinimosi aplikacija - Kaimynė padėk!{% endblock %}</title>
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -17,8 +17,8 @@
         <div class="header-content">
         <img src="/logo.png" class="img-fluid logo">
         <hr>
-        <p class="intro-text">
-            Tai prašymų ir skolinimosi platforma, kuri skirta lietuvos aukštųjų  mokyklų bendrabučiams bei jų studentams palengvinti komunikaciją tarp kaimynų.
+        <p class="text-black-50 intro-text">
+            Tai prašymų ir skolinimosi aplikacija, kuri skirta lietuvos aukštųjų  mokyklų bendrabučiams bei jų studentams palengvinti komunikaciją tarp kaimynų.
         </p>
         </div>
     </header>
@@ -26,6 +26,7 @@
         {% block body %}      
         {% endblock %}
     </div>
+    {% include "includes/footer.html.twig" %}
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
