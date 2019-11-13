@@ -9,6 +9,9 @@
                 <p>Bendrabučiai</p>
             </div>
             <div class="panel-content">
+                {% if dormitories is empty %}
+                    <p>Kol kas jūsų organizacija neturi bendrabučių.</p>
+                {% endif %}
                 <div class="row">
                     {% for dormitory in dormitories %}
                     <div class="col-md m-1">

@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/organisation/admin", name="Admin panel")
+     * @Route("/organisation/admin", name="admin_panel")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param EmailService $emailService
@@ -28,12 +28,12 @@ class AdminController extends AbstractController
     {
 
         $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
-        $dormitories = $dormitoryRepository->findAll();
-
         $invitesRepository = $this->getDoctrine()->getRepository(Invite::class);
-        $invites = $invitesRepository->findAll();
 
         $id = $request->query->get('id');
+
+        $invites = $invitesRepository->findBy(['dorm' => $id]);
+
         $dormitoryInfo = $dormitoryRepository->find($id);
 
         $organisationID = $dormitoryInfo->getOrganisationId();
@@ -46,7 +46,6 @@ class AdminController extends AbstractController
         
         $invitation = new Invite();
         $form = $this->createForm(SendInvitationType::class, $invitation);
-        $repository = $this->getDoctrine()->getRepository(User::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -59,10 +58,13 @@ class AdminController extends AbstractController
             $entityManager->persist($invitation);
             $entityManager->flush();
             $emailService->sendInviteMail($invitation->getEmail(), $url, $invitation->getName());
+
+            $this->addFlash('success', 'Pakvietimas stundentui sėkmingai išsiųstas.');
+
+            return $this->redirectToRoute('admin_panel', ['id' => $id]);
         }
         
         return $this->render('admin/index.html.twig', [
-            'dormitories' => $dormitories,
             'dormitoryInfo' => $dormitoryInfo,
             'invites' => $invites,
             'dormitory' => $dormitory,

@@ -11,18 +11,23 @@
                 <a class="nav-link" href="#"><i class="fas fa-scroll"></i> Taisyklės</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-list"></i> Kontaktai</a>
+                <a class="nav-link" href="{{ path('contacts') }}"><i class="fas fa-list"></i> Kontaktai</a>
             </li>
         </ul>
         <ul class="navbar-nav mr-4">
         {% if app.user %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('dormitory') }}"><i class="fas fa-hotel"></i> Bendrabutis</a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-user"></i> {{ app.user.username }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="/organisation"><i class="fas fa-tools"></i> Administravimas</a>
-                    <a class="dropdown-item" href="/user/changepassword"><i class="fas fa-tools"></i> Pakeisti slaptažodį</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <a class="dropdown-item" href="{{ path('organisation') }}"><i class="fas fa-tools"></i> Administravimas</a>
+                    {% endif %}
+                    <a class="dropdown-item" href="{{ path('passwordChange') }}"><i class="fas fa-lock"></i> Pakeisti slaptažodį</a>
                     <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Atsijungti</a>
                 </div>
             </li>

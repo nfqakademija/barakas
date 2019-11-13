@@ -8,9 +8,9 @@ use App\Entity\Invite;
 use App\Entity\User;
 use App\Entity\Dormitory;
 use App\Form\PasswordChangeType;
+use App\Form\StudentRegisterType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
-use App\Repository\InviteRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,9 +58,6 @@ class UserController extends AbstractController
      */
     public function index()
     {
-        if (!$this->getUser()) {
-            return $this->redirectToRoute('app_login');
-        }
         $user = $this->getUser();
         $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
         $dormitories = $dormitoryRepository->getUserDormitories($user->getId());
@@ -155,8 +152,6 @@ class UserController extends AbstractController
                     'success',
                     'Slaptažodis pakeistas!'
                 );
-            } else {
-                $form->addError(new FormError('Slaptažodis netinka'));
             }
         }
 
@@ -168,24 +163,58 @@ class UserController extends AbstractController
     /**
      * @Route("/register/invite", name="invite")
      * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function generateStudentAccount(Request $request)
-    {
+    public function generateStudentAccount(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        EntityManagerInterface $entityManager
+    ) {
         $invitation = $this
             ->getDoctrine()
             ->getRepository(Invite::class)
             ->findOneBy(array('url' => $request->get('invite')));
 
-        if (!$invitation) {
+        if (!$invitation || $this->getUser()) {
             return $this->redirectToRoute('home');
         }
 
+        $student = new User();
 
-            //$invitation->getName();
-           // $invitation->getId();
-            //$invitation->getRoom();
+        $form = $this->createForm(StudentRegisterType::class, $student, [
+            'owner' => $invitation->getName(),
+            'email' => $invitation->getEmail()
+        ]);
 
-        return new Response($invitation->getName());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $student->getPassword();
+            $encodedPassword = $encoder->encodePassword($student, $plainPassword);
+            $student->setOwner($invitation->getName());
+            $student->setEmail($invitation->getEmail());
+            $student->setPassword($encodedPassword);
+            $student->setDormId($invitation->getDorm());
+            $student->setRoomNr($invitation->getRoom());
+            $student->setRoles(array('ROLE_USER'));
+            $entityManager->persist($student);
+            $entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                'Sveikiname sėkmingai užsiregistravus! Dabar galite prisijungti.'
+            );
+
+            $entityManager->remove($invitation);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('user/register.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }

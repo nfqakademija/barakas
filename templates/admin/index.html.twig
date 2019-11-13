@@ -9,7 +9,11 @@
                 <p>{{ dormitoryInfo.title }} bendrabučio valdymas</p>
             </div>
             <div class="panel-content">
-
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
                 <h5>Bendrabučio administratorius: {{ dormitory.owner }}</h5>
                 <h5>Bendrabučio adresas: {{ dormitoryInfo.address }}</h5>
                 <h5>Bendrabučio studentai: {{ dormitoryInfo.address }}</h5><br>

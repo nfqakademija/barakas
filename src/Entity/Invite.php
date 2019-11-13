@@ -81,7 +81,12 @@ class Invite
 
         return $this;
     }
-     
+
+    public function getDorm(): ?int
+    {
+        return $this->dorm;
+    }
+
     public function setDorm(int $dorm): self
     {
         $this->dorm = $dorm;
@@ -121,4 +126,5 @@ class Invite
 
         return $this;
     }
+
 }

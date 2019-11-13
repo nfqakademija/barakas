@@ -4,6 +4,12 @@
 
 {% block body %}
 
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success">
+			{{ message }}
+		</div>
+	{% endfor %}
+
 <div class="row main-section">
 		<div class="card text-black-50 index-panel index-panel-bg mb-3 col-md-3">
 			<div class="card-body text-center">
