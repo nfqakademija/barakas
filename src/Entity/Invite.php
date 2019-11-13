@@ -126,5 +126,4 @@ class Invite
 
         return $this;
     }
-
 }
