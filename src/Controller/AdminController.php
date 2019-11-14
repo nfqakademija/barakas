@@ -6,7 +6,6 @@ use App\Entity\Dormitory;
 use App\Entity\User;
 use App\Entity\Invite;
 use App\Form\SendInvitationType;
-use App\Repository\UserRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

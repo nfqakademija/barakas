@@ -12,6 +12,10 @@ class HomeController extends AbstractController
      */
     public function index()
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('dormitory');
+        }
+
         return $this->render('home/index.html.twig');
     }
 
