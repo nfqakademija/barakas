@@ -19,32 +19,13 @@ class InviteRepository extends ServiceEntityRepository
         parent::__construct($registry, Invite::class);
     }
 
-    // /**
-    //  * @return Invite[] Returns an array of Invite objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getInvitations($id)
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $entityManager = $this->getEntityManager();
+        $repo = $entityManager->getRepository(Invite::class);
 
-    /*
-    public function findOneBySomeField($value): ?Invite
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $invites = $repo->findBy(['dorm' => $id]);
+
+        return $invites;
     }
-    */
 }

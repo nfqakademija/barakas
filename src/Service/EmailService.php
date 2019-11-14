@@ -37,6 +37,27 @@ class EmailService
         return $this->mailer->send($email);
     }
 
+    public function sendInviteMail(
+        string $email,
+        string $link,
+        string $name
+    ) {
+
+        $serverEmail = $this->serverEmail;
+
+        $email = (new TemplatedEmail())
+            ->from(new NamedAddress($serverEmail, $this->getName()))
+            ->to($email)
+            ->subject('Jūs pakviestas į sistemą Kaimyne padėk!')
+            ->htmlTemplate('email/invite.html.twig')
+            ->context([
+                'name' => $name,
+                'link' => $link
+            ]);
+
+        return $this->mailer->send($email);
+    }
+
     private function getName()
     {
         return 'Kaimyne padėk!';

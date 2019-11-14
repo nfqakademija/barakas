@@ -7,7 +7,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DormitoryRepository")
- * @UniqueEntity("address")
+ * @UniqueEntity("address", message="Šis adresas jau naudojamas.")
  */
 class Dormitory
 {

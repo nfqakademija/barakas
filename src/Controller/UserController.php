@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
+use App\Entity\Invite;
 use App\Entity\User;
 use App\Entity\Dormitory;
 use App\Form\PasswordChangeType;
+use App\Form\StudentRegisterType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
 use App\Service\EmailService;
@@ -56,9 +58,6 @@ class UserController extends AbstractController
      */
     public function index()
     {
-        if (!$this->getUser()) {
-            return $this->redirectToRoute('app_login');
-        }
         $user = $this->getUser();
         $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
         $dormitories = $dormitoryRepository->getUserDormitories($user->getId());
@@ -67,16 +66,7 @@ class UserController extends AbstractController
             'dormitories' => $dormitories
         ]);
     }
-    /**
-     * @Route("/organisation/invite", name="Invite Students", methods={"POST"})
-     * @param EntityManagerInterface $em
-     * @param Request $request
-     * @return Response
-     */
-    public function generateStudentAccount(EntityManagerInterface $em, Request $request)
-    {
-        return new Response('Labas');
-    }
+
     /**
      * @Route("/registration", name="org_registration")
      * @param Request $request
@@ -162,13 +152,69 @@ class UserController extends AbstractController
                     'success',
                     'Slaptažodis pakeistas!'
                 );
-            } else {
-                $form->addError(new FormError('Slaptažodis netinka'));
             }
         }
 
         return $this->render('user/passwordChange.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/register/invite", name="invite")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function generateStudentAccount(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        EntityManagerInterface $entityManager
+    ) {
+        $invitation = $this
+            ->getDoctrine()
+            ->getRepository(Invite::class)
+            ->findOneBy(array('url' => $request->get('invite')));
+
+        if (!$invitation || $this->getUser()) {
+            return $this->redirectToRoute('home');
+        }
+
+        $student = new User();
+
+        $form = $this->createForm(StudentRegisterType::class, $student, [
+            'owner' => $invitation->getName(),
+            'email' => $invitation->getEmail()
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $student->getPassword();
+            $encodedPassword = $encoder->encodePassword($student, $plainPassword);
+            $student->setOwner($invitation->getName());
+            $student->setEmail($invitation->getEmail());
+            $student->setPassword($encodedPassword);
+            $student->setDormId($invitation->getDorm());
+            $student->setRoomNr($invitation->getRoom());
+            $student->setRoles(array('ROLE_USER'));
+            $entityManager->persist($student);
+            $entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                'Sveikiname sėkmingai užsiregistravus! Dabar galite prisijungti.'
+            );
+
+            $entityManager->remove($invitation);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('user/register.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 }

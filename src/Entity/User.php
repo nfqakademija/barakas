@@ -58,6 +58,16 @@ class User implements UserInterface
      */
     private $roles = [];
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $dorm_id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $room_nr;
+
 
     public function getId(): ?int
     {
@@ -194,6 +204,30 @@ class User implements UserInterface
     public function setAcademy(?Academy $academy): self
     {
         $this->academy = $academy;
+
+        return $this;
+    }
+
+    public function getDormId(): ?int
+    {
+        return $this->dorm_id;
+    }
+
+    public function setDormId(?int $dorm_id): self
+    {
+        $this->dorm_id = $dorm_id;
+
+        return $this;
+    }
+
+    public function getRoomNr(): ?string
+    {
+        return $this->room_nr;
+    }
+
+    public function setRoomNr(?string $room_nr): self
+    {
+        $this->room_nr = $room_nr;
 
         return $this;
     }
