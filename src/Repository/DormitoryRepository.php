@@ -21,7 +21,7 @@ class DormitoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Dormitory::class);
     }
 
-    public function findDormitory($id)
+    public function findOrganisationDormitory($id)
     {
         $entityManager = $this->getEntityManager();
         $repo = $entityManager->getRepository(User::class);
@@ -42,5 +42,26 @@ class DormitoryRepository extends ServiceEntityRepository
         );
 
         return $dormitories;
+    }
+
+    public function getLoggedInUserDormitory($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $dormitoryRepo = $entityManager->getRepository(Dormitory::class);
+
+        $dormitory = $dormitoryRepo->find($id);
+        return $dormitory;
+    }
+
+    public function getStudentsInDormitory($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $studentsRepo = $entityManager->getRepository(User::class);
+
+        $students = $studentsRepo->findBy(
+            ['dorm_id' => $id]
+        );
+
+        return $students;
     }
 }

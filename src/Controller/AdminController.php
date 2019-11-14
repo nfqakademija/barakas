@@ -39,7 +39,7 @@ class AdminController extends AbstractController
 
         $organisationID = $dormitoryInfo->getOrganisationId();
 
-        $dormitory = $dormitoryRepository->findDormitory($organisationID);
+        $dormitory = $dormitoryRepository->findOrganisationDormitory($organisationID);
 
         if (!$dormitory) {
             return $this->redirectToRoute('home');
