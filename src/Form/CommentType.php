@@ -1,34 +1,37 @@
 <?php
+
 namespace App\Form;
 
+use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DormAddFormType extends AbstractType
+class CommentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', TextType::class, [
-                'label' => 'Bendrabučio pavadinimas',
+            ->add('content', TextType::class, [
                 'attr' => [
-                    'placeholder' => 'II Bendrabutis'
+                    'placeholder' => 'Pranešimas, kurį gaus prašymo autorius. '
                 ]
             ])
-            ->add('address', TextType::class, [
-                'label' => 'Bendrabučio adresas',
+            ->add('save', SubmitType::class, [
+                'label' => 'Siųsti pranešimą',
                 'attr' => [
-                    'placeholder' => 'P. Višinskio 15a'
+                    'class' => 'btn btn-success'
                 ]
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            // Configure your form options here
+            'data_class' => Comment::class,
         ]);
     }
 }

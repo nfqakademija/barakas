@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Dormitory;
 use App\Entity\Invite;
+use App\Entity\Message;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -63,5 +64,18 @@ class DormitoryRepository extends ServiceEntityRepository
         );
 
         return $students;
+    }
+
+    public function getDormitoryMessages($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $messagesRepo = $entityManager->getRepository(Message::class);
+
+        $messages = $messagesRepo->findBy(
+            ['dorm_id' => $id],
+            ['created_at' => 'DESC']
+        );
+
+        return $messages;
     }
 }
