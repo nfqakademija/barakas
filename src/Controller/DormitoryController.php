@@ -26,8 +26,10 @@ class DormitoryController extends AbstractController
      * @return Response
      * @throws Exception
      */
-    public function index(Request $request, EntityManagerInterface $entityManager)
-    {
+    public function index(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ) {
         $user = $this->getUser();
 
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
@@ -37,12 +39,9 @@ class DormitoryController extends AbstractController
         $messages = $dormitoryRepo->getDormitoryMessages($user->getDormId());
 
         $message = new Message();
-        $comment = new Comment();
         $formRequest = $this->createForm(MessageType::class, $message);
-        //$formComment = $this->createForm(CommentType::class, $comment);
 
         $formRequest->handleRequest($request);
-        //$formComment->handleRequest($request);
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
             $message->setUser($user->getOwner());
@@ -65,15 +64,6 @@ class DormitoryController extends AbstractController
             'students' => $students,
             'messages' => $messages,
             'formRequest' => $formRequest->createView(),
-            //'formComment' => $formComment->createView()
         ]);
-    }
-
-    /**
-     * @Route("/new-message")
-     */
-    public function newMessage()
-    {
-        return new JsonResponse(array('name' => 'Raimondas'));
     }
 }
