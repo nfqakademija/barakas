@@ -15,7 +15,6 @@ use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -171,6 +170,7 @@ class UserController extends AbstractController
      * @param UserPasswordEncoderInterface $encoder
      * @param EntityManagerInterface $entityManager
      * @return Response
+     * @throws Exception
      */
     public function generateStudentAccount(
         Request $request,
@@ -204,6 +204,7 @@ class UserController extends AbstractController
             $student->setDormId($invitation->getDorm());
             $student->setRoomNr($invitation->getRoom());
             $student->setRoles(array('ROLE_USER'));
+            $student->setCreatedAt(new \DateTime());
             $entityManager->persist($student);
             $entityManager->flush();
 

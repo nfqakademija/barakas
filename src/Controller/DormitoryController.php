@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Dormitory;
 use App\Entity\Message;
+use App\Entity\Notification;
 use App\Entity\StatusType;
 use App\Form\CommentType;
 use App\Form\MessageType;
@@ -53,6 +54,19 @@ class DormitoryController extends AbstractController
 
             $entityManager->persist($message);
             $entityManager->flush();
+
+
+            foreach ($students as $student) {
+                $notification = new Notification();
+                $notification->setUser($message->getUser());
+                $notification->setCreatedAt(new \DateTime());
+                $notification->setRoomNr($message->getRoomNr());
+                $notification->setDormId($message->getDormId());
+                $notification->setContent($message->getContent());
+                $notification->setRecipientId($student->getId());
+                $entityManager->persist($notification);
+                $entityManager->flush();
+            }
 
             $this->addFlash('success', 'Prašymas išsiųstas sėkmingai!');
             return $this->redirectToRoute('dormitory');
