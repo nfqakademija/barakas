@@ -147,6 +147,7 @@ input {
   padding: 7px;
   color: white;
   border-radius: 5px;
+  border: none;
 }
 
 .help-button > img {
@@ -159,10 +160,19 @@ input {
   padding: 7px;
   color: white;
   border-radius: 5px;
+  border: none;
 }
 
 .report-button > img {
   height: 20px
+}
+
+.help-button > span  {
+  vertical-align: middle
+}
+
+.report-button > span  {
+  vertical-align: middle
 }
 
 .notification-url {

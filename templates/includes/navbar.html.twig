@@ -20,7 +20,7 @@
                 {% if notifications %}
                 <a class="badge1 nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown"  data-badge="{{ notifications|length }}"><i class="fas fa-bell"></i> Pranešimai</a>
                 {% else %}
-                <a class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown"><i class="fas fa-bell"></i> Pranešimai</a>
+                <a class="badge1 nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown"><i class="fas fa-bell"></i> Pranešimai</a>
                 {% endif %}
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width: 25em">
                     {% if notifications %}
@@ -42,7 +42,7 @@
                             {% endfor %}
                         </ul>
                     {% else %}
-                    <span class="dropdown-item">Šiuo metu naujų pranešimų nėra.</span>
+                    <small style="padding: 5px">Šiuo metu naujų pranešimų nėra.</small>
                     {% endif %}
                 </div>
             </li>

@@ -14,17 +14,23 @@
             <div style="width: 82%">{{ message.content }}</div>
             <br>
             <small>
-                <span class="help-button">
-                    <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg"> Padėti
-                </span>
+                <button class="help-button">
+                    <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
+                    <span>Padėti</span>
+                </button>
             </small>
             &nbsp;
             <small>
-                <span class="report-button">
-                    <img src="https://image.flaticon.com/icons/svg/196/196777.svg"> Pranešti
-                </span>
+                <button class="report-button">
+                    <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
+                    <span>Pranešti</span>
+                </button>
             </small>
             <hr>
         </li>
+
+        <form action="#" id="{{ message.id }}" style="visibility: hidden">
+            <input type="text" name="comment" id="{{ message.id }}">
+        </form>
     {% endfor %}
 </ul>
