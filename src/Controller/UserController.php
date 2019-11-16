@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Academy;
 use App\Entity\AcademyType;
 use App\Entity\Invite;
+use App\Entity\Notification;
 use App\Entity\User;
 use App\Entity\Dormitory;
 use App\Form\PasswordChangeType;
@@ -15,6 +16,7 @@ use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -222,5 +224,24 @@ class UserController extends AbstractController
         return $this->render('user/register.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("clear-notifications", name="clear_notifications")
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function clearNotifications(EntityManagerInterface $entityManager)
+    {
+        $user = $this->getUser();
+        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+
+        foreach ($notifications as $notification) {
+            $entityManager->remove($notification);
+        }
+
+        $entityManager->flush();
+        return $this->redirectToRoute('dormitory');
     }
 }

@@ -15,6 +15,37 @@
             </li>
         </ul>
         <ul class="navbar-nav mr-4">
+            {% if app.user %}
+            <li class="nav-item dropdown">
+                {% if notifications %}
+                <span class="badge1 nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown"  data-badge="{{ notifications|length }}"><i class="fas fa-bell"></i></span>
+                {% else %}
+                <span class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown"><i class="fas fa-bell"></i></span>
+                {% endif %}
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="margin-left: -4em; width: 25em">
+                    {% if notifications %}
+                        <ul class="list-unstyled dropdown-item">
+                            <a href="{{ path('clear_notifications') }}" class="btn btn-sm btn-dark float-right">Perskaityta</a>
+                           <br>
+                            {% for notification in notifications %}
+                                <li>
+                                    <small>
+                                        {{ notification.user }} | Kambarys: <strong>{{ notification.roomNr }}</strong> <br>
+                                        <strong>Prašymas:</strong> {{ notification.content|length > 50 ? notification.content|slice(0, 50) ~ '...' : notification.content  }}
+                                        <br>
+                                        <i>{{ notification.createdAt|date('Y-m-d h:m:s') }}</i>
+                                    </small>
+                                    <hr>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                    <span class="dropdown-item">Šiuo metu naujų pranešimų nėra.</span>
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+
         {% if app.user %}
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('dormitory') }}"><i class="fas fa-hotel"></i> Bendrabutis</a>
