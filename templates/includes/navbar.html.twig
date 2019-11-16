@@ -17,16 +17,24 @@
         <ul class="navbar-nav mr-4">
             {% if app.user and not is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('provided_help') }}"><i class="fas fa-hotel"></i> Pagalbos pranešimai
-                    <span class="badge badge-danger">{{ helpMessages|length }}</span></a>
+                <a class="nav-link" href="{{ path('provided_help') }}"><i class="fas fa-hands-helping"></i> Pagalbos pranešimai
+                    {% if helpMessages %}
+                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ helpMessages|length }}</span>
+                    {% else %}
+                    {% endif %}
+                </a>
             </li>
 
             <li class="nav-item dropdown">
-                {% if notifications %}
-                <a style="cursor: pointer" class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown"><i class="fas fa-bell"></i> Bendrabučio pranešimai <span class="badge badge-danger">{{ notifications|length }}</span></a>
+
+                <a style="cursor: pointer" class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown">
+                    <i class="fas fa-bell"></i> Bendrabučio pranešimai
+                 {% if notifications %}
+                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ notifications|length }}</span>
                 {% else %}
-                <a class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown"><i class="fas fa-bell"></i> Bendrabučio pranešimai</a>
+
                 {% endif %}
+                </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width: 25em">
                     {% if notifications %}
                         <ul class="list-unstyled dropdown-item">
