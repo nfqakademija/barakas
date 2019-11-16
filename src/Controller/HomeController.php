@@ -14,7 +14,16 @@ class HomeController extends AbstractController
      */
     public function index()
     {
-        return $this->render('home/index.html.twig');
+        $notifications = [];
+        if ($user = $this->getUser()) {
+            $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+            $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+        }
+        $this->getUser();
+
+        return $this->render('home/index.html.twig', [
+            'notifications' => $notifications,
+        ]);
     }
 
     /**
@@ -22,7 +31,16 @@ class HomeController extends AbstractController
      */
     public function contacts()
     {
-        return $this->render('home/contacts.html.twig');
+        $notifications = [];
+        if ($user = $this->getUser()) {
+            $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+            $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+        }
+        $this->getUser();
+
+        return $this->render('home/contacts.html.twig', [
+            'notifications' => $notifications,
+        ]);
     }
 
     private function getNotifications()

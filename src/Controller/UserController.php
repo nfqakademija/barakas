@@ -160,9 +160,12 @@ class UserController extends AbstractController
                 );
             }
         }
+        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
 
         return $this->render('user/passwordChange.html.twig', [
             'form' => $form->createView(),
+            'notifications' => $notifications,
         ]);
     }
 
