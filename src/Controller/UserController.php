@@ -13,8 +13,8 @@ use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,6 +28,7 @@ class UserController extends AbstractController
      * @param EntityManagerInterface $em
      * @param Request $request
      * @return Response
+     * @throws Exception
      */
     public function addDormitory(EntityManagerInterface $em, Request $request)
     {
@@ -43,6 +44,7 @@ class UserController extends AbstractController
             $dormitory->setAddress($dormitory->getAddress());
             $dormitory->setOrganisationId($user->getId());
             $dormitory->setTitle($dormitory->getTitle());
+            $dormitory->setCreatedAt(new \DateTime());
 
             $em->persist($dormitory);
             $em->flush();
@@ -74,6 +76,7 @@ class UserController extends AbstractController
      * @param UserPasswordEncoderInterface $encoder
      * @param EmailService $emailService
      * @return Response
+     * @throws Exception
      */
     public function register(
         Request $request,
@@ -105,6 +108,7 @@ class UserController extends AbstractController
             $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
             $organisation->setPassword($encodedPassword);
             $organisation->setRoles(array('ROLE_ADMIN'));
+            $organisation->setCreatedAt(new \DateTime());
             $entityManager->persist($organisation);
             $entityManager->flush();
 
@@ -166,6 +170,7 @@ class UserController extends AbstractController
      * @param UserPasswordEncoderInterface $encoder
      * @param EntityManagerInterface $entityManager
      * @return Response
+     * @throws Exception
      */
     public function generateStudentAccount(
         Request $request,
@@ -199,6 +204,7 @@ class UserController extends AbstractController
             $student->setDormId($invitation->getDorm());
             $student->setRoomNr($invitation->getRoom());
             $student->setRoles(array('ROLE_USER'));
+            $student->setCreatedAt(new \DateTime());
             $entityManager->persist($student);
             $entityManager->flush();
 

@@ -39,7 +39,7 @@ class AdminController extends AbstractController
 
         $organisationID = $dormitoryInfo->getOrganisationId();
 
-        $dormitory = $dormitoryRepository->findDormitory($organisationID);
+        $dormitory = $dormitoryRepository->findOrganisationDormitory($organisationID);
 
         if (!$dormitory) {
             return $this->redirectToRoute('home');
@@ -60,7 +60,7 @@ class AdminController extends AbstractController
             $entityManager->flush();
             $emailService->sendInviteMail($invitation->getEmail(), $url, $invitation->getName());
 
-            $this->addFlash('success', 'Pakvietimas stundentui sėkmingai išsiųstas.');
+            $this->addFlash('success', 'Pakvietimas studentui sėkmingai išsiųstas.');
 
             return $this->redirectToRoute('admin_panel', ['id' => $id]);
         }
