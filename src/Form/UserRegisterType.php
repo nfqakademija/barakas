@@ -39,12 +39,6 @@ class UserRegisterType extends AbstractType
                     'Kolegijos' => $options['colleges']
                 ]
             ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Registruoti organizaciją',
-                'attr' => [
-                    'class' => 'btn btn-success'
-                ]
-            ])
         ;
     }
 

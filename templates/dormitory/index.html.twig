@@ -15,54 +15,58 @@
                 <i class="fas fa-pencil-alt"></i> Rašyti prašymą</button>
         </li>
     </ul>
-
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">
-            {{ message }}
-        </div>
-    {% endfor %}
-
-
-    <div class="col-md-6 mx-auto" id="requestForm">
-    <div id="requestForm" class="panel">
-            <div class="panel-header">
-                <p>Pateikti prašymą</p>
-            </div>
-            <div class="panel-content">
-                {{ form_start(formRequest, {'attr': {'id': 'postRequestForm'}}) }}
-                {{ form(formRequest) }}
-                {{ form_end(formRequest) }}
-            </div>
-    </div>
-        <br>
-    </div>
-
     <div class="row">
         <div class="col-md-8">
             <div class="panel">
                 <div class="panel-header">
                     <p>Prašymai</p>
                 </div>
+
+                {{ notifications|length }}
+
                 <div class="panel-content">
-        <ul class="list-unstyled">
-            {% for message in messages %}
-            <li style="font-size: 14px">
-                {% if(message.status == 0) %}
-                    <span style="vertical-align: text-bottom" class="badge badge-success">Naujas</span>
-                {% endif %}
-                Gyventojas {{ message.user }} iš {{ message.roomNr }}
-                kambario prašo: <strong>{{ message.content }}</strong>
-                <br>
-                <div style="margin-left: 7.3%">
-                    <small><span style="cursor: pointer">Padėti</span></small>
-                    &nbsp;
-                <small>Pranešti</small>
-                <small class="float-right"><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
-                </div>
-                <br>
-            </li>
-            {% endfor %}
-        </ul>
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    <div class="col-md-12" id="requestForm">
+                        {{ form_start(formRequest, {'attr': {'id': 'postRequestForm'}}) }}
+                        {{ form_widget(formRequest) }}
+                        <div style="display: flex; justify-content: space-between">
+                            <button type="submit" class="btn btn-success"><i class="far fa-paper-plane"></i> Siųsti</button>
+                            <span id="closeRequestFormBtn" style="cursor:pointer;" class="btn btn-danger"><i class="fas fa-times"></i> Uždaryti</span>
+                        </div>
+                        {{ form_end(formRequest) }}
+                        <br>
+                    </div>
+
+                    <ul class="list-unstyled">
+                        {% for message in messages %}
+                        <li style="font-size: 14px">
+                            {% if(message.status == 0) %}
+                                <span style="vertical-align: text-bottom" class="badge badge-success">Naujas</span>
+                            {% endif %}
+                            Gyventojas {{ message.user }} iš {{ message.roomNr }}
+                            kambario prašo: <strong>{{ message.content }}</strong>
+                            <br>
+                            <div style="margin-left: 7.3%">
+                                <small><span style="cursor: pointer">Padėti</span></small>
+                                &nbsp;
+                            <small>Pranešti</small>
+                            <small class="float-right"><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
+                            </div>
+                            <br>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>

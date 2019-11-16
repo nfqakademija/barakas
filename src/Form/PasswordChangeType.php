@@ -44,9 +44,6 @@ class PasswordChangeType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Patvirtinti slaptažodį'
                 ]
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Keisti',
             ]);
     }
 }

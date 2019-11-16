@@ -34,10 +34,12 @@ class DormitoryController extends AbstractController
         $user = $this->getUser();
 
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
+        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
 
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
         $students = $dormitoryRepo->getStudentsInDormitory($user->getDormId());
         $messages = $dormitoryRepo->getDormitoryMessages($user->getDormId());
+        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
 
         $message = new Message();
         $formRequest = $this->createForm(MessageType::class, $message);
@@ -55,6 +57,17 @@ class DormitoryController extends AbstractController
             $entityManager->persist($message);
             $entityManager->flush();
 
+            $studentToRemove = null;
+
+            foreach ($students as $struct) {
+                if ($user->getOwner() == $struct->getOwner()) {
+                    $studentToRemove = $struct;
+                    break;
+                }
+            }
+
+            $key = array_search($studentToRemove, $students);
+            unset($students[$key]);
 
             foreach ($students as $student) {
                 $notification = new Notification();
@@ -72,11 +85,17 @@ class DormitoryController extends AbstractController
             return $this->redirectToRoute('dormitory');
         }
 
+        if ($formRequest->isSubmitted() && !$formRequest->isValid()) {
+            $this->addFlash('error', 'Prašymas nebuvo išsiųstas. Prašymą turi sudaryti mažiausiai 7 simboliai.');
+            return $this->redirectToRoute('dormitory');
+        }
+
 
         return $this->render('dormitory/index.html.twig', [
             'dormitory' => $dormitory,
             'students' => $students,
             'messages' => $messages,
+            'notifications' => $notifications,
             'formRequest' => $formRequest->createView(),
         ]);
     }
