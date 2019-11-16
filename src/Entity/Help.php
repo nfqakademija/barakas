@@ -3,12 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\HelpRepository")
  */
-class Message
+class Help
 {
     /**
      * @ORM\Id()
@@ -33,15 +32,9 @@ class Message
     private $room_nr;
 
     /**
-     * @Assert\Length(
-     *     min = 7,
-     *     max = 300,
-     *     minMessage = "Prašymą turi sudaryti mažiausiai {{ limit }} simboliai.",
-     *     maxMessage = "Prašymas neturi būti ilgesnis nei {{ limit }} simbolių."
-     * )
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="integer")
      */
-    private $content;
+    private $message_id;
 
     /**
      * @ORM\Column(type="datetime")
@@ -51,12 +44,7 @@ class Message
     /**
      * @ORM\Column(type="integer")
      */
-    private $status;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $user_id;
+    private $requester_id;
 
     public function getId(): ?int
     {
@@ -99,14 +87,14 @@ class Message
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getMessageId(): ?int
     {
-        return $this->content;
+        return $this->message_id;
     }
 
-    public function setContent(string $content): self
+    public function setMessageId(int $message_id): self
     {
-        $this->content = $content;
+        $this->message_id = $message_id;
 
         return $this;
     }
@@ -123,26 +111,14 @@ class Message
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getRequesterId(): ?int
     {
-        return $this->status;
+        return $this->requester_id;
     }
 
-    public function setStatus(int $status): self
+    public function setRequesterId(int $requester_id): self
     {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): self
-    {
-        $this->user_id = $user_id;
+        $this->requester_id = $requester_id;
 
         return $this;
     }

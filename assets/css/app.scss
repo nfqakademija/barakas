@@ -144,10 +144,10 @@ input {
 .help-button {
   cursor: pointer;
   background: #343a40;
-  padding: 7px;
-  color: white;
+  color: #fff !important;
   border-radius: 5px;
   border: none;
+  padding: 10px;
 }
 
 .help-button > img {
@@ -157,22 +157,14 @@ input {
 .report-button {
   cursor: pointer;
   background: #e20808;
-  padding: 7px;
-  color: white;
+  color: white !important;
   border-radius: 5px;
   border: none;
+  padding: 10px;
 }
 
 .report-button > img {
   height: 20px
-}
-
-.help-button > span  {
-  vertical-align: middle
-}
-
-.report-button > span  {
-  vertical-align: middle
 }
 
 .notification-url {

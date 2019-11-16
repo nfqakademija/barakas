@@ -14,23 +14,19 @@
             <div style="width: 82%">{{ message.content }}</div>
             <br>
             <small>
-                <button class="help-button">
+                <a href="{{ path('dormitory_help', {'id': message.id}) }}" class="help-button">
                     <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
                     <span>Padėti</span>
-                </button>
+                </a>
             </small>
             &nbsp;
             <small>
-                <button class="report-button">
+                <a href="/dormitory/help" class="report-button">
                     <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
                     <span>Pranešti</span>
-                </button>
+                </a>
             </small>
             <hr>
         </li>
-
-        <form action="#" id="{{ message.id }}" style="visibility: hidden">
-            <input type="text" name="comment" id="{{ message.id }}">
-        </form>
     {% endfor %}
 </ul>

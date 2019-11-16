@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Dormitory;
+use App\Entity\Help;
 use App\Entity\Message;
 use App\Entity\Notification;
 use App\Entity\StatusType;
@@ -48,6 +49,7 @@ class DormitoryController extends AbstractController
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
             $message->setUser($user->getOwner());
+            $message->setUserId($user->getId());
             $message->setDormId($user->getDormId());
             $message->setRoomNr($user->getRoomNr());
             $message->setContent($message->getContent());
@@ -128,5 +130,37 @@ class DormitoryController extends AbstractController
             'dormitory' => $dormitory,
             'students' => $students
         ]);
+    }
+
+    /**
+     * @Route("/dormitory/help/{id}", name="dormitory_help")
+     */
+    public function helpUser($id, EntityManagerInterface $entityManager)
+    {
+        $user = $this->getUser();
+        $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
+        $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
+
+        $message = $messagesRepo->find($id);
+        $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
+
+        if (!$message) {
+            return $this->redirectToRoute('dormitory');
+        }
+
+        $help = new Help();
+        $help->setMessageId($id);
+        $help->setUser($user->getOwner());
+        $help->setDormId($dormitory->getId());
+        $help->setRoomNr($user->getRoomNr());
+        $help->setRequesterId($message->getUserId());
+        $help->setCreatedAt(new \DateTime());
+
+        $entityManager->persist($help);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Pagalbos siūlymas išsiųstas sėkmingai!');
+
+        return $this->redirectToRoute('dormitory');
     }
 }
