@@ -26,7 +26,11 @@
                     <p>Prisijungę studentai</p>
                 </div>
                 <div class="panel-content">
-
+                    <ul class="list-unstyled">
+                    {% for student in students %}
+                        <li>{{ student.username }}</li>
+                    {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>

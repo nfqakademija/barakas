@@ -77,6 +77,7 @@ class DormitoryController extends AbstractController
                 $notification->setDormId($message->getDormId());
                 $notification->setContent($message->getContent());
                 $notification->setRecipientId($student->getId());
+                $notification->setMessageId($message->getId());
                 $entityManager->persist($notification);
                 $entityManager->flush();
             }
@@ -97,6 +98,35 @@ class DormitoryController extends AbstractController
             'messages' => $messages,
             'notifications' => $notifications,
             'formRequest' => $formRequest->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("dormitory/message/{id}", name="message")
+     * @param $id
+     * @return Response
+     */
+    public function showMessage($id)
+    {
+        $user = $this->getUser();
+        $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
+        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+        $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
+
+        $message = $messagesRepo->find($id);
+        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+        $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
+        $students = $dormitoryRepo->getStudentsInDormitory($user->getDormId());
+
+        if (!$message) {
+            return $this->redirectToRoute('dormitory');
+        }
+
+        return $this->render('dormitory/message.html.twig', [
+            'message' => $message,
+            'notifications' => $notifications,
+            'dormitory' => $dormitory,
+            'students' => $students
         ]);
     }
 }

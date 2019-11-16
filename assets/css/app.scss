@@ -32,7 +32,7 @@ header {
 .logo {
   height: 125px;
   margin-left: 10%;
-  padding-right: 8px;
+  padding-right: 23px;
 }
 
 .index-about-text {
@@ -124,6 +124,7 @@ input {
 
 .badge1 {
   position:relative;
+  cursor: pointer;
 }
 .badge1[data-badge]:after {
   content:attr(data-badge);
@@ -162,6 +163,21 @@ input {
 
 .report-button > img {
   height: 20px
+}
+
+.notification-url {
+  color: black;
+}
+
+.notification-url:hover {
+  color: grey;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background: white !important;
 }
 
 footer {
