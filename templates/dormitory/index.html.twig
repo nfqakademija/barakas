@@ -28,7 +28,14 @@
                 <div class="panel-content">
                     <ul class="list-unstyled">
                     {% for student in students %}
-                        <li>{{ student.username }}</li>
+                        <li style="display: flex; justify-content: space-between">
+                            {{ student.username }}
+                            <span>
+                            <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 25px">
+                            {{ student.roomNr }}
+                            </span>
+                        </li>
+                        <hr>
                     {% endfor %}
                     </ul>
                 </div>
