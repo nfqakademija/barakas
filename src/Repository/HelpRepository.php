@@ -28,4 +28,13 @@ class HelpRepository extends ServiceEntityRepository
 
         return $help;
     }
+
+    public function userProblemSolvers($id)
+    {
+        $helpers = $this->findBy([
+            'requester_id' => $id
+        ]);
+
+        return $helpers;
+    }
 }

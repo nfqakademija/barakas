@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
+use App\Entity\Help;
 use App\Entity\Invite;
 use App\Entity\Notification;
 use App\Entity\User;
@@ -97,7 +98,6 @@ class UserController extends AbstractController
         $universities = $academyRepository->findBy(['academyType' => AcademyType::university()->id()]);
         $colleges = $academyRepository->findBy(['academyType' => AcademyType::college()->id()]);
 
-
         $form = $this->createForm(UserRegisterType::class, $organisation, array(
             'universities' => $universities,
             'colleges' => $colleges
@@ -161,11 +161,16 @@ class UserController extends AbstractController
             }
         }
         $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
+
         $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
         return $this->render('user/passwordChange.html.twig', [
             'form' => $form->createView(),
             'notifications' => $notifications,
+            'helpMessages' => $helpMessages,
+
         ]);
     }
 
@@ -246,5 +251,27 @@ class UserController extends AbstractController
 
         $entityManager->flush();
         return $this->redirectToRoute('dormitory');
+    }
+
+    /**
+     * @Route("help-provided", name="provided_help")
+     */
+    public function providedHelp()
+    {
+        $user = $this->getUser();
+        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+
+        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
+        $messages = $userRepo->getUserMessages($user->getId());
+
+        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+
+        return $this->render('user/messages_solved.html.twig', [
+            'messages' => $messages,
+            'helpMessages' => $helpMessages,
+            'notifications' => $notifications
+        ]);
     }
 }

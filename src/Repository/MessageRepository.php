@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Help;
 use App\Entity\Message;
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -20,13 +20,15 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
-    public function getMessageUserId($username)
+    public function getHelpers($id)
     {
         $entityManager = $this->getEntityManager();
-        $repo = $entityManager->getRepository(User::class);
+        $helpRepo = $entityManager->getRepository(Help::class);
 
-        $user = $repo->findBy(['user' => $username]);
+        $helpers = $helpRepo->findBy(
+            ['message_id' => $id]
+        );
 
-        return $user;
+        return $helpers;
     }
 }

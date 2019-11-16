@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Message;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -27,5 +28,17 @@ class UserRepository extends ServiceEntityRepository
         $invites = $repo->findBy(['dorm_id' => $id]);
 
         return $invites;
+    }
+
+    public function getUserMessages($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $messagesRepo = $entityManager->getRepository(Message::class);
+
+        $messages = $messagesRepo->findBy([
+            'user_id' => $id
+        ]);
+
+        return $messages;
     }
 }
