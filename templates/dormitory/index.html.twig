@@ -21,9 +21,6 @@
                 <div class="panel-header">
                     <p>Prašymai</p>
                 </div>
-
-
-
                 <div class="panel-content">
                     {% for message in app.flashes('success') %}
                         <div class="alert alert-success">
@@ -52,18 +49,29 @@
                         {% for message in messages %}
                         <li style="font-size: 14px">
                             {% if(message.status == 0) %}
-                                <span style="vertical-align: text-bottom" class="badge badge-success">Naujas</span>
+                                <img src="https://image.flaticon.com/icons/svg/785/785116.svg" style="height: 25px">
                             {% endif %}
-                            Gyventojas {{ message.user }} iš {{ message.roomNr }}
-                            kambario prašo: <strong>{{ message.content }}</strong>
+
+                            <strong>{{ message.user }}</strong> <small><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
+                            <span class="float-right" style="font-size: 24px">
+                               <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 50px">
+                                {{ message.roomNr }}
+                            </span>
                             <br>
-                            <div style="margin-left: 7.3%">
-                                <small><span style="cursor: pointer">Padėti</span></small>
+                            <div style="width: 82%">{{ message.content }}</div>
+
+                                <small>
+                                    <span class="help-button">
+                                        <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg"> Padėti
+                                    </span>
+                                </small>
                                 &nbsp;
-                            <small>Pranešti</small>
-                            <small class="float-right"><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
-                            </div>
-                            <br>
+                                <small>
+                                    <span class="report-button">
+                                        <img src="https://image.flaticon.com/icons/svg/196/196777.svg"> Pranešti
+                                    </span>
+                                </small>
+                            <hr>
                         </li>
                         {% endfor %}
                     </ul>

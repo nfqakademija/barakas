@@ -33,10 +33,9 @@ class Message
     private $room_nr;
 
     /**
-     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @Assert\Length(
      *     min = 7,
-     *     max = 100,
+     *     max = 300,
      *     minMessage = "Prašymą turi sudaryti mažiausiai {{ limit }} simboliai.",
      *     maxMessage = "Prašymas neturi būti ilgesnis nei {{ limit }} simbolių."
      * )

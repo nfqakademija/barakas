@@ -86,7 +86,7 @@ class DormitoryController extends AbstractController
         }
 
         if ($formRequest->isSubmitted() && !$formRequest->isValid()) {
-            $this->addFlash('error', 'Prašymas nebuvo išsiųstas. Prašymą turi sudaryti mažiausiai 7 simboliai.');
+            $this->addFlash('error', 'Prašymas nebuvo išsiųstas. Prašymas turi sudaryti nuo 7 iki 300 simbolių.');
             return $this->redirectToRoute('dormitory');
         }
 

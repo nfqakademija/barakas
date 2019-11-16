@@ -8,6 +8,7 @@ body {
   background: #e8e8e8;
   height: 100%;
   position: relative;
+  font-size: 15px;
 }
 
 header {
@@ -31,7 +32,7 @@ header {
 .logo {
   height: 125px;
   margin-left: 10%;
-  padding-right: 1%;
+  padding-right: 8px;
 }
 
 .index-about-text {
@@ -128,7 +129,7 @@ input {
   content:attr(data-badge);
   position:absolute;
   top:-0px;
-  right:-5px;
+  right:9em;
   font-size: .7em;
   background:green;
   color:white;
@@ -137,6 +138,30 @@ input {
   line-height:18px;
   border-radius:50%;
   box-shadow:0 0 1px #333;
+}
+
+.help-button {
+  cursor: pointer;
+  background: #343a40;
+  padding: 7px;
+  color: white;
+  border-radius: 5px;
+}
+
+.help-button > img {
+  height: 20px
+}
+
+.report-button {
+  cursor: pointer;
+  background: #e20808;
+  padding: 7px;
+  color: white;
+  border-radius: 5px;
+}
+
+.report-button > img {
+  height: 20px
 }
 
 footer {
@@ -160,6 +185,9 @@ footer {
   .vert-line {
     height: 0;
   }
+  .badge1[data-badge]:after {
+    right:32em;
+  }
 }
 
 @media only screen and (max-width: 767px) and (orientation: portrait) {
@@ -174,5 +202,8 @@ footer {
   }
   .vert-line {
     height: 0;
+  }
+  .badge1[data-badge]:after {
+    right:32em;
   }
 }
