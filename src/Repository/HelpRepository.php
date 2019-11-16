@@ -19,32 +19,13 @@ class HelpRepository extends ServiceEntityRepository
         parent::__construct($registry, Help::class);
     }
 
-    // /**
-    //  * @return Help[] Returns an array of Help objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findUserProvidedHelp($requester_id, $user_id)
     {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('h.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $help = $this->findBy([
+            'requester_id' => $requester_id,
+            'user_id' => $user_id
+        ]);
 
-    /*
-    public function findOneBySomeField($value): ?Help
-    {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $help;
     }
-    */
 }

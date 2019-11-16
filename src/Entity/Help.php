@@ -17,9 +17,9 @@ class Help
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $user;
+    private $user_id;
 
     /**
      * @ORM\Column(type="integer")
@@ -51,14 +51,14 @@ class Help
         return $this->id;
     }
 
-    public function getUser(): ?string
+    public function getUserId(): ?int
     {
-        return $this->user;
+        return $this->user_id;
     }
 
-    public function setUser(string $user): self
+    public function setUserId(string $user_id): self
     {
-        $this->user = $user;
+        $this->user_id = $user_id;
 
         return $this;
     }

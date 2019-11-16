@@ -2,19 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Comment;
 use App\Entity\Dormitory;
 use App\Entity\Help;
 use App\Entity\Message;
 use App\Entity\Notification;
 use App\Entity\StatusType;
-use App\Form\CommentType;
 use App\Form\MessageType;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -140,17 +136,19 @@ class DormitoryController extends AbstractController
         $user = $this->getUser();
         $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
+        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
 
         $message = $messagesRepo->find($id);
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
+        $help = $helpRepo->findUserProvidedHelp($message->getUserId(), $user->getId());
 
-        if (!$message) {
+        if (!$message || $help) {
             return $this->redirectToRoute('dormitory');
         }
 
         $help = new Help();
         $help->setMessageId($id);
-        $help->setUser($user->getOwner());
+        $help->setUserId($user->getId());
         $help->setDormId($dormitory->getId());
         $help->setRoomNr($user->getRoomNr());
         $help->setRequesterId($message->getUserId());

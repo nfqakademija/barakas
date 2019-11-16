@@ -12,6 +12,9 @@
             </span>
             <br>
             <div style="width: 82%">{{ message.content }}</div>
+            {% if message.userId == app.user.id %}
+
+            {% else %}
             <br>
             <small>
                 <a href="{{ path('dormitory_help', {'id': message.id}) }}" class="help-button">
@@ -26,6 +29,7 @@
                     <span>Pranešti</span>
                 </a>
             </small>
+                {% endif %}
             <hr>
         </li>
     {% endfor %}
