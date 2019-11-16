@@ -1,0 +1,10 @@
+<ul class="list-inline" style="display: flex; justify-content: space-between">
+    <li class="list-inline-item"><img src="https://image.flaticon.com/icons/svg/2038/2038013.svg" style="height: 60px"></li>
+    <li class="list-inline-item" style="align-self: center"><i class="fas fa-hotel"></i> <strong>Bendrabutis:</strong> {{ dormitory.title }}</li>
+    <li class="list-inline-item" style="align-self: center"><i class="fas fa-thumbtack"></i> <strong>Gatvė:</strong> {{ dormitory.address }}</li>
+    <li class="list-inline-item" style="align-self: center"><i class="fas fa-users"></i> <strong>Studentų:</strong> {{ students|length }}</li>
+    <li class="list-inline-item" style="align-self: center">
+        <button class="btn btn-warning" id="requestBtn">
+            <i class="fas fa-pencil-alt"></i> Rašyti prašymą</button>
+    </li>
+</ul>

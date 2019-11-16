@@ -51,7 +51,7 @@ class DormitoryController extends AbstractController
             $message->setDormId($user->getDormId());
             $message->setRoomNr($user->getRoomNr());
             $message->setContent($message->getContent());
-            $message->setStatus(StatusType::newRequest()->id());
+            $message->setStatus(StatusType::urgent()->id());
             $message->setCreatedAt(new \DateTime());
 
             $entityManager->persist($message);
