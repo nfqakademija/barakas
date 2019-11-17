@@ -33,10 +33,9 @@ class Message
     private $room_nr;
 
     /**
-     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @Assert\Length(
      *     min = 7,
-     *     max = 100,
+     *     max = 300,
      *     minMessage = "Prašymą turi sudaryti mažiausiai {{ limit }} simboliai.",
      *     maxMessage = "Prašymas neturi būti ilgesnis nei {{ limit }} simbolių."
      * )
@@ -53,6 +52,16 @@ class Message
      * @ORM\Column(type="integer")
      */
     private $status;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $user_id;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $solved;
 
     public function getId(): ?int
     {
@@ -127,6 +136,30 @@ class Message
     public function setStatus(int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(int $user_id): self
+    {
+        $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    public function getSolved(): ?int
+    {
+        return $this->solved;
+    }
+
+    public function setSolved(int $solved): self
+    {
+        $this->solved = $solved;
 
         return $this;
     }

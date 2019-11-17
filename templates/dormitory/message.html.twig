@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bendrabutis{% endblock %}
+
+{% block body %}
+    {% include 'dormitory/inc/dormitory_info.html.twig' %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel">
+                <div class="panel-header">
+                    <p>Prašymai</p>
+                </div>
+                <div class="panel-content">
+                    {% include 'dormitory/inc/notifications.html.twig' %}
+                    <ul class="list-unstyled">
+                        <li style="font-size: 14px">
+                            {% if(message.status == 0) %}
+                                <img src="https://image.flaticon.com/icons/svg/785/785116.svg" style="height: 17px">
+                            {% endif %}
+                            <strong>{{ message.user }}</strong> <small><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
+                            <span class="float-right">
+                            <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 25px">
+                            {{ message.roomNr }}
+                            </span>
+                            <br>
+                            <div style="width: 82%; padding-left: 3%">{{ message.content }}</div>
+                                <br>
+                            {% if message.userId == app.user.id and message.solved == 0 %}
+                                <small>
+                    <span class="isDisabled help-button">
+                        <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
+                        <span>Padėti</span>
+                    </span>
+                                </small>
+                                &nbsp;
+                                <small>
+                    <span class="isDisabled report-button">
+                        <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
+                        <span>Pranešti</span>
+                    </span>
+                                </small>
+
+                            {% elseif message.solved == 1 %}
+                                <small>
+                        <span style="cursor: default" class="help-button">
+                            <img src="https://image.flaticon.com/icons/svg/443/443138.svg">
+                            <span>Pagalba suteikta</span>
+                        </span>
+                                </small>
+
+                            {% else %}
+                                <small>
+                            <span class="help-button">
+                            <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg"> Padėti
+                            </span>
+                                </small>
+                                &nbsp;
+                                <small>
+                            <span class="report-button">
+                                <img src="https://image.flaticon.com/icons/svg/196/196777.svg"> Pranešti
+                            </span>
+                                </small>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel">
+                <div class="panel-header">
+                    <p>Prisijungę studentai</p>
+                </div>
+                <div class="panel-content">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('dormitory') }}
+{% endblock %}

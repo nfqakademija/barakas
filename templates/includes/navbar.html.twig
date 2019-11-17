@@ -15,10 +15,58 @@
             </li>
         </ul>
         <ul class="navbar-nav mr-4">
+            {% if app.user and not is_granted('ROLE_ADMIN') %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('provided_help') }}"><i class="fas fa-hands-helping"></i> Pagalbos pranešimai
+                    {% if helpMessages %}
+                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ helpMessages|length }}</span>
+                    {% else %}
+                    {% endif %}
+                </a>
+            </li>
+
+            <li class="nav-item dropdown">
+
+                <a style="cursor: pointer" class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown">
+                    <i class="fas fa-bell"></i> Bendrabučio pranešimai
+                 {% if notifications %}
+                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ notifications|length }}</span>
+                {% else %}
+
+                {% endif %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width: 25em">
+                    {% if notifications %}
+                        <ul class="list-unstyled dropdown-item">
+                            <a href="{{ path('clear_notifications') }}" class="btn btn-sm btn-dark float-right">Perskaityta</a>
+                           <br>
+                            {% for notification in notifications %}
+                                <li>
+                                    <small>
+                                        <a href="{{ path('message', {'id': notification.messageId}) }}" class="notification-url">
+                                        {{ notification.user }} | Kambarys: <strong>{{ notification.roomNr }}</strong> <br>
+                                        <strong>Prašymas:</strong> {{ notification.content|length > 50 ? notification.content|slice(0, 50) ~ '...' : notification.content  }}
+                                        <br>
+                                        <i>{{ notification.createdAt|date('Y-m-d h:m:s') }}</i>
+                                        </a>
+                                    </small>
+                                    <hr>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                    <small style="padding: 5px">Šiuo metu naujų pranešimų nėra.</small>
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+
         {% if app.user %}
+            {% if not is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('dormitory') }}"><i class="fas fa-hotel"></i> Bendrabutis</a>
             </li>
+                {% endif %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-user"></i> {{ app.user.username }}

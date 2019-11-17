@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
+use App\Entity\Help;
 use App\Entity\Invite;
+use App\Entity\Notification;
 use App\Entity\User;
 use App\Entity\Dormitory;
 use App\Form\PasswordChangeType;
@@ -15,6 +17,7 @@ use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -95,7 +98,6 @@ class UserController extends AbstractController
         $universities = $academyRepository->findBy(['academyType' => AcademyType::university()->id()]);
         $colleges = $academyRepository->findBy(['academyType' => AcademyType::college()->id()]);
 
-
         $form = $this->createForm(UserRegisterType::class, $organisation, array(
             'universities' => $universities,
             'colleges' => $colleges
@@ -158,9 +160,17 @@ class UserController extends AbstractController
                 );
             }
         }
+        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
+
+        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
         return $this->render('user/passwordChange.html.twig', [
             'form' => $form->createView(),
+            'notifications' => $notifications,
+            'helpMessages' => $helpMessages,
+
         ]);
     }
 
@@ -221,6 +231,47 @@ class UserController extends AbstractController
 
         return $this->render('user/register.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("clear-notifications", name="clear_notifications")
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function clearNotifications(EntityManagerInterface $entityManager)
+    {
+        $user = $this->getUser();
+        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+
+        foreach ($notifications as $notification) {
+            $entityManager->remove($notification);
+        }
+
+        $entityManager->flush();
+        return $this->redirectToRoute('dormitory');
+    }
+
+    /**
+     * @Route("help-provided", name="provided_help")
+     */
+    public function providedHelp()
+    {
+        $user = $this->getUser();
+        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+
+        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
+        $messages = $userRepo->getUserMessages($user->getId());
+
+        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+
+        return $this->render('user/messages_solved.html.twig', [
+            'messages' => $messages,
+            'helpMessages' => $helpMessages,
+            'notifications' => $notifications
         ]);
     }
 }

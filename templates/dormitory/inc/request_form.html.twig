@@ -1,0 +1,10 @@
+<div class="col-md-12" id="requestForm">
+    {{ form_start(formRequest, {'attr': {'id': 'postRequestForm'}}) }}
+    {{ form_widget(formRequest) }}
+    <div style="display: flex; justify-content: space-between">
+        <button type="submit" class="btn btn-success"><i class="far fa-paper-plane"></i> Siųsti</button>
+        <span id="closeRequestFormBtn" style="cursor:pointer;" class="btn btn-danger"><i class="fas fa-times"></i> Uždaryti</span>
+    </div>
+    {{ form_end(formRequest) }}
+    <br>
+</div>

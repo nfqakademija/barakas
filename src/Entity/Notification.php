@@ -46,6 +46,11 @@ class Notification
      */
     private $recipient_id;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $message_id;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +124,18 @@ class Notification
     public function setRecipientId(int $recipient_id): self
     {
         $this->recipient_id = $recipient_id;
+
+        return $this;
+    }
+
+    public function getMessageId(): ?int
+    {
+        return $this->message_id;
+    }
+
+    public function setMessageId(int $message_id): self
+    {
+        $this->message_id = $message_id;
 
         return $this;
     }
