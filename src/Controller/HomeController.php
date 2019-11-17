@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Help;
 use App\Entity\Notification;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +15,21 @@ class HomeController extends AbstractController
      */
     public function index()
     {
-        return $this->render('home/index.html.twig');
+        $notifications = [];
+        $helpMessages = [];
+        if ($user = $this->getUser()) {
+            $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+            $helpRepo = $this->getDoctrine()->getRepository(Help::class);
+
+            $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+            $helpMessages = $helpRepo->userProblemSolvers($user->getId());
+        }
+        $this->getUser();
+
+        return $this->render('home/index.html.twig', [
+            'notifications' => $notifications,
+            'helpMessages' => $helpMessages
+        ]);
     }
 
     /**
@@ -22,7 +37,21 @@ class HomeController extends AbstractController
      */
     public function contacts()
     {
-        return $this->render('home/contacts.html.twig');
+        $notifications = [];
+        $helpMessages = [];
+        if ($user = $this->getUser()) {
+            $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+            $helpRepo = $this->getDoctrine()->getRepository(Help::class);
+
+            $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+            $helpMessages = $helpRepo->userProblemSolvers($user->getId());
+        }
+        $this->getUser();
+
+        return $this->render('home/contacts.html.twig', [
+            'notifications' => $notifications,
+            'helpMessages' => $helpMessages
+        ]);
     }
 
     private function getNotifications()

@@ -16,14 +16,14 @@
                 {% endfor %}
                 <h5>Bendrabučio administratorius: {{ dormitory.owner }}</h5>
                 <h5>Bendrabučio adresas: {{ dormitoryInfo.address }}</h5>
-                <h5>Bendrabučio studentai: {{ dormitoryInfo.address }}</h5><br>
+                <h5>Bendrabučio studentai: {{ students|length }}</h5><br>
 
 				   <h6>Studento pridėjimas į bendrabutį</h6>
                    <div style='height:1px; width:100%; background:#e0e0e0;'></div><br>
 				   
                     {{ form_start(SendInvitationType) }}
                     {{ form_widget(SendInvitationType) }}
-                    <button type="submit" class="btn btn-sm btn-primary">Siųsti pakvietimo nuorodą</button>
+                    <button type="submit" class="btn btn-sm btn-primary"><i class="far fa-paper-plane"></i> Siųsti pakvietimo nuorodą</button>
                     {{ form_end(SendInvitationType) }}
 				   <br><br>
                    <h6>Išsiųsti pakvietimai studentams</h6>
@@ -33,11 +33,13 @@
                     <tr>
                         <th>Studentas</th>
                         <th>Kambarys</th>
+                        <th>El. paštas</th>
                     </tr>
                     {% for invite in invites %}
                     <tr>
                         <td>{{ invite.name }}</td>
                         <td>{{ invite.room }}</td>
+                        <td>{{ invite.email }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -46,11 +48,13 @@
                     <tr>
                         <th>Studentas</th>
                         <th>Kambarys</th>
+                        <th>El. paštas</th>
                     </tr>
                     {% for student in students %}
                         <tr>
                             <td>{{ student.owner }}</td>
                             <td>{{ student.RoomNr }}</td>
+                            <td>{{ student.email }}</td>
                         </tr>
                     {% endfor %}
                 </table>

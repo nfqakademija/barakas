@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for message in helpMessages %}
+        Narys su ID: {{ message.userId }} gali tau padėti su tavo problema ID {{ message.messageId }}
+        <hr>
+    {% endfor %}
+{% endblock %}
