@@ -44,7 +44,7 @@
                     <p>Prašymai</p>
                 </div>
                 <div class="panel-content">
-        <ul class="list-unstyled">
+        <ul class="list-unstyled" id="list">
             {% for message in messages %}
             <li style="font-size: 14px">
                 {% if(message.status == 0) %}
@@ -83,4 +83,23 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
     {{ encore_entry_script_tags('dormitory') }}
+
+    <script>
+        const url = new URL('http://127.0.0.1:9090/.well-known/mercure');
+        url.searchParams.append('topic', 'http://127.0.0.1:8000/dormitory');
+        const eventSource = new EventSource(url);
+        eventSource.onmessage = e => {
+        const data = JSON.parse(e.data);
+            const ul = document.getElementById("list");
+            const li = document.createElement("li");
+            li.innerHTML = "<span style=\"vertical-align: text-bottom\" class=\"badge badge-success\">Naujas</span>" +
+                "Gyventojas" + data.user + " iš " + data.roomNr +
+                "kambario prašo: <strong>"+ data.content +"</strong>\n" +
+                "<br>" + "<div style=\"margin-left: 7.3%\">" + "<small><span style=\"cursor: pointer\">Padėti</span></small>&nbsp;&nbsp;&nbsp;" +
+            "<small>Pranešti</small>" + "<small class=\"float-right\"><i>"+ data.createdAt +"</i></small></div><br>";
+            li.setAttribute("style", "font-size: 14px");
+            ul.appendChild(li);
+            console.log(data);
+        };
+    </script>
 {% endblock %}
