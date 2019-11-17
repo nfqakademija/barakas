@@ -97,6 +97,7 @@ class DormitoryController extends AbstractController
 
 
             $update = new Update("http://127.0.0.1:8000/dormitory", json_encode([
+                'id' => $message->getId(),
                 'user' => $message->getUser(),
                 'roomNr' => $message->getRoomNr(),
                 'content' => $message->getContent(),

@@ -58,13 +58,32 @@
         const data = JSON.parse(e.data);
             const ul = document.getElementById("list");
             const li = document.createElement("li");
-            li.innerHTML = "<span style=\"vertical-align: text-bottom\" class=\"badge badge-success\">Naujas</span>" +
-                "Gyventojas" + data.user + " iš " + data.roomNr +
-                "kambario prašo: <strong>"+ data.content +"</strong>\n" +
-                "<br>" + "<div style=\"margin-left: 7.3%\">" + "<small><span style=\"cursor: pointer\">Padėti</span></small>&nbsp;&nbsp;&nbsp;" +
-            "<small>Pranešti</small>" + "<small class=\"float-right\"><i>"+ data.createdAt +"</i></small></div><br>";
+            li.innerHTML = "<li style=\"font-size: 14px\">\n" +
+                "<img src=\"https://image.flaticon.com/icons/svg/785/785116.svg\" style=\"height: 17px\">\n" +
+                "<strong>"+data.user+"</strong> <small><i>"+data.createdAt+"</i></small>\n" +
+                "<span class=\"float-right\">\n" +
+                "    <img src=\"https://image.flaticon.com/icons/svg/1229/1229996.svg\" style=\"height: 25px\">\n" +
+                "    "+data.roomNr+"\n" +
+                "</span>\n" +
+                "<div style=\"width: 82%; padding-left: 3%\">"+data.content+"</div>\n" +
+                "    <br>\n" +
+                "    <small>\n" +
+                "        <a href=\"/dormitory/help/"+data.id+"\" class=\"help-button\">\n" +
+                "            <img src=\"https://image.flaticon.com/icons/svg/1264/1264878.svg\">\n" +
+                "            <span>Padėti</span>\n" +
+                "        </a>\n" +
+                "    </small>\n" +
+                "    &nbsp;\n" +
+                "    <small>\n" +
+                "        <a href=\"#\" class=\"report-button\">\n" +
+                "            <img src=\"https://image.flaticon.com/icons/svg/196/196777.svg\">\n" +
+                "            <span>Pranešti</span>\n" +
+                "        </a>\n" +
+                "    </small>\n" +
+                "    <hr>\n" +
+                "</li>";
             li.setAttribute("style", "font-size: 14px");
-            ul.appendChild(li);
+            ul.insertBefore(li, ul.firstChild);
             console.log(data);
         };
     </script>
