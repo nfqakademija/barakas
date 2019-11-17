@@ -19,16 +19,4 @@ class MessageRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Message::class);
     }
-
-    public function getHelpers($id)
-    {
-        $entityManager = $this->getEntityManager();
-        $helpRepo = $entityManager->getRepository(Help::class);
-
-        $helpers = $helpRepo->findBy(
-            ['message_id' => $id]
-        );
-
-        return $helpers;
-    }
 }

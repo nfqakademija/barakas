@@ -6,6 +6,7 @@ use App\Entity\Dormitory;
 use App\Entity\Help;
 use App\Entity\Message;
 use App\Entity\Notification;
+use App\Entity\SolvedType;
 use App\Entity\StatusType;
 use App\Form\MessageType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,7 +41,6 @@ class DormitoryController extends AbstractController
         $notifications = $notificationRepo->getNotificationsByUser($user->getId());
         $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
-
         $message = new Message();
         $formRequest = $this->createForm(MessageType::class, $message);
 
@@ -53,6 +53,7 @@ class DormitoryController extends AbstractController
             $message->setRoomNr($user->getRoomNr());
             $message->setContent($message->getContent());
             $message->setStatus(StatusType::urgent()->id());
+            $message->setSolved(SolvedType::notSolved()->id());
             $message->setCreatedAt(new \DateTime());
 
             $entityManager->persist($message);
@@ -147,7 +148,7 @@ class DormitoryController extends AbstractController
 
         $message = $messagesRepo->find($id);
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $help = $helpRepo->findUserProvidedHelp($message->getUserId(), $user->getId());
+        $help = $helpRepo->findUserProvidedHelp($message->getUserId(), $user->getId(), $message->getId());
 
         if (!$message || $help) {
             return $this->redirectToRoute('dormitory');
@@ -162,7 +163,10 @@ class DormitoryController extends AbstractController
         $help->setCreatedAt(new \DateTime());
 
         $entityManager->persist($help);
+        $message->setSolved(SolvedType::solved()->id());
+
         $entityManager->flush();
+
 
         $this->addFlash('success', 'Pagalbos siūlymas išsiųstas sėkmingai!');
 

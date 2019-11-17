@@ -58,6 +58,11 @@ class Message
      */
     private $user_id;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $solved;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -143,6 +148,18 @@ class Message
     public function setUserId(int $user_id): self
     {
         $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    public function getSolved(): ?int
+    {
+        return $this->solved;
+    }
+
+    public function setSolved(int $solved): self
+    {
+        $this->solved = $solved;
 
         return $this;
     }
