@@ -52,10 +52,10 @@ class Notification
      */
     private $message;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    /*    private $message_id;*/
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {

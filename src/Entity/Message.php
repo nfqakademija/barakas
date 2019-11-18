@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Cassandra\Date;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,11 +19,6 @@ class Message
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $user;
 
     /**
      * @ORM\Column(type="integer")
@@ -58,11 +54,6 @@ class Message
     /**
      * @ORM\Column(type="integer")
      */
-    private $user_id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
     private $solved;
 
     /**
@@ -70,26 +61,20 @@ class Message
      */
     private $notifications;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
+        $this->created_at = new \DateTime();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUser(): ?string
-    {
-        return $this->user;
-    }
-
-    public function setUser(string $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getDormId(): ?int
@@ -152,18 +137,6 @@ class Message
         return $this;
     }
 
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): self
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
     public function getSolved(): ?int
     {
         return $this->solved;
@@ -203,6 +176,18 @@ class Message
                 $notification->setMessage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

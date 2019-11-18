@@ -23,7 +23,7 @@ class HelpRepository extends ServiceEntityRepository
     {
         $help = $this->findBy([
             'requester_id' => $requester_id,
-            'user_id' => $user_id,
+            'user' => $user_id,
             'message_id' => $message_id
         ]);
 

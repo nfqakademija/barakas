@@ -5,14 +5,14 @@
                 <img src="https://image.flaticon.com/icons/svg/785/785116.svg" style="height: 17px">
             {% endif %}
 
-            <strong>{{ message.user }}</strong> <small><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
+            <strong>{{ message.user.owner }}</strong> <small><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
             <span class="float-right">
                  <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 25px">
                  {{ message.roomNr }}
             </span>
 
             <div style="width: 82%; padding-left: 3%">{{ message.content }}</div>
-            {% if message.userId == app.user.id and message.solved == 0 %}
+            {% if message.user.id == app.user.id and message.solved == 0 %}
                 <br>
                 <small>
                     <span class="isDisabled help-button">

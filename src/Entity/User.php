@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,10 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User implements UserInterface
 {
-    public function __construct()
-    {
-        $this->created_at = new \DateTime();
-    }
 
     /**
      * @ORM\Id()
@@ -78,6 +76,22 @@ class User implements UserInterface
      */
     private $created_at;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="user")
+     */
+    private $messages;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Help", mappedBy="user")
+     */
+    private $helps;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+        $this->messages = new ArrayCollection();
+        $this->helps = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -250,6 +264,68 @@ class User implements UserInterface
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Help[]
+     */
+    public function getHelps(): Collection
+    {
+        return $this->helps;
+    }
+
+    public function addHelp(Help $help): self
+    {
+        if (!$this->helps->contains($help)) {
+            $this->helps[] = $help;
+            $help->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHelp(Help $help): self
+    {
+        if ($this->helps->contains($help)) {
+            $this->helps->removeElement($help);
+            // set the owning side to null (unless already changed)
+            if ($help->getUser() === $this) {
+                $help->setUser(null);
+            }
+        }
 
         return $this;
     }

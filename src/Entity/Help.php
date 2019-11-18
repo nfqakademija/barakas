@@ -9,11 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Help
 {
-    public function __construct()
-    {
-        $this->created_at = new \DateTime();
-    }
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -24,7 +19,7 @@ class Help
     /**
      * @ORM\Column(type="integer")
      */
-    private $user_id;
+/*    private $user_id;*/
 
     /**
      * @ORM\Column(type="integer")
@@ -51,12 +46,22 @@ class Help
      */
     private $requester_id;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="helps")
+     */
+    private $user;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUserId(): ?int
+/*    public function getUserId(): ?int
     {
         return $this->user_id;
     }
@@ -66,7 +71,7 @@ class Help
         $this->user_id = $user_id;
 
         return $this;
-    }
+    }*/
 
     public function getDormId(): ?int
     {
@@ -124,6 +129,18 @@ class Help
     public function setRequesterId(int $requester_id): self
     {
         $this->requester_id = $requester_id;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
