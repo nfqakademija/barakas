@@ -71,7 +71,7 @@ class DormitoryController extends AbstractController
                 $notification->setDormId($message->getDormId());
                 $notification->setContent($message->getContent());
                 $notification->setRecipientId($student->getId());
-                $notification->setMessageId($message->getId());
+                $notification->setMessage($message);
                 $entityManager->persist($notification);
                 $entityManager->flush();
             }

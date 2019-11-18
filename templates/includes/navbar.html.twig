@@ -43,7 +43,7 @@
                             {% for notification in notifications %}
                                 <li>
                                     <small>
-                                        <a href="{{ path('message', {'id': notification.messageId}) }}" class="notification-url">
+                                        <a href="{{ path('message', {'id': notification.message.id}) }}" class="notification-url">
                                         {{ notification.user }} | Kambarys: <strong>{{ notification.roomNr }}</strong> <br>
                                         <strong>Prašymas:</strong> {{ notification.content|length > 50 ? notification.content|slice(0, 50) ~ '...' : notification.content  }}
                                         <br>
