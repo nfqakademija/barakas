@@ -13,6 +13,7 @@ use App\Service\StudentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +24,7 @@ class DormitoryController extends AbstractController
      * @Route("/dormitory", name="dormitory")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
+     * @param StudentManager $studentManager
      * @return Response
      * @throws Exception
      */
@@ -115,7 +117,7 @@ class DormitoryController extends AbstractController
         $students = $dormitoryRepo->getStudentsInDormitory($user->getDormId());
         $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
-        if (!$message) {
+        if (!$message || $user->getDormId() !== $message->getDormId()) {
             return $this->redirectToRoute('dormitory');
         }
 
@@ -130,6 +132,9 @@ class DormitoryController extends AbstractController
 
     /**
      * @Route("/dormitory/help/{id}", name="dormitory_help")
+     * @param $id
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
      */
     public function helpUser($id, EntityManagerInterface $entityManager)
     {
