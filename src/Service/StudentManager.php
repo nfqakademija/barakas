@@ -3,7 +3,6 @@
 
 namespace App\Service;
 
-
 class StudentManager
 {
     public function removeStudentFromStudentsArray($students, $user)
