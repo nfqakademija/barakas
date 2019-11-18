@@ -65,7 +65,7 @@ class DormitoryController extends AbstractController
 
             foreach ($students as $student) {
                 $notification = new Notification();
-                $notification->setUser($message->getUser()->getId());
+                $notification->setUser($message->getUser());
                 $notification->setCreatedAt(new \DateTime());
                 $notification->setRoomNr($message->getRoomNr());
                 $notification->setDormId($message->getDormId());
