@@ -2,7 +2,7 @@
 
 {% block body %}
     {% for message in helpMessages %}
-        Narys su ID: {{ message.userId }} gali tau padėti su tavo problema ID {{ message.messageId }}
+        Narys su ID: {{ message.user.id }} gali tau padėti su tavo problema ID {{ message.messageId }}
         <hr>
     {% endfor %}
 {% endblock %}

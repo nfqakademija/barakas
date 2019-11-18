@@ -36,7 +36,7 @@ class UserRepository extends ServiceEntityRepository
         $messagesRepo = $entityManager->getRepository(Message::class);
 
         $messages = $messagesRepo->findBy([
-            'user_id' => $id
+            'user' => $id
         ]);
 
         return $messages;

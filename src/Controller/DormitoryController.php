@@ -51,14 +51,12 @@ class DormitoryController extends AbstractController
         $formRequest->handleRequest($request);
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
-            $message->setUser($user->getOwner());
-            $message->setUserId($user->getId());
+            $message->setUser($user);
             $message->setDormId($user->getDormId());
             $message->setRoomNr($user->getRoomNr());
             $message->setContent($message->getContent());
             $message->setStatus(StatusType::urgent());
             $message->setSolved(SolvedType::notSolved());
-            $message->setCreatedAt(new \DateTime());
 
             $entityManager->persist($message);
             $entityManager->flush();
@@ -67,7 +65,7 @@ class DormitoryController extends AbstractController
 
             foreach ($students as $student) {
                 $notification = new Notification();
-                $notification->setUser($message->getUser());
+                $notification->setUser($message->getUser()->getId());
                 $notification->setCreatedAt(new \DateTime());
                 $notification->setRoomNr($message->getRoomNr());
                 $notification->setDormId($message->getDormId());
@@ -145,7 +143,7 @@ class DormitoryController extends AbstractController
 
         $message = $messagesRepo->find($id);
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $help = $helpRepo->findUserProvidedHelp($message->getUserId(), $user->getId(), $message->getId());
+        $help = $helpRepo->findUserProvidedHelp($message->getUser()->getId(), $user->getId(), $message->getId());
 
         if (!$message || $help) {
             return $this->redirectToRoute('dormitory');
@@ -153,10 +151,10 @@ class DormitoryController extends AbstractController
 
         $help = new Help();
         $help->setMessageId($id);
-        $help->setUserId($user->getId());
+        $help->setUser($user);
         $help->setDormId($dormitory->getId());
         $help->setRoomNr($user->getRoomNr());
-        $help->setRequesterId($message->getUserId());
+        $help->setRequesterId($message->getUser()->getId());
 
         $entityManager->persist($help);
         $message->setSolved(SolvedType::solved());
