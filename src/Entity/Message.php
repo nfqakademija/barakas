@@ -133,9 +133,9 @@ class Message
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(StatusType $statusType)
     {
-        $this->status = $status;
+        $this->status = $statusType->id();
 
         return $this;
     }
@@ -157,9 +157,9 @@ class Message
         return $this->solved;
     }
 
-    public function setSolved(int $solved): self
+    public function setSolved(SolvedType $solvedType)
     {
-        $this->solved = $solved;
+        $this->solved = $solvedType->id();
 
         return $this;
     }

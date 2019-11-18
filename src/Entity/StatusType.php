@@ -8,11 +8,11 @@ class StatusType extends EnumerableType
 {
     final public static function urgent()
     {
-        return self::get(0, 'Skubu');
+        return self::get(0, 'urgent');
     }
 
     final public static function normal()
     {
-        return self::get(0, 'Normalus');
+        return self::get(1, 'normal');
     }
 }

@@ -9,6 +9,7 @@ use App\Entity\Notification;
 use App\Entity\SolvedType;
 use App\Entity\StatusType;
 use App\Form\MessageType;
+use App\Service\StudentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,7 +28,8 @@ class DormitoryController extends AbstractController
      */
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        StudentManager $studentManager
     ) {
         $user = $this->getUser();
 
@@ -52,24 +54,14 @@ class DormitoryController extends AbstractController
             $message->setDormId($user->getDormId());
             $message->setRoomNr($user->getRoomNr());
             $message->setContent($message->getContent());
-            $message->setStatus(StatusType::urgent()->id());
-            $message->setSolved(SolvedType::notSolved()->id());
+            $message->setStatus(StatusType::urgent());
+            $message->setSolved(SolvedType::notSolved());
             $message->setCreatedAt(new \DateTime());
 
             $entityManager->persist($message);
             $entityManager->flush();
 
-            $studentToRemove = null;
-
-            foreach ($students as $struct) {
-                if ($user->getOwner() == $struct->getOwner()) {
-                    $studentToRemove = $struct;
-                    break;
-                }
-            }
-
-            $key = array_search($studentToRemove, $students);
-            unset($students[$key]);
+            $students = $studentManager->removeStudentFromStudentsArray($students, $user);
 
             foreach ($students as $student) {
                 $notification = new Notification();
@@ -160,10 +152,9 @@ class DormitoryController extends AbstractController
         $help->setDormId($dormitory->getId());
         $help->setRoomNr($user->getRoomNr());
         $help->setRequesterId($message->getUserId());
-        $help->setCreatedAt(new \DateTime());
 
         $entityManager->persist($help);
-        $message->setSolved(SolvedType::solved()->id());
+        $message->setSolved(SolvedType::solved());
 
         $entityManager->flush();
 

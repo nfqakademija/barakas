@@ -11,6 +11,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Dormitory
 {
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
