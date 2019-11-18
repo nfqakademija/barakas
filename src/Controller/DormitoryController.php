@@ -9,9 +9,11 @@ use App\Entity\Notification;
 use App\Entity\SolvedType;
 use App\Entity\StatusType;
 use App\Form\MessageType;
+use App\Service\StudentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,12 +24,14 @@ class DormitoryController extends AbstractController
      * @Route("/dormitory", name="dormitory")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
+     * @param StudentManager $studentManager
      * @return Response
      * @throws Exception
      */
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        StudentManager $studentManager
     ) {
         $user = $this->getUser();
 
@@ -52,24 +56,14 @@ class DormitoryController extends AbstractController
             $message->setDormId($user->getDormId());
             $message->setRoomNr($user->getRoomNr());
             $message->setContent($message->getContent());
-            $message->setStatus(StatusType::urgent()->id());
-            $message->setSolved(SolvedType::notSolved()->id());
+            $message->setStatus(StatusType::urgent());
+            $message->setSolved(SolvedType::notSolved());
             $message->setCreatedAt(new \DateTime());
 
             $entityManager->persist($message);
             $entityManager->flush();
 
-            $studentToRemove = null;
-
-            foreach ($students as $struct) {
-                if ($user->getOwner() == $struct->getOwner()) {
-                    $studentToRemove = $struct;
-                    break;
-                }
-            }
-
-            $key = array_search($studentToRemove, $students);
-            unset($students[$key]);
+            $students = $studentManager->removeStudentFromStudentsArray($students, $user);
 
             foreach ($students as $student) {
                 $notification = new Notification();
@@ -79,7 +73,7 @@ class DormitoryController extends AbstractController
                 $notification->setDormId($message->getDormId());
                 $notification->setContent($message->getContent());
                 $notification->setRecipientId($student->getId());
-                $notification->setMessageId($message->getId());
+                $notification->setMessage($message);
                 $entityManager->persist($notification);
                 $entityManager->flush();
             }
@@ -123,7 +117,7 @@ class DormitoryController extends AbstractController
         $students = $dormitoryRepo->getStudentsInDormitory($user->getDormId());
         $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
-        if (!$message) {
+        if (!$message || $user->getDormId() !== $message->getDormId()) {
             return $this->redirectToRoute('dormitory');
         }
 
@@ -138,6 +132,9 @@ class DormitoryController extends AbstractController
 
     /**
      * @Route("/dormitory/help/{id}", name="dormitory_help")
+     * @param $id
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
      */
     public function helpUser($id, EntityManagerInterface $entityManager)
     {
@@ -160,10 +157,9 @@ class DormitoryController extends AbstractController
         $help->setDormId($dormitory->getId());
         $help->setRoomNr($user->getRoomNr());
         $help->setRequesterId($message->getUserId());
-        $help->setCreatedAt(new \DateTime());
 
         $entityManager->persist($help);
-        $message->setSolved(SolvedType::solved()->id());
+        $message->setSolved(SolvedType::solved());
 
         $entityManager->flush();
 

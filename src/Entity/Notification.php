@@ -47,9 +47,15 @@ class Notification
     private $recipient_id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Message", inversedBy="notifications")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $message;
+
+    /**
      * @ORM\Column(type="integer")
      */
-    private $message_id;
+    /*    private $message_id;*/
 
     public function getId(): ?int
     {
@@ -128,14 +134,14 @@ class Notification
         return $this;
     }
 
-    public function getMessageId(): ?int
+    public function getMessage(): ?Message
     {
-        return $this->message_id;
+        return $this->message;
     }
 
-    public function setMessageId(int $message_id): self
+    public function setMessage(?Message $message): self
     {
-        $this->message_id = $message_id;
+        $this->message = $message;
 
         return $this;
     }
