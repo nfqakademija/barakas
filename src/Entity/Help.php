@@ -15,7 +15,7 @@ class Help
      * @ORM\Column(type="integer")
      */
     private $id;
-    
+
     /**
      * @ORM\Column(type="integer")
      */
