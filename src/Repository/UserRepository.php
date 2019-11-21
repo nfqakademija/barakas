@@ -41,4 +41,14 @@ class UserRepository extends ServiceEntityRepository
 
         return $messages;
     }
+
+    public function findByEmail($email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 }
