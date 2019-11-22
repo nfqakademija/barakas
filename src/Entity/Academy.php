@@ -41,9 +41,9 @@ class Academy
         $this->title = $title;
     }
 
-    public function getAcademyType(): ?int
+    public function getAcademyType()
     {
-        return $this->academyType;
+        return AcademyType::fromId($this->academyType);
     }
 
     public function setAcademyType(AcademyType $academyType): void
