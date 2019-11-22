@@ -23,7 +23,6 @@ class App extends React.Component {
             this.setState({
                 messages: [data].concat(this.state.messages),
             });
-            console.log(this.state.messages);
         };
     }
     render()
