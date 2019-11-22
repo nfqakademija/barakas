@@ -96,7 +96,7 @@ class DormitoryController extends AbstractController
             }
 
 
-            $update = new Update("http://127.0.0.1:8000/dormitory", json_encode([
+            $update = new Update($_SERVER['SITE_ADDRESS']."/dormitory", json_encode([
                 'id' => $message->getId(),
                 'user' => $message->getUser(),
                 'roomNr' => $message->getRoomNr(),
@@ -113,8 +113,6 @@ class DormitoryController extends AbstractController
             $this->addFlash('error', 'Prašymas nebuvo išsiųstas. Prašymas turi sudaryti nuo 7 iki 300 simbolių.');
             return $this->redirectToRoute('dormitory');
         }
-
-
 
         return $this->render('dormitory/index.html.twig', [
             'dormitory' => $dormitory,
@@ -193,5 +191,16 @@ class DormitoryController extends AbstractController
         $this->addFlash('success', 'Pagalbos siūlymas išsiųstas sėkmingai!');
 
         return $this->redirectToRoute('dormitory');
+    }
+
+    /**
+     * @Route("/dormitory/get/messages", name="messages_json")
+     */
+    public function returnMessages()
+    {
+        $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
+        $user = $this->getUser();
+        $messages = $dormitoryRepo->getDormitoryMessages($user->getDormId());
+        return $this->json($messages);
     }
 }

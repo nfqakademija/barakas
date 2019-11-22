@@ -49,42 +49,5 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
     {{ encore_entry_script_tags('dormitory') }}
-
-    <script>
-        const url = new URL('http://127.0.0.1:9090/.well-known/mercure');
-        url.searchParams.append('topic', 'http://127.0.0.1:8000/dormitory');
-        const eventSource = new EventSource(url);
-        eventSource.onmessage = e => {
-        const data = JSON.parse(e.data);
-            const ul = document.getElementById("list");
-            const li = document.createElement("li");
-            li.innerHTML = "<li style=\"font-size: 14px\">\n" +
-                "<img src=\"https://image.flaticon.com/icons/svg/785/785116.svg\" style=\"height: 17px\">\n" +
-                "<strong>"+data.user+"</strong> <small><i>"+data.createdAt+"</i></small>\n" +
-                "<span class=\"float-right\">\n" +
-                "    <img src=\"https://image.flaticon.com/icons/svg/1229/1229996.svg\" style=\"height: 25px\">\n" +
-                "    "+data.roomNr+"\n" +
-                "</span>\n" +
-                "<div style=\"width: 82%; padding-left: 3%\">"+data.content+"</div>\n" +
-                "    <br>\n" +
-                "    <small>\n" +
-                "        <a href=\"/dormitory/help/"+data.id+"\" class=\"help-button\">\n" +
-                "            <img src=\"https://image.flaticon.com/icons/svg/1264/1264878.svg\">\n" +
-                "            <span>Padėti</span>\n" +
-                "        </a>\n" +
-                "    </small>\n" +
-                "    &nbsp;\n" +
-                "    <small>\n" +
-                "        <a href=\"#\" class=\"report-button\">\n" +
-                "            <img src=\"https://image.flaticon.com/icons/svg/196/196777.svg\">\n" +
-                "            <span>Pranešti</span>\n" +
-                "        </a>\n" +
-                "    </small>\n" +
-                "    <hr>\n" +
-                "</li>";
-            li.setAttribute("style", "font-size: 14px");
-            ul.insertBefore(li, ul.firstChild);
-            console.log(data);
-        };
-    </script>
+    {{ encore_entry_script_tags('messages') }}
 {% endblock %}
