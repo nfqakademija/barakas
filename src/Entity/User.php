@@ -77,17 +77,17 @@ class User implements UserInterface
     private $created_at;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="user", cascade={"remove"})
      */
     private $messages;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Help", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Help", mappedBy="user", cascade={"remove"})
      */
     private $helps;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Notification", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Notification", mappedBy="user", cascade={"remove"})
      */
     private $notifications;
 
