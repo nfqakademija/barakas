@@ -30,7 +30,7 @@ class User implements UserInterface
     /**
      * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @Assert\Length(
-     *     min = 10,
+     *     min = 7,
      *     max = 25,
      *     minMessage = "Vadovo vardas negali būti trumpesnis nei {{ limit }} simbolių.",
      *     maxMessage = "Vadovo vardas negali būti ilgesnis nei {{ limit }} simboliai."
@@ -77,17 +77,17 @@ class User implements UserInterface
     private $created_at;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="user", cascade={"remove"})
      */
     private $messages;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Help", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Help", mappedBy="user", cascade={"remove"})
      */
     private $helps;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Notification", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Notification", mappedBy="user", cascade={"remove"})
      */
     private $notifications;
 
