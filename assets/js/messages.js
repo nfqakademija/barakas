@@ -24,8 +24,6 @@ class App extends React.Component {
                     messages: res.data.data,
                     user: res.data.user_id
                 });
-                console.log(this.state.messages);
-                console.log(this.state.user);
             });
 
         const url = new URL('http://127.0.0.1:9090/.well-known/mercure');
