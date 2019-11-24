@@ -9,9 +9,11 @@ use App\Entity\Notification;
 use App\Entity\SolvedType;
 use App\Entity\StatusType;
 use App\Form\MessageType;
+use App\Service\StudentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Publisher;
@@ -28,6 +30,8 @@ class DormitoryController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param MessageBusInterface $bus
+     * @param StudentManager $studentManager
+
      * @return Response
      * @throws Exception
      */
@@ -35,6 +39,7 @@ class DormitoryController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         MessageBusInterface $bus
+        StudentManager $studentManager
     ) {
         $user = $this->getUser();
 
@@ -54,14 +59,12 @@ class DormitoryController extends AbstractController
         $formRequest->handleRequest($request);
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
-            $message->setUser($user->getOwner());
-            $message->setUserId($user->getId());
+            $message->setUser($user);
             $message->setDormId($user->getDormId());
             $message->setRoomNr($user->getRoomNr());
             $message->setContent($message->getContent());
-            $message->setStatus(StatusType::urgent()->id());
-            $message->setSolved(SolvedType::notSolved()->id());
-            $message->setCreatedAt(new \DateTime());
+            $message->setStatus(StatusType::urgent());
+            $message->setSolved(SolvedType::notSolved());
 
             $entityManager->persist($message);
             $entityManager->flush();
@@ -82,6 +85,9 @@ class DormitoryController extends AbstractController
             $key = array_search($studentToRemove, $students);
             unset($students[$key]);
 
+            $students = $studentManager->removeStudentFromStudentsArray($students, $user);
+
+
             foreach ($students as $student) {
                 $notification = new Notification();
                 $notification->setUser($message->getUser());
@@ -90,7 +96,7 @@ class DormitoryController extends AbstractController
                 $notification->setDormId($message->getDormId());
                 $notification->setContent($message->getContent());
                 $notification->setRecipientId($student->getId());
-                $notification->setMessageId($message->getId());
+                $notification->setMessage($message);
                 $entityManager->persist($notification);
                 $entityManager->flush();
             }
@@ -143,7 +149,7 @@ class DormitoryController extends AbstractController
         $students = $dormitoryRepo->getStudentsInDormitory($user->getDormId());
         $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
-        if (!$message) {
+        if (!$message || $user->getDormId() !== $message->getDormId()) {
             return $this->redirectToRoute('dormitory');
         }
 
@@ -158,6 +164,9 @@ class DormitoryController extends AbstractController
 
     /**
      * @Route("/dormitory/help/{id}", name="dormitory_help")
+     * @param $id
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
      */
     public function helpUser($id, EntityManagerInterface $entityManager)
     {
@@ -168,7 +177,7 @@ class DormitoryController extends AbstractController
 
         $message = $messagesRepo->find($id);
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $help = $helpRepo->findUserProvidedHelp($message->getUserId(), $user->getId(), $message->getId());
+        $help = $helpRepo->findUserProvidedHelp($message->getUser()->getId(), $user->getId(), $message->getId());
 
         if (!$message || $help) {
             return $this->redirectToRoute('dormitory');
@@ -176,14 +185,13 @@ class DormitoryController extends AbstractController
 
         $help = new Help();
         $help->setMessageId($id);
-        $help->setUserId($user->getId());
+        $help->setUser($user);
         $help->setDormId($dormitory->getId());
         $help->setRoomNr($user->getRoomNr());
-        $help->setRequesterId($message->getUserId());
-        $help->setCreatedAt(new \DateTime());
+        $help->setRequesterId($message->getUser()->getId());
 
         $entityManager->persist($help);
-        $message->setSolved(SolvedType::solved()->id());
+        $message->setSolved(SolvedType::solved());
 
         $entityManager->flush();
 

@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Cassandra\Date;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -16,11 +19,6 @@ class Message
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $user;
 
     /**
      * @ORM\Column(type="integer")
@@ -56,28 +54,27 @@ class Message
     /**
      * @ORM\Column(type="integer")
      */
-    private $user_id;
+    private $solved;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="App\Entity\Notification", mappedBy="message")
      */
-    private $solved;
+    private $notifications;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
+     */
+    private $user;
+
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection();
+        $this->created_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUser(): ?string
-    {
-        return $this->user;
-    }
-
-    public function setUser(string $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getDormId(): ?int
@@ -133,21 +130,9 @@ class Message
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(StatusType $statusType)
     {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): self
-    {
-        $this->user_id = $user_id;
+        $this->status = $statusType->id();
 
         return $this;
     }
@@ -157,9 +142,52 @@ class Message
         return $this->solved;
     }
 
-    public function setSolved(int $solved): self
+    public function setSolved(SolvedType $solvedType)
     {
-        $this->solved = $solved;
+        $this->solved = $solvedType->id();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setMessage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->contains($notification)) {
+            $this->notifications->removeElement($notification);
+            // set the owning side to null (unless already changed)
+            if ($notification->getMessage() === $this) {
+                $notification->setMessage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -19,11 +19,6 @@ class Notification
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $user;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $room_nr;
 
     /**
@@ -47,25 +42,24 @@ class Notification
     private $recipient_id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Message", inversedBy="notifications")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $message_id;
+    private $message;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notifications")
+     */
+    private $user;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUser(): ?string
-    {
-        return $this->user;
-    }
-
-    public function setUser(string $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getRoomNr(): ?string
@@ -128,14 +122,26 @@ class Notification
         return $this;
     }
 
-    public function getMessageId(): ?int
+    public function getMessage(): ?Message
     {
-        return $this->message_id;
+        return $this->message;
     }
 
-    public function setMessageId(int $message_id): self
+    public function setMessage(?Message $message): self
     {
-        $this->message_id = $message_id;
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

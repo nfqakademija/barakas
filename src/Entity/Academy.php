@@ -36,11 +36,9 @@ class Academy
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(string $title): void
     {
         $this->title = $title;
-
-        return $this;
     }
 
     public function getAcademyType()
@@ -48,10 +46,8 @@ class Academy
         return AcademyType::fromId($this->academyType);
     }
 
-    public function setAcademyType(AcademyType $academyType)
+    public function setAcademyType(AcademyType $academyType): void
     {
         $this->academyType = $academyType->id();
-
-        return $this;
     }
 }

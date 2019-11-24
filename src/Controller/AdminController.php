@@ -31,7 +31,7 @@ class AdminController extends AbstractController
         $studentsRepository = $this->getDoctrine()->getRepository(User::class);
 
         $id = $request->query->get('id');
-
+        
         $invites = $invitesRepository->getInvitations($id);
         $students = $studentsRepository->getStudents($id);
 
@@ -56,6 +56,14 @@ class AdminController extends AbstractController
             $invitation->setRoom($invitation->getRoom());
             $invitation->setUrl($url);
             $invitation->setDorm($dormitoryInfo->getId());
+
+            $studentExists = $studentsRepository->findBy(['email' => $invitation->getEmail()]);
+
+            if ($studentExists) {
+                $this->addFlash('warning', 'El. pašto adresas jau užregistruotas.');
+                return $this->redirectToRoute('admin_panel', ['id' => $id]);
+            }
+
             $entityManager->persist($invitation);
             $entityManager->flush();
             $emailService->sendInviteMail($invitation->getEmail(), $url, $invitation->getName());

@@ -38,6 +38,11 @@ class Dormitory
      */
     private $created_at;
 
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -58,13 +63,13 @@ class Dormitory
     /**
      * @return mixed
      */
-    public function getOrganisationId(): int
+    public function getOrganisationId(): ?int
     {
         return $this->organisation_id;
     }
 
     /**
-
+     * @param $organisation_id
      * @return Dormitory
      */
     public function setOrganisationId($organisation_id): self

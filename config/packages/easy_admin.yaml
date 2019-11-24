@@ -1,0 +1,138 @@
+easy_admin:
+    entities:
+        # List the entity class name you want to manage
+        User:
+            class: App\Entity\User
+            list:  # <-- 'form' is applied to both 'new' and 'edit' views
+                fields:
+                    - 'email'
+                    - 'owner'
+                    - 'dorm_id'
+                    - 'room_nr'
+                    - { property: 'roles', template: 'admin/super/roles-type-read.html.twig' }
+                    - { property: 'created_at', type: 'datetime' }
+            form:
+                fields:
+                    - { property: 'email', type: 'email' }
+                    - { property: 'owner', type: 'text' }
+                    - { property: 'roles', type: 'collection' }
+                    - { property: 'dorm_id', type: 'number' }
+                    - { property: 'room_nr', type: 'text' }
+                    - { property: 'created_at', type: 'datetime' }
+
+        Academy:
+          class: App\Entity\Academy
+          list:  # <-- 'form' is applied to both 'new' and 'edit' views
+            fields:
+              - 'title'
+              - 'academyType'
+          form:
+            fields:
+              - { property: 'title', type: 'text' }
+              - { property: 'academyType', type: 'number' }
+
+        Comment:
+          class: App\Entity\Comment
+          list:  # <-- 'form' is applied to both 'new' and 'edit' views
+            fields:
+              - 'message_id'
+              - 'user'
+              - 'room_nr'
+              - 'content'
+              - 'created_at'
+          form:
+            fields:
+              - { property: 'message_id', type: 'number' }
+              - { property: 'user', type: 'text' }
+              - { property: 'room_nr', type: 'number' }
+              - { property: 'content', type: 'text' }
+              - { property: 'created_at', type: 'datetime' }
+
+        Dormitory:
+          class: App\Entity\Dormitory
+          list:  # <-- 'form' is applied to both 'new' and 'edit' views
+            fields:
+              - 'address'
+              - 'organisation_id'
+              - 'title'
+          form:
+            fields:
+              - { property: 'address', type: 'text' }
+              - { property: 'organisation_id', type: 'number' }
+              - { property: 'title', type: 'text' }
+              - { property: 'created_at', type: 'datetime' }
+
+        Help:
+          class: App\Entity\Help
+          list:  # <-- 'form' is applied to both 'new' and 'edit' views
+            fields:
+              - 'dorm_id'
+              - 'room_nr'
+              - 'message_id'
+              - 'requester_id'
+              - 'created_at'
+          form:
+            fields:
+              - { property: 'dorm_id', type: 'number' }
+              - { property: 'room_nr', type: 'text' }
+              - { property: 'message_id', type: 'number' }
+              - { property: 'requester_id', type: 'number' }
+              - { property: 'created_at', type: 'datetime' }
+
+        Invite:
+          class: App\Entity\Invite
+          list:  # <-- 'form' is applied to both 'new' and 'edit' views
+            fields:
+              - 'name'
+              - 'url'
+              - 'email'
+              - 'room'
+              - 'dorm'
+          form:
+            fields:
+              - { property: 'name', type: 'text' }
+              - { property: 'url', type: 'text' }
+              - { property: 'email', type: 'email' }
+              - { property: 'room', type: 'text' }
+              - { property: 'dorm', type: 'number' }
+
+        Message:
+          class: App\Entity\Message
+          list:  # <-- 'form' is applied to both 'new' and 'edit' views
+            fields:
+              - 'dorm_id'
+              - 'room_nr'
+              - 'content'
+              - 'solved'
+              - 'status'
+              - 'created_at'
+          form:
+            fields:
+              - { property: 'dorm_id', type: 'number' }
+              - { property: 'room_nr', type: 'text' }
+              - { property: 'content', type: 'text' }
+              - { property: 'solved', type: 'number' }
+              - { property: 'status', type: 'number' }
+              - { property: 'created_at', type: 'datetime' }
+
+        Notification:
+          class: App\Entity\Notification
+          list:  # <-- 'form' is applied to both 'new' and 'edit' views
+            fields:
+              - 'user'
+              - 'room_nr'
+              - 'dorm_id'
+              - 'content'
+              - 'recipient_id'
+              - 'created_at'
+          form:
+            fields:
+              - { property: 'user', type: 'text' }
+              - { property: 'room_nr', type: 'text' }
+              - { property: 'dorm_id', type: 'number' }
+              - { property: 'content', type: 'text' }
+              - { property: 'recipient_id', type: 'number' }
+              - { property: 'created_at', type: 'datetime' }
+
+    user:
+      name_property_path: "email"

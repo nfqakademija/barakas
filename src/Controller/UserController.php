@@ -47,7 +47,6 @@ class UserController extends AbstractController
             $dormitory->setAddress($dormitory->getAddress());
             $dormitory->setOrganisationId($user->getId());
             $dormitory->setTitle($dormitory->getTitle());
-            $dormitory->setCreatedAt(new \DateTime());
 
             $em->persist($dormitory);
             $em->flush();
@@ -110,7 +109,7 @@ class UserController extends AbstractController
             $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
             $organisation->setPassword($encodedPassword);
             $organisation->setRoles(array('ROLE_ADMIN'));
-            $organisation->setCreatedAt(new \DateTime());
+
             $entityManager->persist($organisation);
             $entityManager->flush();
 
@@ -214,7 +213,6 @@ class UserController extends AbstractController
             $student->setDormId($invitation->getDorm());
             $student->setRoomNr($invitation->getRoom());
             $student->setRoles(array('ROLE_USER'));
-            $student->setCreatedAt(new \DateTime());
             $entityManager->persist($student);
             $entityManager->flush();
 

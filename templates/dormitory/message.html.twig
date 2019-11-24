@@ -17,7 +17,7 @@
                             {% if(message.status == 0) %}
                                 <img src="https://image.flaticon.com/icons/svg/785/785116.svg" style="height: 17px">
                             {% endif %}
-                            <strong>{{ message.user }}</strong> <small><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
+                            <strong>{{ message.user.owner }}</strong> <small><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
                             <span class="float-right">
                             <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 25px">
                             {{ message.roomNr }}
@@ -25,7 +25,7 @@
                             <br>
                             <div style="width: 82%; padding-left: 3%">{{ message.content }}</div>
                                 <br>
-                            {% if message.userId == app.user.id and message.solved == 0 %}
+                            {% if message.user.id == app.user.id and message.solved == 0 %}
                                 <small>
                     <span class="isDisabled help-button">
                         <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
@@ -50,15 +50,17 @@
 
                             {% else %}
                                 <small>
-                            <span class="help-button">
-                            <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg"> Padėti
-                            </span>
+                                    <a href="{{ path('dormitory_help', {'id': message.id}) }}" class="help-button">
+                                        <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
+                                        <span>Padėti</span>
+                                    </a>
                                 </small>
                                 &nbsp;
                                 <small>
-                            <span class="report-button">
-                                <img src="https://image.flaticon.com/icons/svg/196/196777.svg"> Pranešti
-                            </span>
+                                    <a href="#" class="report-button">
+                                        <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
+                                        <span>Pranešti</span>
+                                    </a>
                                 </small>
                             {% endif %}
                         </li>

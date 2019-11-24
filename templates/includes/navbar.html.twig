@@ -15,6 +15,12 @@
             </li>
         </ul>
         <ul class="navbar-nav mr-4">
+            {% if app.user and is_granted('ROLE_SUPER') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin"><i class="fas"></i> Administravimas
+                    </a>
+                </li>
+            {% endif %}
             {% if app.user and not is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('provided_help') }}"><i class="fas fa-hands-helping"></i> Pagalbos pranešimai
@@ -43,8 +49,8 @@
                             {% for notification in notifications %}
                                 <li>
                                     <small>
-                                        <a href="{{ path('message', {'id': notification.messageId}) }}" class="notification-url">
-                                        {{ notification.user }} | Kambarys: <strong>{{ notification.roomNr }}</strong> <br>
+                                        <a href="{{ path('message', {'id': notification.message.id}) }}" class="notification-url">
+                                        {{ notification.user.owner }} | Kambarys: <strong>{{ notification.roomNr }}</strong> <br>
                                         <strong>Prašymas:</strong> {{ notification.content|length > 50 ? notification.content|slice(0, 50) ~ '...' : notification.content  }}
                                         <br>
                                         <i>{{ notification.createdAt|date('Y-m-d h:m:s') }}</i>

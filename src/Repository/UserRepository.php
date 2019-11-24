@@ -36,9 +36,19 @@ class UserRepository extends ServiceEntityRepository
         $messagesRepo = $entityManager->getRepository(Message::class);
 
         $messages = $messagesRepo->findBy([
-            'user_id' => $id
+            'user' => $id
         ]);
 
         return $messages;
+    }
+
+    public function findByEmail($email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 }
