@@ -38,7 +38,7 @@ class DormitoryController extends AbstractController
     public function index(
         Request $request,
         EntityManagerInterface $entityManager,
-        MessageBusInterface $bus
+        MessageBusInterface $bus,
         StudentManager $studentManager
     ) {
         $user = $this->getUser();

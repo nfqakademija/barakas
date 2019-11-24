@@ -164,6 +164,7 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.0.1"
+    },
     "pagerfanta/pagerfanta": {
         "version": "v2.1.3"
     },
