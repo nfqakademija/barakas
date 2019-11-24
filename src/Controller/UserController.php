@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
+use App\Entity\DormitoryChange;
 use App\Entity\Help;
 use App\Entity\Invite;
 use App\Entity\Notification;
 use App\Entity\User;
 use App\Entity\Dormitory;
+use App\Form\DormitoryChangeType;
 use App\Form\PasswordChangeType;
 use App\Form\StudentRegisterType;
 use App\Form\UserRegisterType;
@@ -270,6 +272,37 @@ class UserController extends AbstractController
             'messages' => $messages,
             'helpMessages' => $helpMessages,
             'notifications' => $notifications
+        ]);
+    }
+
+    /**
+     * @Route("/dormitory/change-dormitory", name="change_dormitory")
+     */
+    public function changeDormitory()
+    {
+        $user = $this->getUser();
+
+        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
+        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
+
+        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
+        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+
+        $changeDormitory = new DormitoryChange();
+        $dormitoryChangeRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
+
+        $userDormitory = $user->getDormId();
+
+        $dorms = $dormitoryChangeRepo->removeUserDormitoryFromArray($user, $userDormitory);
+
+        $form = $this->createForm(DormitoryChangeType::class, $changeDormitory, array(
+            'dorms' => $dorms
+        ));
+
+        return $this->render('user/change_dormitory.html.twig', [
+            'helpMessages' => $helpMessages,
+            'notifications' => $notifications,
+            'form' => $form->createView()
         ]);
     }
 }
