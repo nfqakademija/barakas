@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
+use App\Entity\ApprovedType;
 use App\Entity\DormitoryChange;
 use App\Entity\Help;
 use App\Entity\Invite;
@@ -277,8 +278,11 @@ class UserController extends AbstractController
 
     /**
      * @Route("/dormitory/change-dormitory", name="change_dormitory")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
-    public function changeDormitory()
+    public function changeDormitory(Request $request, EntityManagerInterface $entityManager)
     {
         $user = $this->getUser();
 
@@ -291,13 +295,23 @@ class UserController extends AbstractController
         $changeDormitory = new DormitoryChange();
         $dormitoryChangeRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
 
-        $userDormitory = $user->getDormId();
+        $userDormitoryId = $user->getDormId();
 
-        $dorms = $dormitoryChangeRepo->removeUserDormitoryFromArray($user, $userDormitory);
+        $dorms = $dormitoryChangeRepo->removeUserDormitoryFromArray($user, $userDormitoryId);
 
         $form = $this->createForm(DormitoryChangeType::class, $changeDormitory, array(
             'dorms' => $dorms
         ));
+
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $changeDormitory->setDormitory($changeDormitory->getDormitory());
+            $changeDormitory->setUser($user);
+            $changeDormitory->setApproved(ApprovedType::approved());
+            $entityManager->persist($changeDormitory);
+            $entityManager->flush();
+        }
 
         return $this->render('user/change_dormitory.html.twig', [
             'helpMessages' => $helpMessages,

@@ -4,8 +4,11 @@ namespace App\Form;
 
 use App\Entity\Dormitory;
 use App\Entity\DormitoryChange;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,11 +17,18 @@ class DormitoryChangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('academy', EntityType::class, [
+            ->add('academy', NumberType::class, [
+                'label' => 'Akademija',
+                'attr' => [
+                    'readonly' => true
+                ],
+                'data' => null
+            ])
+            ->add('dormitory', EntityType::class, [
                 'label' => 'Adresas',
                 'class' => Dormitory::class,
-                'choice_label' => 'address',
-                'choice_value' => 'address',
+                'choice_label' => 'organisation_id',
+                'choice_value' => 'organisation_id',
                 'choices' => [
                     'Gatvė' => $options['dorms']
                 ]

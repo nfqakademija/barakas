@@ -20,7 +20,19 @@ class DormitoryChangeRepository extends ServiceEntityRepository
         parent::__construct($registry, DormitoryChange::class);
     }
 
-    private function findUserDormitory($id)
+    public function findCurrentUserDormitory($id)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $dormitoryRepo = $entityManager->getRepository(Dormitory::class);
+
+        $dormitory = $dormitoryRepo->findOneBy(['id' => $id]);
+
+        return $dormitory;
+
+    }
+
+    private function findUserOrganisationDormitory($id)
     {
         $entityManager = $this->getEntityManager();
 
@@ -36,7 +48,7 @@ class DormitoryChangeRepository extends ServiceEntityRepository
 
     public function removeUserDormitoryFromArray($user, $userDormitoryId)
     {
-        $dorms = $this->findUserDormitory($userDormitoryId);
+        $dorms = $this->findUserOrganisationDormitory($userDormitoryId);
 
         $dormitoryToRemove = null;
 

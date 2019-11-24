@@ -46,6 +46,7 @@ class DormitoryChange
     public function __construct()
     {
         $this->user = new ArrayCollection();
+        $this->created_at = new \DateTime();
     }
 
     public function getId(): ?int
@@ -61,29 +62,12 @@ class DormitoryChange
         return $this->user;
     }
 
-    public function addUser(User $user): self
+    public function setUser(?User $user): self
     {
-        if (!$this->user->contains($user)) {
-            $this->user[] = $user;
-            $user->setDormitoryChange($this);
-        }
+        $this->user = $user;
 
         return $this;
     }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->user->contains($user)) {
-            $this->user->removeElement($user);
-            // set the owning side to null (unless already changed)
-            if ($user->getDormitoryChange() === $this) {
-                $user->setDormitoryChange(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getDormitory(): ?Dormitory
     {
         return $this->dormitory;
@@ -101,11 +85,9 @@ class DormitoryChange
         return $this->approved;
     }
 
-    public function setApproved(int $approved): self
+    public function setApproved(ApprovedType $approvedType): void
     {
-        $this->approved = $approved;
-
-        return $this;
+        $this->approved = $approvedType->id();
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
