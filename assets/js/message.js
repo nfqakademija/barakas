@@ -1,10 +1,9 @@
 import React from 'react';
-
+import Fade from 'react-reveal/Fade';
 class message extends React.Component {
     constructor(props)
     {
         super(props);
-        console.log(this.props.currentUser);
     }
 
     render()
@@ -12,7 +11,7 @@ class message extends React.Component {
         const {id,createdAt,roomNr,content, user, status, currentUser, userId, solved} = this.props;
 
         return (
-            <ul className="list-unstyled">
+            <Fade>
                 <li style={{fontSize: '14px'}}>
                     {status===0 ?  <img src="https://image.flaticon.com/icons/svg/785/785116.svg" style={{height: '17px'}} /> : null}
 
@@ -63,10 +62,9 @@ class message extends React.Component {
                                 </small>
                             </div>
                     }
-
+                    <hr />
                 </li>
-                <hr />
-            </ul>
+            </Fade>
         )
 
     }

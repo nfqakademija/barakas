@@ -40,7 +40,7 @@ class App extends React.Component {
     {
         Moment.locale('lt');
         return (
-            <div>
+            <ul className="list-unstyled">
                 {this.state.messages.map((messages) => (
                     <Message
                     key={messages.id}
@@ -55,7 +55,7 @@ class App extends React.Component {
                     currentUser = {this.state.user}
                     />
                         ))}
-            </div>
+            </ul>
                 )
     }
 }
