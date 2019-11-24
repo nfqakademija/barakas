@@ -20,16 +20,6 @@ easy_admin:
                     - { property: 'room_nr', type: 'text' }
                     - { property: 'created_at', type: 'datetime' }
 
-        Academy:
-          class: App\Entity\Academy
-          list:  # <-- 'form' is applied to both 'new' and 'edit' views
-            fields:
-              - 'title'
-              - 'academyType'
-          form:
-            fields:
-              - { property: 'title', type: 'text' }
-              - { property: 'academyType', type: 'number' }
 
         Comment:
           class: App\Entity\Comment
