@@ -30,7 +30,7 @@ class User implements UserInterface
     /**
      * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @Assert\Length(
-     *     min = 10,
+     *     min = 7,
      *     max = 25,
      *     minMessage = "Vadovo vardas negali būti trumpesnis nei {{ limit }} simbolių.",
      *     maxMessage = "Vadovo vardas negali būti ilgesnis nei {{ limit }} simboliai."
