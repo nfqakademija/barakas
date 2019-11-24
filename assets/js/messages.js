@@ -16,7 +16,7 @@ class App extends React.Component {
     componentDidMount()
     {
         const url = new URL('http://127.0.0.1:9090/.well-known/mercure');
-        url.searchParams.append('topic', '/dormitory');
+        url.searchParams.append('topic', 'http://127.0.0.1:8000/dormitory');
         const eventSource = new EventSource(url);
         eventSource.onmessage = e => {
             const data = JSON.parse(e.data);
