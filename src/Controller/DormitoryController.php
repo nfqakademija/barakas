@@ -201,6 +201,8 @@ class DormitoryController extends AbstractController
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
         $user = $this->getUser();
         $messages = $dormitoryRepo->getDormitoryMessages($user->getDormId());
+        $messages['data'] = $messages;
+        $messages["user_id"] = $user->getId();
         return $this->json($messages);
     }
 }
