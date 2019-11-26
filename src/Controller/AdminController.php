@@ -130,7 +130,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/organisation/remove-request", name="`remove_change_dorm_req`")
+     * @Route("/organisation/remove-request", name="remove_change_dorm_req")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @return RedirectResponse

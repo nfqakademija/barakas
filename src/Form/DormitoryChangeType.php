@@ -20,7 +20,7 @@ class DormitoryChangeType extends AbstractType
                 'label' => 'Pasirinkite adresą',
                 'class' => Dormitory::class,
                 'choice_label' => 'address',
-                'choice_value' => 'organisation_id',
+                'choice_value' => 'id',
                 'choices' => [
                     'Gatvė' => $options['dorms']
                 ]
