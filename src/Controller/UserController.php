@@ -162,17 +162,9 @@ class UserController extends AbstractController
                 );
             }
         }
-        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
-        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
-
-        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
-        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
         return $this->render('user/passwordChange.html.twig', [
             'form' => $form->createView(),
-            'notifications' => $notifications,
-            'helpMessages' => $helpMessages,
-
         ]);
     }
 
@@ -261,18 +253,11 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
         $helpRepo = $this->getDoctrine()->getRepository(Help::class);
-        $userRepo = $this->getDoctrine()->getRepository(User::class);
 
         $helpMessages = $helpRepo->userProblemSolvers($user->getId());
-        $messages = $userRepo->getUserMessages($user->getId());
-
-        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
-        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
 
         return $this->render('user/messages_solved.html.twig', [
-            'messages' => $messages,
             'helpMessages' => $helpMessages,
-            'notifications' => $notifications
         ]);
     }
 
@@ -285,12 +270,6 @@ class UserController extends AbstractController
     public function changeDormitory(Request $request, EntityManagerInterface $entityManager)
     {
         $user = $this->getUser();
-
-        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
-        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
-
-        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
-        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
 
         $changeDormitory = new DormitoryChange();
         $dormitoryChangeRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
@@ -321,8 +300,6 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/change_dormitory.html.twig', [
-            'helpMessages' => $helpMessages,
-            'notifications' => $notifications,
             'form' => $form->createView()
         ]);
     }
