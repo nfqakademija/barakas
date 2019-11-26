@@ -80,6 +80,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     {% if is_granted('ROLE_ADMIN') %}
                     <a class="dropdown-item" href="{{ path('organisation') }}"><i class="fas fa-tools"></i> Administravimas</a>
+                    <a class="dropdown-item" href="{{ path('dormitory_change_req') }}"><i class="fas fa-exchange-alt"></i> Bendrabučių keitimai</a>
                     {% endif %}
                     <a class="dropdown-item" href="{{ path('passwordChange') }}"><i class="fas fa-lock"></i> Pakeisti slaptažodį</a>
                     <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Atsijungti</a>
