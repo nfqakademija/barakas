@@ -30,7 +30,8 @@ header {
 }
 
 .logo {
-  height: 125px;
+  height: 10em;
+  padding-bottom: 1%;
 }
 
 .index-about-text {
@@ -96,7 +97,6 @@ a:hover {
   padding: 0px 5px;
   display: flex;
   justify-content: space-between;
-  width: 100%;
 }
 
 .vert-line {
