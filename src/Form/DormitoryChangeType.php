@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Academy;
 use App\Entity\Dormitory;
 use App\Entity\DormitoryChange;
 use Doctrine\DBAL\Types\TextType;
@@ -17,13 +18,13 @@ class DormitoryChangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('academy', NumberType::class, [
+/*            ->add('academy', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
                 'label' => 'Akademija',
                 'attr' => [
                     'readonly' => true
                 ],
-                'data' => null
-            ])
+                'data' => 'academy'
+            ])*/
             ->add('dormitory', EntityType::class, [
                 'label' => 'Adresas',
                 'class' => Dormitory::class,
@@ -40,7 +41,8 @@ class DormitoryChangeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => DormitoryChange::class,
-            'dorms' => null
+            'dorms' => null,
+            'academy' => null
         ]);
     }
 }

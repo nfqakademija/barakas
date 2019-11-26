@@ -297,6 +297,8 @@ class UserController extends AbstractController
 
         $userDormitoryId = $user->getDormId();
 
+        $academy = $dormitoryChangeRepo->findUserAcademy($userDormitoryId);
+
         $dorms = $dormitoryChangeRepo->removeUserDormitoryFromArray($user, $userDormitoryId);
 
         $form = $this->createForm(DormitoryChangeType::class, $changeDormitory, array(
@@ -304,11 +306,12 @@ class UserController extends AbstractController
         ));
 
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $changeDormitory->setAcademy($academy);
             $changeDormitory->setDormitory($changeDormitory->getDormitory());
             $changeDormitory->setUser($user);
-            $changeDormitory->setApproved(ApprovedType::approved());
+            $changeDormitory->setApproved(ApprovedType::notApproved());
             $entityManager->persist($changeDormitory);
             $entityManager->flush();
         }
