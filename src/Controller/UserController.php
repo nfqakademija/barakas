@@ -309,7 +309,6 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $changeDormitory->setAcademy($academy);
-            $changeDormitory->setDormitory($changeDormitory->getDormitory());
             $changeDormitory->setUser($user);
             $changeDormitory->setApproved(ApprovedType::notApproved());
             $entityManager->persist($changeDormitory);

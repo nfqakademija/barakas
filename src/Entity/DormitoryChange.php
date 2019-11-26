@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DormitoryChangeRepository")
@@ -25,6 +26,7 @@ class DormitoryChange
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Dormitory")
+     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      */
     private $dormitory;
 
@@ -33,15 +35,28 @@ class DormitoryChange
      */
     private $approved;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $created_at;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Academy")
      */
     private $academy;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
+     */
+    private $room_nr;
+
+    /**
+     * @ORM\Column(type="text")
+     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $created_at;
 
     public function __construct()
     {
@@ -110,6 +125,30 @@ class DormitoryChange
     public function setAcademy(?Academy $academy): self
     {
         $this->academy = $academy;
+
+        return $this;
+    }
+
+    public function getRoomNr(): ?string
+    {
+        return $this->room_nr;
+    }
+
+    public function setRoomNr(string $room_nr): self
+    {
+        $this->room_nr = $room_nr;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

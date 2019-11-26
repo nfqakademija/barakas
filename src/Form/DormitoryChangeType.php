@@ -2,14 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Academy;
 use App\Entity\Dormitory;
 use App\Entity\DormitoryChange;
-use Doctrine\DBAL\Types\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,12 +17,24 @@ class DormitoryChangeType extends AbstractType
     {
         $builder
             ->add('dormitory', EntityType::class, [
-                'label' => 'Adresas',
+                'label' => 'Pasirinkite adresą',
                 'class' => Dormitory::class,
                 'choice_label' => 'address',
                 'choice_value' => 'organisation_id',
                 'choices' => [
                     'Gatvė' => $options['dorms']
+                ]
+            ])
+            ->add('room_nr', TextType::class, [
+                'label' => 'Kambario numeris',
+                'attr' => [
+                    'placeholder' => '505A'
+                ]
+            ])
+            ->add('description', TextareaType::class, [
+                'label' => 'Keitimo priežastis',
+                'attr' => [
+                    'placeholder' => 'Nurodykite priežastį dėl kurios keičiate bendrabutį'
                 ]
             ])
         ;
