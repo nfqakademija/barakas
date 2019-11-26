@@ -18,17 +18,10 @@ class DormitoryChangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-/*            ->add('academy', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
-                'label' => 'Akademija',
-                'attr' => [
-                    'readonly' => true
-                ],
-                'data' => 'academy'
-            ])*/
             ->add('dormitory', EntityType::class, [
                 'label' => 'Adresas',
                 'class' => Dormitory::class,
-                'choice_label' => 'organisation_id',
+                'choice_label' => 'address',
                 'choice_value' => 'organisation_id',
                 'choices' => [
                     'Gatvė' => $options['dorms']
