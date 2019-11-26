@@ -112,8 +112,7 @@ class AdminController extends AbstractController
 
         $request = $requestRepo->find($requestId);
 
-        if(!$request)
-        {
+        if (!$request) {
             return $this->redirectToRoute('organisation');
         }
 
@@ -143,8 +142,7 @@ class AdminController extends AbstractController
 
         $request = $requestRepo->find($requestId);
 
-        if(!$request)
-        {
+        if (!$request) {
             return $this->redirectToRoute('organisation');
         }
 

@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\ApprovedType;
 use App\Entity\Dormitory;
 use App\Entity\DormitoryChange;
 use App\Entity\User;
@@ -33,7 +32,6 @@ class DormitoryChangeRepository extends ServiceEntityRepository
         $dorms = $dormitoryRepo->findBy(['organisation_id' => $dormitory->getOrganisationId()]);
 
         return $dorms;
-
     }
 
     public function removeUserDormitoryFromArray($user, $userDormitoryId)
@@ -70,7 +68,6 @@ class DormitoryChangeRepository extends ServiceEntityRepository
         $academy = $organisation->getAcademy();
 
         return $academy;
-
     }
 
     public function getNotApprovedRequests()
