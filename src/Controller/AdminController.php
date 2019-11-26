@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\ApprovedType;
 use App\Entity\Dormitory;
+use App\Entity\DormitoryChange;
 use App\Entity\User;
 use App\Entity\Invite;
 use App\Form\SendInvitationType;
@@ -80,5 +82,77 @@ class AdminController extends AbstractController
             'dormitory' => $dormitory,
             'SendInvitationType' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("organisation/dormitory-change-requests", name="dormitory_change_req")
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function dormitoryChangeRequests(EntityManagerInterface $entityManager)
+    {
+        $requestsRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
+        $requests = $requestsRepo->getNotApprovedRequests();
+
+        return $this->render('/organisation/pages/dormitoryChangeRequests.html.twig', [
+            'requests' => $requests
+        ]);
+    }
+
+    /**
+     * @Route("/organisation/approve-request", name="approve_change_dorm_req")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function approveDormitoryChangeRequest(Request $request, EntityManagerInterface $entityManager)
+    {
+        $requestId = $request->query->get('id');
+        $requestRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
+
+        $request = $requestRepo->find($requestId);
+
+        if(!$request)
+        {
+            return $this->redirectToRoute('organisation');
+        }
+
+        $user = $request->getUser();
+
+        $request->setApproved(ApprovedType::approved());
+        $user->setDormId($request->getDormitory()->getId());
+        $user->setRoomNr($request->getRoomNr());
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Prašymas patvirtintas sėkmingai.');
+
+        return $this->redirectToRoute('dormitory_change_req');
+    }
+
+    /**
+     * @Route("/organisation/remove-request", name="`remove_change_dorm_req`")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function removeDormitoryChangeRequest(Request $request, EntityManagerInterface $entityManager)
+    {
+        $requestId = $request->query->get('id');
+        $requestRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
+
+        $request = $requestRepo->find($requestId);
+
+        if(!$request)
+        {
+            return $this->redirectToRoute('organisation');
+        }
+
+        $entityManager->remove($request);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
+
+        return $this->redirectToRoute('dormitory_change_req');
     }
 }

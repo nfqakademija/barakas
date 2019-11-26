@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\ApprovedType;
 use App\Entity\Dormitory;
 use App\Entity\DormitoryChange;
 use App\Entity\User;
@@ -37,18 +38,14 @@ class DormitoryChangeRepository extends ServiceEntityRepository
 
     public function removeUserDormitoryFromArray($user, $userDormitoryId)
     {
+        $entityManager = $this->getEntityManager();
+        $dormitoryRepo = $entityManager->getRepository(Dormitory::class);
+
+        $userDormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
+
         $dorms = $this->findUserOrganisationDormitory($userDormitoryId);
 
-        $dormitoryToRemove = null;
-
-        foreach ($user as $struct) {
-            if ($user->getDormId() == $struct->getDormId()) {
-                $dormitoryToRemove = $struct;
-                break;
-            }
-        }
-
-        $key = array_search($dormitoryToRemove, $dorms);
+        $key = array_search($userDormitory, $dorms);
         unset($dorms[$key]);
 
         return $dorms;
@@ -74,5 +71,19 @@ class DormitoryChangeRepository extends ServiceEntityRepository
 
         return $academy;
 
+    }
+
+    public function getNotApprovedRequests()
+    {
+        $requests = $this->findBy(['approved' => false]);
+
+        return $requests;
+    }
+
+    public function getDormitoryById($id)
+    {
+        $request = $this->findOneBy(['id' => $id]);
+
+        return $request;
     }
 }

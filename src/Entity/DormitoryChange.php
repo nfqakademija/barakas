@@ -69,10 +69,8 @@ class DormitoryChange
         return $this->id;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getUser(): Collection
+
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -98,6 +96,11 @@ class DormitoryChange
     public function getApproved(): ?int
     {
         return $this->approved;
+    }
+
+    public function getAcademyType()
+    {
+        return AcademyType::fromId($this->academyType);
     }
 
     public function setApproved(ApprovedType $approvedType): void

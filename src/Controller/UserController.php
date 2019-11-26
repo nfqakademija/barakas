@@ -313,6 +313,11 @@ class UserController extends AbstractController
             $changeDormitory->setApproved(ApprovedType::notApproved());
             $entityManager->persist($changeDormitory);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Prašymas buvo sėkmingai išsiųstas, 
+            kuris bus peržiūrėtas per 24 val.');
+
+            return $this->redirectToRoute('dormitory');
         }
 
         return $this->render('user/change_dormitory.html.twig', [
