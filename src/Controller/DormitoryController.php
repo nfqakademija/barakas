@@ -166,4 +166,19 @@ class DormitoryController extends AbstractController
 
         return $this->redirectToRoute('dormitory');
     }
+
+    /**
+     * @Route("dormitory/rules", name="rules")
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function rules(EntityManagerInterface $entityManager)
+    {
+        $user = $this->getUser();
+        $dorm_id = $user->getDormId();
+        $dorm = $entityManager->getRepository(Dormitory::class)->find($dorm_id);
+        return $this->render('dormitory/message.html.twig', [
+            'rules' => $dorm->getRules()
+        ]);
+    }
 }
