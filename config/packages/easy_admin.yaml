@@ -19,8 +19,9 @@ easy_admin:
                     - { property: 'dorm_id', type: 'number' }
                     - { property: 'room_nr', type: 'text' }
                     - { property: 'created_at', type: 'datetime' }
-
-
+            new:
+                fields:
+                    - { property: 'password', type: 'text'}
         Comment:
           class: App\Entity\Comment
           list:  # <-- 'form' is applied to both 'new' and 'edit' views
