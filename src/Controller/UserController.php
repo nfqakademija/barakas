@@ -298,7 +298,7 @@ class UserController extends AbstractController
                 'Taisyklės pakeistos!!!'
             );
 
-            return $this->redirectToRoute('organisation');
+            return $this->redirectToRoute('admin_panel', ['id' => $dorm_id]);
         }
         return $this->render('organisation/pages/addRules.html.twig', [
             'id' => $dorm_id,
