@@ -286,7 +286,8 @@ class UserController extends AbstractController
         $dorm_id = $request->get('id');
         $formRequest = $this->createForm(AddRulesType::class);
         $formRequest->handleRequest($request);
-        $dorm = $entityManager->getRepository(Dormitory::class)->find($dorm_id);
+        $user = $this->getUser();
+        $dorm = $entityManager->getRepository(Dormitory::class)->getOrganisationDormitoryById($user->getId(), $dorm_id);
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
             $dorm->setRules($formRequest->getData()->getRules());
             $entityManager->persist($dorm);

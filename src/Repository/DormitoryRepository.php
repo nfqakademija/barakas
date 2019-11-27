@@ -44,6 +44,20 @@ class DormitoryRepository extends ServiceEntityRepository
 
         return $dormitories;
     }
+    public function getOrganisationDormitoryById($user_id, $dorm_id)
+    {
+        $entityManager = $this->getEntityManager();
+        $repo = $entityManager->getRepository(Dormitory::class);
+
+        $dormitory = $repo->findOneBy(
+            [
+                'organisation_id' => $user_id,
+                'id' => $dorm_id,
+            ]
+        );
+
+        return $dormitory;
+    }
 
     public function getLoggedInUserDormitory($id)
     {
