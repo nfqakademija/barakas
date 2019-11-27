@@ -20,7 +20,7 @@
                         {{ message }}
                     </div>
                 {% endfor %}
-                <a href="{{ path('add_Rules', {id: app.request.get('id')}) }}" class="btn btn-dark mb-3" role="button">Pridėti taisykles</a>
+                <a href="{{ path('add_Rules', {id: app.request.get('id')}) }}" class="btn btn-dark mb-3" role="button">Redaguoti taisykles</a>
                 <h5>Bendrabučio administratorius: {{ dormitory.owner }}</h5>
                 <h5>Bendrabučio adresas: {{ dormitoryInfo.address }}</h5>
                 <h5>Bendrabučio studentai: {{ students|length }}</h5><br>
