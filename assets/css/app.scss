@@ -3,9 +3,9 @@ $primary: darken(#428bca, 20%);
 
 // the ~ allows you to reference things in node_modules
 @import "~bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 
 body {
-  background: #e8e8e8;
   height: 100%;
   position: relative;
   font-size: 15px;
@@ -117,7 +117,7 @@ input {
 }
 
 .nav-link:hover {
-  color: grey !important;
+  color: blue !important;
 }
 
 .help-button {
