@@ -54,5 +54,4 @@ class DormitoryChangeRepository extends ServiceEntityRepository
 
         return $requests;
     }
-
 }
