@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
         <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
@@ -13,16 +12,8 @@
     </head>
     <body>
     {% include "includes/navbar.html.twig" %}
-    <header>
-        <div class="header-content">
-        <img src="/logo.png" class="img-fluid logo">
-        <div class="vert-line"></div>
-        <p class="text-black-50 intro-text">
-            Tai prašymų ir skolinimosi aplikacija, kuri skirta Lietuvos aukštųjų  mokyklų bendrabučiams bei jų studentams palengvinti komunikaciją tarp kaimynų.
-        </p>
-        </div>
-    </header>
     <div class="container">
+        <img src="/logo.png" class="img-fluid logo">
         {% block body %}      
         {% endblock %}
     </div>

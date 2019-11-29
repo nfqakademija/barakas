@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="col-md-5 mx-auto">
+        <div class="panel">
+            <div class="panel-header">
+                <p>Keisti bendrabutį</p>
+            </div>
+            <div class="panel-content">
+                {{ form_start(form) }}
+                <p class="text-black-50 text-center">
+                    Čia galite nusiųsti užklausą administratoriui jei norite pakeisti bendrabutį.
+                </p>
+                {{ form_widget(form) }}
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-exchange-alt"></i> Keisti bendrabutį
+                </button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

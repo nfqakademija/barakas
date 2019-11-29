@@ -36,14 +36,10 @@ class DormitoryController extends AbstractController
         $user = $this->getUser();
 
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
-        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
-        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
 
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
         $students = $dormitoryRepo->getStudentsInDormitory($user->getDormId());
         $messages = $dormitoryRepo->getDormitoryMessages($user->getDormId());
-        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
-        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
         $message = new Message();
         $formRequest = $this->createForm(MessageType::class, $message);
@@ -90,8 +86,6 @@ class DormitoryController extends AbstractController
             'dormitory' => $dormitory,
             'students' => $students,
             'messages' => $messages,
-            'notifications' => $notifications,
-            'helpMessages' => $helpMessages,
             'formRequest' => $formRequest->createView(),
         ]);
     }
@@ -105,15 +99,12 @@ class DormitoryController extends AbstractController
     {
         $user = $this->getUser();
         $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
-        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
-        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
 
         $message = $messagesRepo->find($id);
-        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
+
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
         $students = $dormitoryRepo->getStudentsInDormitory($user->getDormId());
-        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
         if (!$message || $user->getDormId() !== $message->getDormId()) {
             return $this->redirectToRoute('dormitory');
@@ -121,9 +112,7 @@ class DormitoryController extends AbstractController
 
         return $this->render('dormitory/message.html.twig', [
             'message' => $message,
-            'notifications' => $notifications,
             'dormitory' => $dormitory,
-            'helpMessages' => $helpMessages,
             'students' => $students
         ]);
     }

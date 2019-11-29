@@ -24,8 +24,8 @@
             {% if app.user and not is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('provided_help') }}"><i class="fas fa-hands-helping"></i> Pagalbos pranešimai
-                    {% if helpMessages %}
-                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ helpMessages|length }}</span>
+                    {% if helpMessages() %}
+                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ helpMessages()|length }}</span>
                     {% else %}
                     {% endif %}
                 </a>
@@ -35,18 +35,18 @@
 
                 <a style="cursor: pointer" class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown">
                     <i class="fas fa-bell"></i> Bendrabučio pranešimai
-                 {% if notifications %}
-                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ notifications|length }}</span>
+                 {% if notifications() %}
+                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ notifications()|length }}</span>
                 {% else %}
 
                 {% endif %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width: 25em">
-                    {% if notifications %}
+                    {% if notifications() %}
                         <ul class="list-unstyled dropdown-item">
                             <a href="{{ path('clear_notifications') }}" class="btn btn-sm btn-dark float-right">Perskaityta</a>
                            <br>
-                            {% for notification in notifications %}
+                            {% for notification in notifications() %}
                                 <li>
                                     <small>
                                         <a href="{{ path('message', {'id': notification.message.id}) }}" class="notification-url">
@@ -80,6 +80,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     {% if is_granted('ROLE_ADMIN') %}
                     <a class="dropdown-item" href="{{ path('organisation') }}"><i class="fas fa-tools"></i> Administravimas</a>
+                    <a class="dropdown-item" href="{{ path('dormitory_change_req') }}"><i class="fas fa-exchange-alt"></i> Bendrabučių keitimai</a>
                     {% endif %}
                     <a class="dropdown-item" href="{{ path('passwordChange') }}"><i class="fas fa-lock"></i> Pakeisti slaptažodį</a>
                     <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Atsijungti</a>
@@ -94,5 +95,9 @@
             </li>
         {% endif %}
         </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Ieškoti studento" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Ieškoti</button>
+        </form>
     </div>
 </nav>
