@@ -36,6 +36,27 @@ class Dormitory
     private $title;
 
     /**
+     * @ORM\Column(name="rules", type="text", length=65535, nullable=true)
+     */
+    private $rules;
+
+    /**
+     * @return mixed
+     */
+    public function getRules(): ?String
+    {
+        return $this->rules;
+    }
+
+    /**
+     * @param mixed $rules
+     */
+    public function setRules($rules): void
+    {
+        $this->rules = $rules;
+    }
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;

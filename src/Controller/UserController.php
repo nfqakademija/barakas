@@ -11,11 +11,13 @@ use App\Entity\Invite;
 use App\Entity\Notification;
 use App\Entity\User;
 use App\Entity\Dormitory;
+use App\Form\AddRulesType;
 use App\Form\DormitoryChangeType;
 use App\Form\PasswordChangeType;
 use App\Form\StudentRegisterType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
+use App\Repository\DormitoryRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -301,6 +303,38 @@ class UserController extends AbstractController
 
         return $this->render('user/change_dormitory.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/organisation/addRules", name="add_Rules")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function addRules(Request $request, EntityManagerInterface $entityManager)
+    {
+        $dorm_id = $request->get('id');
+        $formRequest = $this->createForm(AddRulesType::class);
+        $formRequest->handleRequest($request);
+        $user = $this->getUser();
+        $dorm = $entityManager->getRepository(Dormitory::class)->getOrganisationDormitoryById($user->getId(), $dorm_id);
+        if ($formRequest->isSubmitted() && $formRequest->isValid()) {
+            $dorm->setRules($formRequest->getData()->getRules());
+            $entityManager->persist($dorm);
+            $entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                'Taisyklės pakeistos!!!'
+            );
+
+            return $this->redirectToRoute('admin_panel', ['id' => $dorm_id]);
+        }
+        return $this->render('organisation/pages/addRules.html.twig', [
+            'id' => $dorm_id,
+            'form' => $formRequest->createView(),
+            'rules' => $dorm->getRules()
         ]);
     }
 }

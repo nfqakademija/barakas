@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pridėti taisykles{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="panel">
+            <div class="panel-header">
+                <p>Pridėti Taisykles</p>
+            </div>
+            <div class="panel-content">
+
+                {{ form_start(form) }}
+                <label for="{{ form.rules.vars.id }}"
+                       class="{{ form.rules.vars.required ? 'required' }}">
+                    {{ form.rules.vars.label }}
+                </label>
+                {{ form_widget(form.rules, {'value' : rules}) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
