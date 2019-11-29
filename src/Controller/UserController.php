@@ -4,12 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
+use App\Entity\ApprovedType;
+use App\Entity\DormitoryChange;
 use App\Entity\Help;
 use App\Entity\Invite;
 use App\Entity\Notification;
 use App\Entity\User;
 use App\Entity\Dormitory;
 use App\Form\AddRulesType;
+use App\Form\DormitoryChangeType;
 use App\Form\PasswordChangeType;
 use App\Form\StudentRegisterType;
 use App\Form\UserRegisterType;
@@ -161,17 +164,9 @@ class UserController extends AbstractController
                 );
             }
         }
-        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
-        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
-
-        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
-        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
 
         return $this->render('user/passwordChange.html.twig', [
             'form' => $form->createView(),
-            'notifications' => $notifications,
-            'helpMessages' => $helpMessages,
-
         ]);
     }
 
@@ -260,18 +255,54 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
         $helpRepo = $this->getDoctrine()->getRepository(Help::class);
-        $userRepo = $this->getDoctrine()->getRepository(User::class);
 
         $helpMessages = $helpRepo->userProblemSolvers($user->getId());
-        $messages = $userRepo->getUserMessages($user->getId());
-
-        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
-        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
 
         return $this->render('user/messages_solved.html.twig', [
-            'messages' => $messages,
             'helpMessages' => $helpMessages,
-            'notifications' => $notifications
+        ]);
+    }
+
+    /**
+     * @Route("/dormitory/change-dormitory", name="change_dormitory")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function changeDormitory(Request $request, EntityManagerInterface $entityManager)
+    {
+        $user = $this->getUser();
+
+        $changeDormitory = new DormitoryChange();
+        $dormitoryChangeRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
+
+        $userDormitoryId = $user->getDormId();
+
+        $academy = $dormitoryChangeRepo->findUserAcademy($userDormitoryId);
+
+        $dorms = $dormitoryChangeRepo->removeUserDormitoryFromArray($user, $userDormitoryId);
+
+        $form = $this->createForm(DormitoryChangeType::class, $changeDormitory, array(
+            'dorms' => $dorms
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $changeDormitory->setAcademy($academy);
+            $changeDormitory->setUser($user);
+            $changeDormitory->setApproved(ApprovedType::notApproved());
+            $entityManager->persist($changeDormitory);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Prašymas buvo sėkmingai išsiųstas, 
+            kuris bus peržiūrėtas per 24 val.');
+
+            return $this->redirectToRoute('dormitory');
+        }
+
+        return $this->render('user/change_dormitory.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
