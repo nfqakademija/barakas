@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\ApprovedType;
 use App\Entity\Dormitory;
 use App\Entity\DormitoryChange;
+use App\Entity\RoomChange;
 use App\Entity\User;
 use App\Entity\Invite;
 use App\Form\SendInvitationType;
@@ -92,7 +93,7 @@ class AdminController extends AbstractController
     public function dormitoryChangeRequests(EntityManagerInterface $entityManager)
     {
         $requestsRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
-        $requests = $requestsRepo->getNotApprovedRequests();
+        $requests = $requestsRepo->getNotApprovedRequests($this->getUser());
 
         return $this->render('/organisation/pages/dormitoryChangeRequests.html.twig', [
             'requests' => $requests
@@ -100,7 +101,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/organisation/approve-request", name="approve_change_dorm_req")
+     * @Route("/organisation/approve-dormitory-change-request", name="approve_change_dorm_req")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @return Response
@@ -130,7 +131,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/organisation/remove-request", name="remove_change_dorm_req")
+     * @Route("/organisation/remove-dormitory-change-request", name="remove_change_dorm_req")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @return RedirectResponse
@@ -152,5 +153,74 @@ class AdminController extends AbstractController
         $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
 
         return $this->redirectToRoute('dormitory_change_req');
+    }
+
+    /**
+     * @Route("organisation/room-change-requests", name="room_change_req")
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function roomChangeRequests(EntityManagerInterface $entityManager)
+    {
+        $requestsRepo = $this->getDoctrine()->getRepository(RoomChange::class);
+        $requests = $requestsRepo->findNotApprovedRequests($this->getUser());
+
+        return $this->render('/organisation/pages/roomChangeRequests.html.twig', [
+            'requests' => $requests
+        ]);
+    }
+
+    /**
+     * @Route("/organisation/approve-room-change-request", name="approve_change_room_req")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function approveRoomChangeRequest(Request $request, EntityManagerInterface $entityManager)
+    {
+        $requestId = $request->query->get('id');
+        $requestRepo = $this->getDoctrine()->getRepository(RoomChange::class);
+
+        $request = $requestRepo->find($requestId);
+
+        if (!$request) {
+            return $this->redirectToRoute('organisation');
+        }
+
+        $user = $request->getUser();
+
+        $request->setApproved(ApprovedType::approved());
+        $user->setRoomNr($request->getNewRoomNr());
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Prašymas patvirtintas sėkmingai.');
+
+        return $this->redirectToRoute('room_change_req');
+    }
+
+    /**
+     * @Route("/organisation/remove-room-change-request", name="remove_change_room_req")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function removeRoomChangeRequest(Request $request, EntityManagerInterface $entityManager)
+    {
+        $requestId = $request->query->get('id');
+        $requestRepo = $this->getDoctrine()->getRepository(RoomChange::class);
+
+        $request = $requestRepo->find($requestId);
+
+        if (!$request) {
+            return $this->redirectToRoute('organisation');
+        }
+
+        $entityManager->remove($request);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
+
+        return $this->redirectToRoute('room_change_req');
     }
 }

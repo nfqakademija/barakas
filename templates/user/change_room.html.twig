@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="col-md-5 mx-auto">
+        <div class="panel">
+            <div class="panel-header">
+                <p>Keisti kambarį</p>
+            </div>
+            <div class="panel-content">
+
+                {% for message in app.flashes('danger') %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {{ form_start(form) }}
+                <p class="text-black-50 text-center">
+                    Čia galite nusiųsti užklausą administratoriui jei norite pakeisti kambarį.
+                </p>
+                {{ form_widget(form) }}
+                <small>Jūsų dabartinis kambarys: <strong>{{ app.user.roomNr }}</strong></small>
+                <br><br>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-exchange-alt"></i> Keisti kambarį
+                </button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

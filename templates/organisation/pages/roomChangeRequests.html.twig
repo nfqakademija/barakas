@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-header">
+                <p>Bendrabučių keitimo prašymai</p>
+            </div>
+            <div class="panel-content">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                <table class="table table-borderless">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Vardas</th>
+                        <th scope="col">Dabartinis kambarys</th>
+                        <th scope="col">Naujas kambarys</th>
+                        <th scope="col">Priežastis</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Veiksmai</th>
+                    </tr>
+                    {% for request in requests %}
+                    <tr style="border-bottom: 1px solid gainsboro">
+                        <th scope="col">{{ request.id }}</th>
+                        <td>{{ request.user.owner }}</td>
+                        <td>{{ request.currentRoom }}</td>
+                        <td>{{ request.newRoomNr }}</td>
+                        <td>{{ request.description }}</td>
+                        <td>{{ request.createdAt|date('Y-M-D h:m:s') }}</td>
+                        <td><a href="{{ path('approve_change_room_req', {'id': request.id}) }}" class="btn btn-success"><i class="fas fa-check"></i></a></td>
+                        <td><a href="{{ path('remove_change_room_req', {'id': request.id}) }}" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a></td>
+                    <tr>
+                        {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

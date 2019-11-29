@@ -9,11 +9,13 @@ use App\Entity\DormitoryChange;
 use App\Entity\Help;
 use App\Entity\Invite;
 use App\Entity\Notification;
+use App\Entity\RoomChange;
 use App\Entity\User;
 use App\Entity\Dormitory;
 use App\Form\AddRulesType;
 use App\Form\DormitoryChangeType;
 use App\Form\PasswordChangeType;
+use App\Form\RoomChangeType;
 use App\Form\StudentRegisterType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
@@ -275,10 +277,11 @@ class UserController extends AbstractController
 
         $changeDormitory = new DormitoryChange();
         $dormitoryChangeRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
 
         $userDormitoryId = $user->getDormId();
 
-        $academy = $dormitoryChangeRepo->findUserAcademy($userDormitoryId);
+        $academy = $userRepo->findUserAcademy($userDormitoryId);
 
         $dorms = $dormitoryChangeRepo->removeUserDormitoryFromArray($user, $userDormitoryId);
 
@@ -340,9 +343,52 @@ class UserController extends AbstractController
 
     /**
      * @Route("/change-room", name="change_room")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
-    public function changeRoom()
+    public function changeRoom(Request $request, EntityManagerInterface $entityManager)
     {
-        return new Response('Keisti bendrabutį');
+        $user = $this->getUser();
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $userDormitoryId = $user->getDormId();
+        $academy = $userRepo->findUserAcademy($userDormitoryId);
+
+        $roomChange = new RoomChange();
+
+
+        $form = $this->createForm(RoomChangeType::class, $roomChange);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $roomChangeRepo = $this->getDoctrine()->getRepository(RoomChange::class);
+            $notApprovedRequest = $roomChangeRepo->findNotApprovedUserRoomChange($user);
+
+            if ($notApprovedRequest) {
+                $this->addFlash('danger', 'Jūs jau esate išsiuntęs prašymą dėl kambario keitimo.');
+                return $this->redirectToRoute('change_room');
+            }
+
+            if ($user->getRoomNr() === $roomChange->getNewRoomNr()) {
+                $this->addFlash('danger', 'Jūs jau esate nurodytame kambaryje.');
+                return $this->redirectToRoute('change_room');
+            }
+
+            $roomChange->setCurrentRoom($user->getRoomNr());
+            $roomChange->setUser($user);
+            $roomChange->setApproved(ApprovedType::notApproved());
+            $roomChange->setAcademy($academy);
+            $entityManager->persist($roomChange);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Prašymas buvo sėkmingai išsiųstas, 
+            kuris bus peržiūrėtas per 24 val.');
+
+            return $this->redirectToRoute('dormitory');
+        }
+
+        return $this->render('user/change_room.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }
