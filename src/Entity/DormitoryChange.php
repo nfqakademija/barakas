@@ -20,7 +20,7 @@ class DormitoryChange
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notifications")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="dormitoryChange")
      */
     private $user;
 
@@ -50,6 +50,10 @@ class DormitoryChange
     /**
      * @ORM\Column(type="text")
      * @Assert\NotNull(message="Šis laukelis yra privalomas.")
+     * @Assert\Length(
+     *     min = 7,
+     *     minMessage = "Keitimo priežastis negali būti trumpesnė nei {{ limit }} simboliai.",
+     * )
      */
     private $description;
 

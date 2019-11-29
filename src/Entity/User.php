@@ -91,12 +91,18 @@ class User implements UserInterface
      */
     private $notifications;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RoomChange", mappedBy="user", cascade={"remove"})
+     */
+    private $roomChanges;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
         $this->messages = new ArrayCollection();
         $this->helps = new ArrayCollection();
         $this->notifications = new ArrayCollection();
+        $this->roomChanges = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -361,6 +367,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($notification->getUser() === $this) {
                 $notification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RoomChange[]
+     */
+    public function getRoomChanges(): Collection
+    {
+        return $this->roomChanges;
+    }
+
+    public function addRoomChange(RoomChange $roomChange): self
+    {
+        if (!$this->roomChanges->contains($roomChange)) {
+            $this->roomChanges[] = $roomChange;
+            $roomChange->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoomChange(RoomChange $roomChange): self
+    {
+        if ($this->roomChanges->contains($roomChange)) {
+            $this->roomChanges->removeElement($roomChange);
+            // set the owning side to null (unless already changed)
+            if ($roomChange->getUser() === $this) {
+                $roomChange->setUser(null);
             }
         }
 

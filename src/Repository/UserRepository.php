@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Dormitory;
 use App\Entity\Message;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -50,5 +51,26 @@ class UserRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
             ;
+    }
+
+    public function findUserAcademy($dormId)
+    {
+        $entityManager = $this->getEntityManager();
+        $dormitoryRepo = $entityManager->getRepository(Dormitory::class);
+        $organisationRepo = $entityManager->getRepository(User::class);
+
+        $userDormitory = $dormitoryRepo->findOneBy(
+            ['id' => $dormId]
+        );
+
+        $organisationId = $userDormitory->getOrganisationId();
+
+        $organisation = $organisationRepo->findOneBy(
+            ['id' => $organisationId]
+        );
+
+        $academy = $organisation->getAcademy();
+
+        return $academy;
     }
 }

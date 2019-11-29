@@ -166,7 +166,7 @@ class DormitoryController extends AbstractController
         $user = $this->getUser();
         $dorm_id = $user->getDormId();
         $dorm = $entityManager->getRepository(Dormitory::class)->find($dorm_id);
-        return $this->render('dormitory/message.html.twig', [
+        return $this->render('dormitory/rules.html.twig', [
             'rules' => $dorm->getRules()
         ]);
     }
