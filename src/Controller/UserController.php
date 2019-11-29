@@ -337,4 +337,12 @@ class UserController extends AbstractController
             'rules' => $dorm->getRules()
         ]);
     }
+
+    /**
+     * @Route("/change-room", name="change_room")
+     */
+    public function changeRoom()
+    {
+        return new Response('Keisti bendrabutį');
+    }
 }
