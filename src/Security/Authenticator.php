@@ -75,6 +75,10 @@ class Authenticator extends AbstractFormLoginAuthenticator
             throw new CustomUserMessageAuthenticationException('Elektroninis paštas nerastas.');
         }
 
+        if ($user->getIsDisabled()==true) {
+            throw new CustomUserMessageAuthenticationException('Paskyra išjungta.');
+        }
+
         return $user;
     }
 

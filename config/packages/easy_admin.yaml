@@ -9,6 +9,7 @@ easy_admin:
                     - 'owner'
                     - 'dorm_id'
                     - 'room_nr'
+                    - 'isDisabled'
                     - { property: 'roles', template: 'admin/super/roles-type-read.html.twig' }
                     - { property: 'created_at', type: 'datetime' }
             form:
@@ -18,6 +19,7 @@ easy_admin:
                     - { property: 'roles', type: 'collection' }
                     - { property: 'dorm_id', type: 'number' }
                     - { property: 'room_nr', type: 'text' }
+                    - { property: 'isDisabled', type: 'number' }
                     - { property: 'created_at', type: 'datetime' }
 
         Academy:

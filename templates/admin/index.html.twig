@@ -36,7 +36,7 @@
                    <h6>Išsiųsti pakvietimai studentams</h6>
                    <div style='height:1px; width:100%; background:#e0e0e0;'></div>
                 <div class="row">
-                <table class="table table-primary table-striped col-md-6">
+                <table class="table table-primary table-striped col-md-5">
                     <tr>
                         <th>Studentas</th>
                         <th>Kambarys</th>
@@ -51,17 +51,23 @@
                     {% endfor %}
                 </table>
 
-                <table class="table table-success table-striped col-md-6">
+                <table class="table table-success table-striped col-md-7">
                     <tr>
                         <th>Studentas</th>
                         <th>Kambarys</th>
                         <th>El. paštas</th>
+                        <th>Statusas</th>
                     </tr>
                     {% for student in students %}
                         <tr>
                             <td>{{ student.owner }}</td>
                             <td>{{ student.RoomNr }}</td>
                             <td>{{ student.email }}</td>
+                            {% if student.isDisabled %}
+                            <td><a class="btn btn-primary" href="{{path('disable_account', { 'id': student.id })}}" role="button">Ijungti</a></td>
+                                {% else %}
+                                    <td><a class="btn btn-primary" href="{{path('disable_account', { 'id': student.id })}}" role="button">Išjungti</a></td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </table>

@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class AdminController extends AbstractController
 {
@@ -222,5 +223,40 @@ class AdminController extends AbstractController
         $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
 
         return $this->redirectToRoute('room_change_req');
+    }
+
+    /**
+     * @Route("/organisation/accountdisable", name="disable_account")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param UserInterface $user
+     * @return RedirectResponse
+     */
+    public function accountDisableOrEnable(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
+    {
+            $user_id = $request->get('id');
+            $studentsRepository = $this->getDoctrine()->getRepository(User::class);
+            $student = $studentsRepository->findOneBy(['id' => $user_id]);
+            $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
+            $dorms = $dormitoryRepository->getUserDormitories($user->getId());
+
+        foreach ($dorms as $dorm) {
+            $dorm_ids[] = $dorm->getId();
+        }
+
+        if (!in_array($student->getDormId(), $dorm_ids)) {
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        if ($student->getIsDisabled()==true) {
+            $student->setIsDisabled(false);
+            $this->addFlash('success', 'Paskyra ijungta');
+        } else {
+            $student->setIsDisabled(true);
+            $this->addFlash('success', 'Paskyra išjungta');
+        }
+        $entityManager->persist($student);
+        $entityManager->flush();
+        return $this->redirect($request->headers->get('referer'));
     }
 }
