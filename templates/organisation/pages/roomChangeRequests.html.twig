@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+<h3>Studentai norintys pakeistį kambarį: {{ requests|length }}</h3>
+    <br>
     <div class="col-md-12">
         <div class="panel">
             <div class="panel-header">
-                <p>Bendrabučių keitimo prašymai</p>
+                <p>Kambarių keitimo prašymai</p>
             </div>
             <div class="panel-content">
                 {% for message in app.flashes('success') %}

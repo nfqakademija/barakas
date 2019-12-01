@@ -1,8 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% for message in helpMessages %}
-        Narys su ID: {{ message.user.id }} gali tau padėti su tavo problema ID {{ message.messageId }}
-        <hr>
-    {% endfor %}
+    <div class="panel">
+        <div class="panel-header">
+            <p>Pagalbos pranešimai</p>
+        </div>
+        <div class="panel-content">
+            {% for message in helpMessages %}
+                <strong>{{ message.user.owner }}</strong> gali tau padėti su
+                  tavo problema <strong>{{ message.message.content}}</strong>.
+                Užbėk į {{ message.user.roomNr }} kambarį.
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

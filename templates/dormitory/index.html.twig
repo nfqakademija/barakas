@@ -16,47 +16,10 @@
                 {% include 'dormitory/inc/request_form.html.twig' %}
 
                 {% include 'dormitory/inc/messages.html.twig' %}
-
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="panel">
-                <div class="panel-header">
-                    <p>Prisijungę studentai</p>
-                </div>
-                <div class="panel-content">
-                    <ul class="list-unstyled">
-                    {% for student in students %}
-                        <li style="display: flex; justify-content: space-between">
-                            {{ student.username }}
-                            <span>
-                            <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 25px">
-                            {{ student.roomNr }}
-                            </span>
-                        </li>
-                        <hr>
-                    {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            <br>
-            <div class="panel">
-                <div class="panel-header">
-                    <p>Keisti bendrabutį</p>
-                </div>
-                <div class="panel-content text-center">
-                    <a href="{{ path('change_dormitory') }}" class="btn btn-success">
-                        <i class="fas fa-exchange-alt"></i> Keisti bendrabutį
-                    </a>
-                    <br><br>
-                    <a href="{{ path('change_room') }}" class="btn btn-primary">
-                        <i class="fas fa-exchange-alt"></i> Keisti kambarį
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+       {% include 'dormitory/inc/actions.html.twig' %}
     <br>
 {% endblock %}
 

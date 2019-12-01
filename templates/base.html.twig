@@ -12,12 +12,29 @@
     </head>
     <body>
     {% include "includes/navbar.html.twig" %}
+    {% if app.user == false %}
+    <header>
+    <div class="container" style="display: flex; justify-content: space-around; padding: 2%">
+        <img src="/logo.png" class="img-fluid logo">
+        <div class="col-md-6">
+            <p class="text-white intro-text">
+                Tai prašymų ir skolinimosi aplikacija, kuri skirta
+                Lietuvos aukštųjų mokyklų bendrabučiams bei jų studentams palengvinti komunikaciją tarp kaimynų.
+
+            <div class="text-center intro-button">
+                <a href="{{ path('org_registration') }}" class="btn btn-success">Registruoti organizaciją</a>
+            </div>
+            </p>
+        </div>
+    </div>
+    </header>
+    {% endif %}
     <div class="container">
-       {# <img src="/logo.png" class="img-fluid logo">#}
-        {% block body %}      
+        <br>
+        {% block body %}
         {% endblock %}
     </div>
-    {% include "includes/footer.html.twig" %}
+    {#{% include "includes/footer.html.twig" %}#}
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}

@@ -132,14 +132,14 @@ class DormitoryController extends AbstractController
 
         $message = $messagesRepo->find($id);
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $help = $helpRepo->findUserProvidedHelp($message->getUser()->getId(), $user->getId(), $message->getId());
+        $help = $helpRepo->findUserProvidedHelp($message->getUser()->getId(), $user->getId(), $message);
 
         if (!$message || $help) {
             return $this->redirectToRoute('dormitory');
         }
 
         $help = new Help();
-        $help->setMessageId($id);
+        $help->setMessage($message);
         $help->setUser($user);
         $help->setDormId($dormitory->getId());
         $help->setRoomNr($user->getRoomNr());
