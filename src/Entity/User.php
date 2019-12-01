@@ -72,6 +72,11 @@ class User implements UserInterface
     private $room_nr;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $isDisabled;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;
@@ -402,5 +407,21 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsDisabled(): ?bool
+    {
+        return $this->isDisabled;
+    }
+
+    /**
+     * @param mixed $isDisabled
+     */
+    public function setIsDisabled($isDisabled): void
+    {
+        $this->isDisabled = $isDisabled;
     }
 }
