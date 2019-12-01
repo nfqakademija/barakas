@@ -19,12 +19,12 @@ class HelpRepository extends ServiceEntityRepository
         parent::__construct($registry, Help::class);
     }
 
-    public function findUserProvidedHelp($requester_id, $user_id, $message_id)
+    public function findUserProvidedHelp($requester_id, $user_id, $message)
     {
         $help = $this->findBy([
             'requester_id' => $requester_id,
             'user' => $user_id,
-            'message_id' => $message_id
+            'message' => $message
         ]);
 
         return $help;

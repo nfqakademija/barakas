@@ -27,9 +27,9 @@ class Help
     private $room_nr;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Message", inversedBy="helps")
      */
-    private $message_id;
+    private $message;
 
     /**
      * @ORM\Column(type="datetime")
@@ -81,14 +81,14 @@ class Help
         return $this;
     }
 
-    public function getMessageId(): ?int
+    public function getMessage(): ?Message
     {
-        return $this->message_id;
+        return $this->message;
     }
 
-    public function setMessageId(int $message_id): self
+    public function setMessage(?Message $message): self
     {
-        $this->message_id = $message_id;
+        $this->message = $message;
 
         return $this;
     }

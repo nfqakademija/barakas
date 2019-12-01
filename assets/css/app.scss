@@ -3,30 +3,21 @@ $primary: darken(#428bca, 20%);
 
 // the ~ allows you to reference things in node_modules
 @import "~bootstrap/scss/bootstrap";
-@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
 
 body {
-  height: 100%;
-  position: relative;
   font-size: 15px;
+  font-family: Nunito, Arial, sans-serif;
 }
 
 header {
-  background: white;
-  border-bottom: 1px solid rgb(187, 187, 187);
-  border-top: 3px solid rgba(255, 255, 255, 0.5);
+  background: #2d3748;
 }
 
 .header-content {
   padding: 5px;
   display: flex;
   justify-content: center;
-}
-
-.container {
-  margin-top: 1%;
-  height: calc(100% - 56px);
-  min-height: 100vh;
 }
 
 .logo {
@@ -47,10 +38,9 @@ header {
 }
 
 .intro-text {
-  width: 50%;
-  margin-top: 36px;
-  margin-right: 10%;
-  text-align: center;
+  font-size: 1.125rem;
+  text-align: justify;
+  font-weight: bolder
 }
 
 .panel {
@@ -113,11 +103,12 @@ input {
 }
 
 .nav-link {
-  color: white !important;
+  color: #a0aec0 !important;
+  font-size: 1.125rem;
 }
 
 .nav-link:hover {
-  color: blue !important;
+  color: #2d3748 !important;
 }
 
 .help-button {
@@ -182,7 +173,10 @@ footer {
     display: block;
   }
   .intro-text {
-    width: 100%;
+    display: none;
+  }
+  .intro-button {
+    display: none;
   }
   .vert-line {
     height: 0;
@@ -200,7 +194,10 @@ footer {
     display: block;
   }
   .intro-text {
-    width: 100%;
+    display: none;
+  }
+  .intro-button {
+    display: none;
   }
   .vert-line {
     height: 0;

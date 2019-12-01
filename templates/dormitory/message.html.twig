@@ -3,12 +3,12 @@
 {% block title %}Bendrabutis{% endblock %}
 
 {% block body %}
-    {% include 'dormitory/inc/dormitory_info.html.twig' %}
+
     <div class="row">
         <div class="col-md-8">
             <div class="panel">
                 <div class="panel-header">
-                    <p>Prašymai</p>
+                    <p>Prašymas</p>
                 </div>
                 <div class="panel-content">
                     {% include 'dormitory/inc/notifications.html.twig' %}
@@ -68,16 +68,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="panel">
-                <div class="panel-header">
-                    <p>Prisijungę studentai</p>
-                </div>
-                <div class="panel-content">
-
-                </div>
-            </div>
-        </div>
+        {% include 'dormitory/inc/actions.html.twig' %}
     </div>
     <br>
 {% endblock %}
