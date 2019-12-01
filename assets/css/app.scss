@@ -4,10 +4,17 @@ $primary: darken(#428bca, 20%);
 // the ~ allows you to reference things in node_modules
 @import "~bootstrap/scss/bootstrap";
 @import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
+html {
+  height: 100%;
+}
 
 body {
   font-size: 15px;
   font-family: Nunito, Arial, sans-serif;
+  min-height: 100%;
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
 }
 
 header {
@@ -157,12 +164,14 @@ input {
   opacity: 0.5;
 }
 
-footer {
-  padding: 10px;
-  color: white;
-  background-color: #343a40;
+.footer {
   position: absolute;
-  width: 100%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
 }
 
 @media only screen and (max-width: 767px) {
