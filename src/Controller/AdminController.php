@@ -232,7 +232,7 @@ class AdminController extends AbstractController
      * @param UserInterface $user
      * @return RedirectResponse
      */
-    public function accountDisableOrEnable(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
+    public function toggleAccount(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
     {
             $user_id = $request->get('id');
             $studentsRepository = $this->getDoctrine()->getRepository(User::class);
@@ -248,7 +248,7 @@ class AdminController extends AbstractController
             return $this->redirect($request->headers->get('referer'));
         }
 
-        if ($student->getIsDisabled()==true) {
+        if ($student->getIsDisabled()===true) {
             $student->setIsDisabled(false);
             $this->addFlash('success', 'Paskyra ijungta');
         } else {
