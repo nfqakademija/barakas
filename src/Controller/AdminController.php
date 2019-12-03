@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\ApprovedType;
 use App\Entity\Dormitory;
 use App\Entity\DormitoryChange;
+use App\Entity\Message;
 use App\Entity\RoomChange;
 use App\Entity\User;
 use App\Entity\Invite;
@@ -250,13 +251,68 @@ class AdminController extends AbstractController
 
         if ($student->getIsDisabled()===true) {
             $student->setIsDisabled(false);
-            $this->addFlash('success', 'Paskyra ijungta');
+            $this->addFlash('success', 'Paskyra atblokuota');
         } else {
             $student->setIsDisabled(true);
-            $this->addFlash('success', 'Paskyra išjungta');
+            $this->addFlash('success', 'Paskyra užblokuota');
         }
         $entityManager->persist($student);
         $entityManager->flush();
         return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
+     * @Route("/organisation/reported-messages", name="reportedMessages")
+     */
+    public function reportedMessages()
+    {
+        $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
+        $messages = $messagesRepo->getReportedMessages();
+
+        return $this->render('/organisation/pages/reportedMessages.html.twig', [
+            'messages' => $messages
+        ]);
+    }
+
+    /**
+     * @Route("/organisation/close-report", name="closeReport")
+     */
+    public function closeReport(Request $request, EntityManagerInterface $entityManager)
+    {
+        $messageId = $request->get('id');
+        $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
+        $message = $messagesRepo->find($messageId);
+
+        if(!$message) {
+            return $this->redirectToRoute('organisation');
+        }
+
+        $message->setReported(false);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Įspėjimas apie blogą pranešimą pašalintas.');
+
+        return $this->redirectToRoute('reportedMessages');
+    }
+
+    /**
+     * @Route("/organisation/accept-report", name="acceptReport")
+     */
+    public function acceptReport(Request $request, EntityManagerInterface $entityManager)
+    {
+        $messageId = $request->get('id');
+        $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
+        $message = $messagesRepo->find($messageId);
+
+        if(!$message) {
+            return $this->redirectToRoute('organisation');
+        }
+
+        $entityManager->remove($message);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Pranešimas buvo sėkmingai pašalintas.');
+
+        return $this->redirectToRoute('reportedMessages');
     }
 }

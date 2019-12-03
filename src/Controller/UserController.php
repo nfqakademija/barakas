@@ -8,6 +8,7 @@ use App\Entity\ApprovedType;
 use App\Entity\DormitoryChange;
 use App\Entity\Help;
 use App\Entity\Invite;
+use App\Entity\Message;
 use App\Entity\Notification;
 use App\Entity\RoomChange;
 use App\Entity\User;
@@ -251,7 +252,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("help-provided", name="provided_help")
+     * @Route("/dormitory/help-provided", name="provided_help")
      */
     public function providedHelp()
     {

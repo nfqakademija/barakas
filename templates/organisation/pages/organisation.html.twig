@@ -3,40 +3,42 @@
 {% block title %}Organizacija {% endblock %}
 
 {% block body %}
-    <div class="container">
         <div class="panel">
             <div class="panel-header">
                 <p>Bendrabučiai</p>
             </div>
             <div class="panel-content">
+                <a href="{{ path('addOrganisation') }}">
+                    <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Pridėti bendrabutį</button>
+                </a>
+                <br><br>
                 {% if dormitories is empty %}
-                    <p>Kol kas jūsų organizacija neturi bendrabučių.</p>
+                    <p class="text-center">Kol kas jūsų organizacija neturi bendrabučių.
+                    <br>
+                    <img src="https://image.flaticon.com/icons/svg/1380/1380641.svg" style="height: 300px; opacity: 0.2">
+                    </p>
                 {% endif %}
                 <div class="row">
                     {% for dormitory in dormitories %}
-                    <div class="col-md m-1">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                {{ dormitory.organisationId}}
-                                <h5 class="card-title">{{ dormitory.title }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{ dormitory.address }}</h6>
-                                <p class="card-text">Prisijungusių prie sistemos: <b>2</b></p>
-                                <p class="card-text">Aktyvių prašymų: <b>2</b></p>
-                                <p class="card-text">Įvykę prašymai: <b>4</b></p>
-                                <p class="card-text">Viso pranešimų bendrabutyje: <b>44</b></p>
+                    <div class="col-md-4">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <p>{{ dormitory.title }}</p>
+                            </div>
+                            <div class="text-center">
+                            <img src="https://image.flaticon.com/icons/svg/619/619104.svg" class="index-panel-img">
+                            <h6 class="card-subtitle mb-2 text-muted">{{ dormitory.address }}</h6>
+                            </div>
+                                <div class="panel-content text-center">
 								<a href=organisation/admin?id={{ dormitory.id }}>
                                 <button type="button" class="btn btn-primary"><i class="fas fa-wrench"></i> Valdyti</button>
 								</a>
                             </div>
+                            </div>
                         </div>
-                    </div>
+
                     {% endfor %}
                 </div>
-                <br>
-                <a href=organisation/add>
-                    <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Pridėti bendrabutį</button>
-                </a>
+                </div>
             </div>
-        </div>
-    </div>
 {% endblock %}

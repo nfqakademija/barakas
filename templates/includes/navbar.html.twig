@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light">
+<nav class="navbar navbar-expand-md navbar-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -29,7 +29,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('provided_help') }}"><i class="fas fa-hands-helping"></i> Pagalbos pranešimai
                     {% if helpMessages() %}
-                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ helpMessages()|length }}</span>
+                    <span class="badge badge-danger">{{ helpMessages()|length }}</span>
                     {% else %}
                     {% endif %}
                 </a>
@@ -40,7 +40,7 @@
                 <a style="cursor: pointer" class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown">
                     <i class="fas fa-bell"></i> Bendrabučio pranešimai
                  {% if notifications() %}
-                    <span class="badge badge-danger" style="vertical-align: text-bottom;">{{ notifications()|length }}</span>
+                    <span class="badge badge-danger">{{ notifications()|length }}</span>
                 {% else %}
 
                 {% endif %}
@@ -84,12 +84,19 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     {% if is_granted('ROLE_ADMIN') %}
                     <a class="dropdown-item" href="{{ path('organisation') }}"><i class="fas fa-tools"></i> Administravimas</a>
+                    <a class="dropdown-item" href="{{ path('reportedMessages') }}"><i class="fas fa-envelope"></i> Netinkami pranešimai</a>
                     <a class="dropdown-item" href="{{ path('dormitory_change_req') }}"><i class="fas fa-exchange-alt"></i> Bendrabučių keitimai</a>
                     <a class="dropdown-item" href="{{ path('room_change_req') }}"><i class="fas fa-exchange-alt"></i> Kambarių keitimai</a>
                     {% endif %}
                     <a class="dropdown-item" href="{{ path('passwordChange') }}"><i class="fas fa-lock"></i> Pakeisti slaptažodį</a>
                     <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Atsijungti</a>
                 </div>
+            </li>
+            <li class="nav-item">
+                <span class="nav-link">
+                    <img src="https://image.flaticon.com/icons/svg/438/438450.svg" style="height: 20px; vertical-align: sub">
+                    2000
+                </span>
             </li>
             {% else %}
             <li>

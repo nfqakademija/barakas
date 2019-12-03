@@ -170,4 +170,74 @@ class DormitoryController extends AbstractController
             'rules' => $dorm->getRules()
         ]);
     }
+
+    /**
+     * @Route("/dormitory/report/message", name="reportMessage")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function reportMessage(Request $request, EntityManagerInterface $entityManager)
+    {
+        $reportMessageId = $request->get('id');
+        $messageRepository = $this->getDoctrine()->getRepository(Message::class);
+        $message = $messageRepository->find($reportMessageId);
+
+        if(!$message) {
+            return $this->redirectToRoute('dormitory');
+        }
+
+        $message->setReported(true);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('dormitory');
+    }
+
+    /**
+     * @Route("/dormitory/accept-help-request", name="acceptHelp")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function acceptHelpRequest(Request $request, EntityManagerInterface $entityManager)
+    {
+        $helpId = $request->get('id');
+        $helpRepository = $this->getDoctrine()->getRepository(Help::class);
+
+        $userWhoHelped = $helpRepository->findUserWhoProvidedHelp($helpId);
+        $userWhoHelpedPoints = $userWhoHelped->getPoints();
+        $newPoints = $userWhoHelpedPoints + 500;
+        $userWhoHelped->setPoints($newPoints);
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Pagalbos siūlymas patvirtintas.');
+
+
+        return $this->redirectToRoute('provided_help');
+    }
+
+    /**
+     * @Route("/dormitory/deny-help-request", name="denyHelp")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function denyHelpRequest(Request $request, EntityManagerInterface $entityManager)
+    {
+        $helpId = $request->get('id');
+        $helpRepository = $this->getDoctrine()->getRepository(Help::class);
+
+        $message = $helpRepository->findMessageFromHelp($helpId);
+        $message->setSolved(SolvedType::notSolved());
+
+        $help = $helpRepository->find($helpId);
+
+        $entityManager->remove($help);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Pagalbos siūlymas pašalintas, pranešimas gražintas į pradinę stadiją.');
+
+        return $this->redirectToRoute('provided_help');
+    }
 }

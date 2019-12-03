@@ -12,7 +12,9 @@
     </head>
     <body>
     {% include "includes/navbar.html.twig" %}
-    {% if app.user == false or is_granted('ROLE_ADMIN') %}
+    {% if app.user %}
+
+    {% else %}
     <header>
     <div class="container" style="display: flex; justify-content: space-around; padding: 2%">
         <img src="/logo.png" class="img-fluid logo">

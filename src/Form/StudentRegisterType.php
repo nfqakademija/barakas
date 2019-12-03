@@ -42,12 +42,6 @@ class StudentRegisterType extends AbstractType
                     'placeholder' => 'Įrašykite savo slaptažodį'
                 ]
             ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Sukurti paskyrą',
-                'attr' => [
-                    'class' => 'btn btn-success'
-                ]
-            ])
         ;
     }
 

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2>Pranešta</h2>
+    <p>Pranešimai, kurie vartotojams pasirodė netinkami.</p>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% if messages is empty %}
+        <p class="text-center">Kol kas pranešimų apie netinkamus pranešimus nėra.
+            <br>
+            <img src="https://image.flaticon.com/icons/svg/1380/1380641.svg" style="height: 300px; opacity: 0.2">
+        </p>
+    {% endif %}
+
+    <ul class="list-unstyled">
+        {% for message in messages %}
+            <li>
+                Autorius: <strong>{{ message.user.owner }}</strong>
+                <br>
+                Pranešimas: <strong>{{ message.content }}</strong>
+                <br>
+                Data: <strong>{{ message.createdAt|date("Y-m-d H:m:s") }}</strong>
+                <br>
+                <a href="{{ path('closeReport', {'id': message.id}) }}" class="btn btn-success"><i class="fas fa-check"></i> Atmesti</a>
+                <a href="{{ path('acceptReport', {'id': message.id}) }}" class="btn btn-danger"><i class="fas fa-trash"></i> Pašalinti pranešimą</a>
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+{% endblock %}

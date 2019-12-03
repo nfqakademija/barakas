@@ -19,4 +19,9 @@ class MessageRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Message::class);
     }
+
+    public function getReportedMessages()
+    {
+        return $this->findBy(['reported' => true]);
+    }
 }

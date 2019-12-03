@@ -1,17 +1,10 @@
 <div class="col-md-4">
-    <div class="panel">
-        <div class="panel-header">
-            <p>Informacijos keitimas</p>
-        </div>
-        <div class="panel-content text-center">
-            <p>Jei norite pakeisti savo bendrabutį ar kambarį naudokitės nurodytais mygtukais.</p>
-            <a href="{{ path('change_dormitory') }}" class="btn btn-success">
-                <i class="fas fa-exchange-alt"></i> Keisti bendrabutį
-            </a>
-            <br><br>
-            <a href="{{ path('change_room') }}" class="btn btn-primary">
-                <i class="fas fa-exchange-alt"></i> Keisti kambarį
-            </a>
-        </div>
-    </div>
+    <h2>Daugiau veiksmų</h2>
+    <p>Jei norite pakeisti savo bendrabutį ar kambarį, pasinaudokite žemiau nurodytomis funkcijomis.</p>
+    <a href="{{ path('change_dormitory') }}" class="btn btn-success">
+        <i class="fas fa-exchange-alt"></i> Keisti bendrabutį
+    </a>
+    <a href="{{ path('change_room') }}" class="btn btn-primary">
+        <i class="fas fa-exchange-alt"></i> Keisti kambarį
+    </a>
 </div>

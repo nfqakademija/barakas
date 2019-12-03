@@ -31,9 +31,10 @@ class Message
     private $room_nr;
 
     /**
+     * @Assert\NotNull(message="Šis laukelis yra privalomas.")
      * @Assert\Length(
      *     min = 7,
-     *     max = 300,
+     *     max = 200,
      *     minMessage = "Prašymą turi sudaryti mažiausiai {{ limit }} simboliai.",
      *     maxMessage = "Prašymas neturi būti ilgesnis nei {{ limit }} simbolių."
      * )
@@ -57,7 +58,7 @@ class Message
     private $solved;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Notification", mappedBy="message")
+     * @ORM\OneToMany(targetEntity="App\Entity\Notification", mappedBy="message", cascade={"remove"})
      */
     private $notifications;
 
@@ -65,6 +66,11 @@ class Message
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $reported;
 
     public function __construct()
     {
@@ -188,6 +194,18 @@ class Message
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getReported(): ?bool
+    {
+        return $this->reported;
+    }
+
+    public function setReported(?bool $reported): self
+    {
+        $this->reported = $reported;
 
         return $this;
     }

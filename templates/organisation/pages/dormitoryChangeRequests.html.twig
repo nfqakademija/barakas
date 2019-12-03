@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+    {% if requests is empty %}
+        <p class="text-center">Kol kas pranešimų apie bendrabučių keitimus nėra.
+            <br>
+            <img src="https://image.flaticon.com/icons/svg/1380/1380641.svg" style="height: 300px; opacity: 0.2">
+        </p>
+    {% else %}
+
     <h3>Studentai norintys pakeistį bendrabutį: {{ requests|length }}</h3>
     <br>
     <div class="col-md-12">
@@ -33,7 +41,7 @@
                             <td>{{ request.dormitory.address }}</td>
                             <td>{{ request.roomNr }}</td>
                             <td>{{ request.description }}</td>
-                            <td>{{ request.createdAt|date('Y-M-D h:m:s') }}</td>
+                            <td>{{ request.createdAt|date("Y-m-d H:m:s") }}</td>
                             <td><a href="{{ path('approve_change_dorm_req', {'id': request.id}) }}" class="btn btn-success"><i class="fas fa-check"></i></a></td>
                             <td><a href="{{ path('remove_change_dorm_req', {'id': request.id}) }}" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a></td>
                     <tr>
@@ -42,5 +50,6 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
 {% endblock %}

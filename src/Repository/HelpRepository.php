@@ -38,4 +38,16 @@ class HelpRepository extends ServiceEntityRepository
 
         return $helpers;
     }
+
+    public function findUserWhoProvidedHelp($id)
+    {
+        $help = $this->find($id);
+        return $help->getUser();
+    }
+
+    public function findMessageFromHelp($id)
+    {
+        $message = $this->find($id);
+        return $message->getMessage();
+    }
 }
