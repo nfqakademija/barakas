@@ -283,7 +283,7 @@ class AdminController extends AbstractController
         $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
         $message = $messagesRepo->find($messageId);
 
-        if(!$message) {
+        if (!$message) {
             return $this->redirectToRoute('organisation');
         }
 
@@ -304,7 +304,7 @@ class AdminController extends AbstractController
         $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
         $message = $messagesRepo->find($messageId);
 
-        if(!$message) {
+        if (!$message) {
             return $this->redirectToRoute('organisation');
         }
 

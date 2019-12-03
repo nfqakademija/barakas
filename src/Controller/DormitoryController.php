@@ -183,7 +183,7 @@ class DormitoryController extends AbstractController
         $messageRepository = $this->getDoctrine()->getRepository(Message::class);
         $message = $messageRepository->find($reportMessageId);
 
-        if(!$message) {
+        if (!$message) {
             return $this->redirectToRoute('dormitory');
         }
 
