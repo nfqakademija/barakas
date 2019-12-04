@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h2>Pranešta</h2>
-    <p>Pranešimai, kurie vartotojams pasirodė netinkami.</p>
 
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
@@ -15,7 +13,11 @@
             <br>
             <img src="https://image.flaticon.com/icons/svg/1380/1380641.svg" style="height: 300px; opacity: 0.2">
         </p>
-    {% endif %}
+    {% else %}
+
+    <h2>Pranešta</h2>
+    <p>Pranešimai, kurie vartotojams pasirodė netinkami.</p>
+
 
     <ul class="list-unstyled">
         {% for message in messages %}
@@ -32,4 +34,5 @@
             <hr>
         {% endfor %}
     </ul>
+    {% endif %}
 {% endblock %}

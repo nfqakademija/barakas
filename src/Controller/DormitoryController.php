@@ -190,6 +190,8 @@ class DormitoryController extends AbstractController
         $message->setReported(true);
         $entityManager->flush();
 
+        $this->addFlash('success', 'Apie netinkamą pranešimą pranešta administracijai.');
+
         return $this->redirectToRoute('dormitory');
     }
 
