@@ -123,6 +123,13 @@ class DormitoryController extends AbstractController
             return $this->redirectToRoute('dormitory');
         }
 
+        $datetime1 = date_create(new \DateTime());
+        $datetime2 = date_create($message->getCreatedAt());
+
+        $interval = date_diff($datetime1, $datetime2);
+
+        dump($interval);
+
         return $this->render('dormitory/message.html.twig', [
             'message' => $message,
             'dormitory' => $dormitory,
