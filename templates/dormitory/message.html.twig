@@ -18,8 +18,8 @@
         {{ message.roomNr }}
         <br>
         <br>
-        <span style="color: #0fbb0f;" class="float-right">+500</span>
         <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 25px">
+        <span style="color: #0fbb0f;">500</span>
         &nbsp;
     </span>
 
@@ -47,7 +47,7 @@
                 <img src="https://image.flaticon.com/icons/svg/443/443138.svg">
                 <span>Pagalba suteikta</span>
             </span>
-            <span class="float-right"><strong>{{ app.user.owner }}</strong></span>
+            <span class="float-right"><strong>{{ message.solver.owner }}</strong></span>
         </small>
 
     {% else %}
