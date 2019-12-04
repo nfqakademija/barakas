@@ -21,6 +21,7 @@ easy_admin:
                     - { property: 'room_nr', type: 'text' }
                     - { property: 'isDisabled', type: 'number' }
                     - { property: 'created_at', type: 'datetime' }
+            
             new:
                 fields:
                     - { property: 'password', type: 'text'}
