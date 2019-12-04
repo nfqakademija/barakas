@@ -68,6 +68,11 @@ class Message
     private $user;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
+     */
+    private $solver;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $reported;
@@ -192,6 +197,18 @@ class Message
     }
 
     public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSolver(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setSolver(?User $user): self
     {
         $this->user = $user;
 
