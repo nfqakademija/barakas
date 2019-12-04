@@ -6,14 +6,14 @@
                 <img src="https://image.flaticon.com/icons/svg/785/785116.svg" style="height: 30px">
             {% endif %}
 
-            <strong>{{ message.user.owner }}</strong> <small><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
+            <strong>{{ message.user.owner }}</strong> <small><i>{{ message.createdAt|time_diff }}</i></small>
             <span class="float-right">
                  <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 25px">
                  {{ message.roomNr }}
                 <br>
                 <br>
                 <span style="color: #0fbb0f;" class="float-right">+500</span>
-                <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 25px">
+                <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 25px; vertical-align: text-top">
                 &nbsp;
             </span>
 

@@ -110,6 +110,16 @@ class DormitoryController extends AbstractController
             return $this->redirectToRoute('dormitory');
         }
 
+
+        // LAIKAS TARP PRANESIMU IR SIANDIENOS
+
+/*        $creationDate = $message->getCreatedAt();
+        $now = new \DateTime();
+
+        $interval = $creationDate->diff($now);
+
+        echo "The difference is " . $interval->days . " days.";*/
+
         return $this->render('dormitory/message.html.twig', [
             'message' => $message,
             'dormitory' => $dormitory,
