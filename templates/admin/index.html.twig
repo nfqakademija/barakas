@@ -20,18 +20,22 @@
                         {{ message }}
                     </div>
                 {% endfor %}
-                <ul class="list-unstyled list-group list-group-horizontal">
-                    <li class="col-md-4">
-                        <p>Administratorius: <strong>{{ dormitory.owner }}</strong></p>
+                <ul class="list-unstyled list-group list-group-horizontal" style="display: flex; justify-content: space-between">
+                    <li>
+                        Administratorius: <strong>{{ dormitory.owner }}</strong>
                     </li>
-                    <li class="col-md-4">
-                        <p>Adresas: <strong>{{ dormitoryInfo.address }}</strong></p>
+                    <li>
+                        Adresas: <strong>{{ dormitoryInfo.address }}</strong>
                     </li>
-                    <li class="col-md-4">
-                        <p>Studentai: <strong>{{ students|length }}</strong></p>
+                    <li>
+                        Studentai: <strong>{{ students|length }}</strong>
+                    </li>
+                    <li>
+                        <a href="{{ path('add_Rules', {id: app.request.get('id')}) }}" class="btn btn-sm btn-dark mb-3" role="button">
+                            <i class="fas fa-list"></i> Taisyklės
+                        </a>
                     </li>
                 </ul>
-                <a href="{{ path('add_Rules', {id: app.request.get('id')}) }}" class="btn btn-dark mb-3" role="button">Taisyklės</a>
 
                    <div class="text-center">
 				   <h5>Išsiųsti pakvietimą studentui</h5>

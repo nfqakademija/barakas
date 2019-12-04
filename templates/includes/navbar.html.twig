@@ -9,14 +9,14 @@
                 <a class="nav-link" href="{{ path('home') }}"><i class="fas fa-home"></i> Pradinis<span class="sr-only">(current)</span></a>
             </li>
             {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('contacts') }}"><i class="fas fa-list"></i> Kontaktai</a>
+            </li>
             {% if app.user and not is_granted('ROLE_SUPER') and not is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
                 <a class="nav-link" href="{{path('rules')}}"><i class="fas fa-scroll"></i> Taisyklės</a>
             </li>
             {% endif %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('contacts') }}"><i class="fas fa-list"></i> Kontaktai</a>
-            </li>
         </ul>
         <ul class="navbar-nav mr-4">
             {% if app.user and is_granted('ROLE_SUPER') %}
@@ -48,7 +48,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width: 25em">
                     {% if notifications() %}
                         <ul class="list-unstyled dropdown-item">
-                            <a href="{{ path('clear_notifications') }}" class="btn btn-sm btn-dark float-right">Perskaityta</a>
+                            <a href="{{ path('clear_notifications') }}" class="btn btn-sm btn-dark float-right"><i class="fas fa-check"></i> Perskaityta</a>
                            <br>
                             {% for notification in notifications() %}
                                 <li>
@@ -57,7 +57,7 @@
                                         {{ notification.user.owner }} | Kambarys: <strong>{{ notification.roomNr }}</strong> <br>
                                         <strong>Prašymas:</strong> {{ notification.content|length > 50 ? notification.content|slice(0, 50) ~ '...' : notification.content  }}
                                         <br>
-                                        <i>{{ notification.createdAt|date('Y-m-d h:m:s') }}</i>
+                                        <i>{{ notification.createdAt|time_diff }}</i>
                                         </a>
                                     </small>
                                     <hr>
@@ -92,12 +92,14 @@
                     <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Atsijungti</a>
                 </div>
             </li>
+            {% if not is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
                 <span class="nav-link">
                     <img src="https://image.flaticon.com/icons/svg/438/438450.svg" style="height: 20px; vertical-align: sub">
                     {{ app.user.points }}
                 </span>
             </li>
+            {% endif %}
             {% else %}
             <li>
                 <a href="{{ path('org_registration') }}" class="nav-link"><i class="fas fa-user-plus"></i> Registruoti organizaciją</a>

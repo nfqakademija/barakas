@@ -20,8 +20,7 @@ class AddRulesType extends AbstractType
                     'placeholder' => 'Taisyklės',
                     'rows' => 15
                 ]
-            ])
-        ->add('Išsaugoti', SubmitType::class);
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
