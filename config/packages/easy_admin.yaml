@@ -23,7 +23,9 @@ easy_admin:
                     - { property: 'isDisabled', type: 'number' }
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'lastActivityAt', type: 'datetime' }
-
+            new:
+                fields:
+                    - { property: 'password', type: 'text'}
         Academy:
           class: App\Entity\Academy
           list:  # <-- 'form' is applied to both 'new' and 'edit' views
