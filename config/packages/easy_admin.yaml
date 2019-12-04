@@ -9,7 +9,6 @@ easy_admin:
                     - 'owner'
                     - 'dorm_id'
                     - 'room_nr'
-                    - 'isDisabled'
                     - { property: 'roles', template: 'admin/super/roles-type-read.html.twig' }
                     - { property: 'created_at', type: 'datetime' }
             form:
@@ -19,20 +18,10 @@ easy_admin:
                     - { property: 'roles', type: 'collection' }
                     - { property: 'dorm_id', type: 'number' }
                     - { property: 'room_nr', type: 'text' }
-                    - { property: 'isDisabled', type: 'number' }
                     - { property: 'created_at', type: 'datetime' }
-
-        Academy:
-          class: App\Entity\Academy
-          list:  # <-- 'form' is applied to both 'new' and 'edit' views
-            fields:
-              - 'title'
-              - 'academyType'
-          form:
-            fields:
-              - { property: 'title', type: 'text' }
-              - { property: 'academyType', type: 'number' }
-
+            new:
+                fields:
+                    - { property: 'password', type: 'text'}
         Comment:
           class: App\Entity\Comment
           list:  # <-- 'form' is applied to both 'new' and 'edit' views
