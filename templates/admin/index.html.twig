@@ -20,20 +20,32 @@
                         {{ message }}
                     </div>
                 {% endfor %}
-                <a href="{{ path('add_Rules', {id: app.request.get('id')}) }}" class="btn btn-dark mb-3" role="button">Redaguoti taisykles</a>
-                <h5>Bendrabučio administratorius: {{ dormitory.owner }}</h5>
-                <h5>Bendrabučio adresas: {{ dormitoryInfo.address }}</h5>
-                <h5>Bendrabučio studentai: {{ students|length }}</h5><br>
+                <ul class="list-unstyled list-group list-group-horizontal">
+                    <li class="col-md-4">
+                        <p>Administratorius: <strong>{{ dormitory.owner }}</strong></p>
+                    </li>
+                    <li class="col-md-4">
+                        <p>Adresas: <strong>{{ dormitoryInfo.address }}</strong></p>
+                    </li>
+                    <li class="col-md-4">
+                        <p>Studentai: <strong>{{ students|length }}</strong></p>
+                    </li>
+                </ul>
+                <a href="{{ path('add_Rules', {id: app.request.get('id')}) }}" class="btn btn-dark mb-3" role="button">Taisyklės</a>
 
-				   <h6>Studento pridėjimas į bendrabutį</h6>
-                   <div style='height:1px; width:100%; background:#e0e0e0;'></div><br>
-				   
+                   <div class="text-center">
+				   <h5>Išsiųsti pakvietimą studentui</h5>
+                   <img src="https://image.flaticon.com/icons/svg/1945/1945977.svg" class="index-panel-img">
+
+                   <div class="col-md-4" style="margin: 0 auto;">
                     {{ form_start(SendInvitationType) }}
                     {{ form_widget(SendInvitationType) }}
-                    <button type="submit" class="btn btn-sm btn-primary"><i class="far fa-paper-plane"></i> Siųsti pakvietimo nuorodą</button>
+                    <button type="submit" class="btn btn-primary"><i class="far fa-paper-plane"></i> Siųsti pakvietimo nuorodą</button>
                     {{ form_end(SendInvitationType) }}
-				   <br><br>
-                   <h6>Išsiųsti pakvietimai studentams</h6>
+                   </div>
+                    </div>
+				   <br>
+                   <h5>Išsiųsti pakvietimai studentams</h5>
                    <div style='height:1px; width:100%; background:#e0e0e0;'></div>
                 <div class="row">
                 <table class="table table-primary table-striped col-md-5">
