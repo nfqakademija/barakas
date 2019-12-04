@@ -1,5 +1,13 @@
 <h2>Pranešimai</h2>
 <ul class="list-unstyled">
+
+    {% if messages is empty %}
+        <p class="text-center">Kol kas bendrabutyje pranešimų nėra.
+            <br>
+            <img src="https://image.flaticon.com/icons/svg/1380/1380641.svg" style="height: 300px; opacity: 0.2">
+        </p>
+    {% endif %}
+
     {% for message in messages %}
         <li style="font-size: 20px">
             {% if(message.status == 0) %}
