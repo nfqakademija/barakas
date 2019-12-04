@@ -8,8 +8,10 @@ use App\Entity\Message;
 use App\Entity\Notification;
 use App\Entity\SolvedType;
 use App\Entity\StatusType;
+use App\Entity\User;
 use App\Form\MessageType;
 use App\Service\StudentManager;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,7 +36,6 @@ class DormitoryController extends AbstractController
         StudentManager $studentManager
     ) {
         $user = $this->getUser();
-
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
 
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
@@ -81,12 +82,24 @@ class DormitoryController extends AbstractController
             return $this->redirectToRoute('dormitory');
         }
 
+        $studentsRepo = $entityManager->getRepository(User::class);
+        $delay = new \DateTime('2 minutes ago');
+        $expression = Criteria::expr();
+        $criteria = Criteria::create();
+        $criteria->where(
+            $expression->gt('lastActivityAt', $delay)
+        )
+            ->andWhere($expression->eq('dorm_id', $user->getDormId()));
+        $criteria->orderBy(['lastActivityAt' => Criteria::DESC]);
+        $loggedInUsers = $studentsRepo->matching($criteria);
+
 
         return $this->render('dormitory/index.html.twig', [
             'dormitory' => $dormitory,
             'students' => $students,
             'messages' => $messages,
             'formRequest' => $formRequest->createView(),
+            'loggedInUsers' => $loggedInUsers,
         ]);
     }
 

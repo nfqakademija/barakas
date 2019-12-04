@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Datetime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -106,9 +107,17 @@ class User implements UserInterface
      */
     private $points;
 
+    /**
+     * Date/Time of the last activity
+     *
+     * @var Datetime
+     * @ORM\Column(name="last_activity_at", type="datetime")
+     */
+    protected $lastActivityAt;
+
     public function __construct()
     {
-        $this->created_at = new \DateTime();
+        $this->created_at = new DateTime();
         $this->messages = new ArrayCollection();
         $this->helps = new ArrayCollection();
         $this->notifications = new ArrayCollection();
@@ -440,5 +449,28 @@ class User implements UserInterface
         $this->points = $points;
 
         return $this;
+    }
+
+    /**
+     * @return Datetime
+     */
+    public function getLastActivityAt(): Datetime
+    {
+        return $this->lastActivityAt;
+    }
+
+    /**
+     * @param Datetime $lastActivityAt
+     */
+    public function setLastActivityAt(Datetime $lastActivityAt): void
+    {
+        $this->lastActivityAt = $lastActivityAt;
+    }
+
+    public function isActiveNow()
+    {
+        $delay = new \DateTime('2 minutes ago');
+
+        return ( $this->getLastActivityAt() > $delay );
     }
 }
