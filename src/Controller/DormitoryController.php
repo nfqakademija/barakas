@@ -210,7 +210,10 @@ class DormitoryController extends AbstractController
         $userWhoHelpedPoints = $userWhoHelped->getPoints();
         $newPoints = $userWhoHelpedPoints + 500;
         $userWhoHelped->setPoints($newPoints);
+        
+        $help = $helpRepository->find($helpId);
 
+        $entityManager->remove($help);
         $entityManager->flush();
 
         $this->addFlash('success', 'Pagalbos siūlymas patvirtintas.');
