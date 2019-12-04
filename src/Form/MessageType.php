@@ -18,7 +18,7 @@ class MessageType extends AbstractType
             ->add('content', TextType::class, [
                 'label' => 'Jūsų prašymas',
                 'attr' => [
-                    'placeholder' => 'Pateikite savo prašymą čia... pvz. Reikia playstation 4 pultelio 🎮'
+                    'placeholder' => 'Pateikite savo prašymą čia... pvz. Reikia playstation 4 pultelio 🎮',
                 ]
             ])
         ;

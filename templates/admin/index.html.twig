@@ -64,9 +64,9 @@
                             <td>{{ student.RoomNr }}</td>
                             <td>{{ student.email }}</td>
                             {% if student.isDisabled %}
-                            <td><a class="btn btn-primary" href="{{path('disable_account', { 'id': student.id })}}" role="button">Ijungti</a></td>
+                            <td><a class="btn btn-primary" href="{{path('disable_account', { 'id': student.id })}}" role="button"><i class="fas fa-unlock-alt"></i> Atblokuoti</a></td>
                                 {% else %}
-                                    <td><a class="btn btn-primary" href="{{path('disable_account', { 'id': student.id })}}" role="button">Išjungti</a></td>
+                                    <td><a class="btn btn-danger" href="{{path('disable_account', { 'id': student.id })}}" role="button"><i class="fas fa-ban"></i> Blokuoti</a></td>
                             {% endif %}
                         </tr>
                     {% endfor %}

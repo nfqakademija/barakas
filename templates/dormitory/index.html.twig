@@ -4,9 +4,17 @@
 
 {% block body %}
     {% include 'dormitory/inc/dormitory_info.html.twig' %}
+<hr>
     <div class="row">
         <div class="col-md-8">
-            <div class="panel">
+            {% include 'dormitory/inc/notifications.html.twig' %}
+
+            {% include 'dormitory/inc/request_form.html.twig' %}
+
+            {% include 'dormitory/inc/messages.html.twig' %}
+
+
+{#            <div class="panel">
                 <div class="panel-header">
                     <p>Prašymai</p>
                 </div>
@@ -17,9 +25,9 @@
 
                 {% include 'dormitory/inc/messages.html.twig' %}
                 </div>
-            </div>
+            </div>#}
         </div>
-       {% include 'dormitory/inc/actions.html.twig' %}
+       {% include 'dormitory/inc/panels.html.twig' %}
     <br>
 {% endblock %}
 

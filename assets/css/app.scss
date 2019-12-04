@@ -18,7 +18,7 @@ body {
 }
 
 header {
-  background: #2d3748;
+  background: #0d003c;
 }
 
 .header-content {
@@ -109,18 +109,19 @@ input {
   border-right: none !important;
 }
 
-.nav-link {
-  color: #a0aec0 !important;
-  font-size: 1.125rem;
+.navbar {
+  background: #443674 !important;
 }
 
-.nav-link:hover {
-  color: #2d3748 !important;
+.nav-link {
+  color: white !important;
+  font-size: 16px;
+  font-weight: 700;
+  padding-left: 1rem;
 }
 
 .help-button {
   cursor: pointer;
-  background: #343a40;
   color: #fff !important;
   border-radius: 5px;
   border: none;

@@ -101,6 +101,11 @@ class User implements UserInterface
      */
     private $roomChanges;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $points;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -423,5 +428,17 @@ class User implements UserInterface
     public function setIsDisabled($isDisabled): void
     {
         $this->isDisabled = $isDisabled;
+    }
+
+    public function getPoints(): ?int
+    {
+        return $this->points;
+    }
+
+    public function setPoints(int $points): self
+    {
+        $this->points = $points;
+
+        return $this;
     }
 }

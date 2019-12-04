@@ -5,8 +5,10 @@ namespace App\Twig;
 use App\Entity\Help;
 use App\Entity\Notification;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
 use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class AppExtension extends AbstractExtension

@@ -1,0 +1,19 @@
+<div class="col-md-4">
+    <h2>Lyderiai</h2>
+    <ol>
+        {% for student in students %}
+        <li>
+            {{ student.owner }} {{ student.points }}
+        </li>
+        {% endfor %}
+    </ol>
+    <br><br>
+    <h2>Daugiau veiksmų</h2>
+    <p>Jei norite pakeisti savo bendrabutį ar kambarį, pasinaudokite žemiau nurodytomis funkcijomis.</p>
+    <a href="{{ path('change_dormitory') }}" class="btn btn-success">
+        <i class="fas fa-exchange-alt"></i> Keisti bendrabutį
+    </a>
+    <a href="{{ path('change_room') }}" class="btn btn-primary">
+        <i class="fas fa-exchange-alt"></i> Keisti kambarį
+    </a>
+</div>
