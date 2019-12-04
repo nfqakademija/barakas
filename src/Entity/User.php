@@ -111,7 +111,7 @@ class User implements UserInterface
      * Date/Time of the last activity
      *
      * @var Datetime
-     * @ORM\Column(name="last_activity_at", type="datetime")
+     * @ORM\Column(name="last_activity_at", nullable=true, type="datetime")
      */
     protected $lastActivityAt;
 

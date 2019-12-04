@@ -1,14 +1,19 @@
 <div class="col-md-4">
     <h2>Prisijungę vartotojai</h2>
-    <ol>
+    <div class="row">
         {% for user in loggedInUsers %}
-            {% if user.id != app.user.id %}
-            <li>
-                {{ user.owner }} iš {{ user.roomNr }} kambario.
-            </li>
-            {% endif %}
+                <div style="margin-left: 1rem">
+                <span style="background: #5739bd;color: white;padding: 5px;border-radius: 5px;">
+                    {{ user.owner }}</span>
+                <span style="background: black;color: white;padding: 5px 5px 5px 3px;border-radius: 5px;margin-left: -0.5rem;
+                    border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                    {{ user.roomNr }}
+                </span>
+                </div>
+                &nbsp;
         {% endfor %}
-    </ol>
+    </div>
+    <br><br>
     <h2>Lyderiai</h2>
     <ul class="list-unstyled" id="topStudents">
         {% for student in students %}
