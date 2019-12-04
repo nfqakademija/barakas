@@ -1,4 +1,14 @@
 <div class="col-md-4">
+    <h2>Prisijungę vartotojai</h2>
+    <ol>
+        {% for user in loggedInUsers %}
+            {% if user.id != app.user.id %}
+            <li>
+                {{ user.owner }} iš {{ user.roomNr }} kambario.
+            </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
     <h2>Lyderiai</h2>
     <ol>
         {% for student in students %}
