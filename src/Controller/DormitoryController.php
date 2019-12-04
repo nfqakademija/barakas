@@ -38,7 +38,7 @@ class DormitoryController extends AbstractController
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
 
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $students = $dormitoryRepo->orderStudentsByPoints($user->getDormId());
+        $students = $dormitoryRepo->orderTopStudentsByPoints($user->getDormId());
         $messages = $dormitoryRepo->getDormitoryMessages($user->getDormId());
 
         $message = new Message();
@@ -244,5 +244,23 @@ class DormitoryController extends AbstractController
         $this->addFlash('success', 'Pagalbos siūlymas pašalintas, pranešimas gražintas į pradinę stadiją.');
 
         return $this->redirectToRoute('provided_help');
+    }
+
+    /**
+     * @Route("/dormitory/students", name="dormitory_leaderboard")
+     */
+    public function allDormitoryStudents()
+    {
+        $user = $this->getUser();
+
+        $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
+
+        $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
+        $students = $dormitoryRepo->orderAllStudentsByPoints($user->getDormId());
+
+        return $this->render('/dormitory/dormitory_leaderboard.html.twig', [
+            'students' => $students,
+            'dormitory' => $dormitory
+        ]);
     }
 }
