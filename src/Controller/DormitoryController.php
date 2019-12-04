@@ -160,6 +160,7 @@ class DormitoryController extends AbstractController
 
         $entityManager->persist($help);
         $message->setSolved(SolvedType::solved());
+        $message->setSolver($user);
 
         $entityManager->flush();
 
