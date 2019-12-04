@@ -20,12 +20,11 @@
                 <div class="panel text-center" style="background: #f7f7f7">
                     <img src="https://image.flaticon.com/icons/svg/391/391175.svg" style="height: 70px">
                     <br>
-                    <h5>{{ message.user.owner }} <strong>{{ message.user.roomNr }}</strong></h5>
+                    <h5>{{ message.user.owner }}
+                        <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 25px; vertical-align: bottom">
+                        <strong>{{ message.user.roomNr }}</strong></h5>
                     <small>{{ message.createdAt|date('Y-m-d H:i:s') }}</small>
                     <h2>„</h2>{{message.message.content}}<h2>“</h2>
-                    <strong>Pranešimas:</strong>
-                    <br>
-                    Užbėk į 305 kambarį apie 19 val.
                     <hr>
                     <a href="{{ path('acceptHelp', {'id': message.id}) }}"
                        class="btn btn-success"><i class="fas fa-check"></i> Patvirtinti
@@ -36,7 +35,6 @@
                     <br><br>
                 </div>
             </div>
-
         {% endfor %}
     </div>
 
