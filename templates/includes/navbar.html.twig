@@ -82,7 +82,7 @@
                     <i class="fas fa-user"></i> {{ app.user.username }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER') %}
                     <a class="dropdown-item" href="{{ path('organisation') }}"><i class="fas fa-tools"></i> Administravimas</a>
                     <a class="dropdown-item" href="{{ path('reportedMessages') }}"><i class="fas fa-envelope"></i> Netinkami pranešimai</a>
                     <a class="dropdown-item" href="{{ path('dormitory_change_req') }}"><i class="fas fa-exchange-alt"></i> Bendrabučių keitimai</a>
