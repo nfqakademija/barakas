@@ -297,6 +297,9 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/organisation/accept-report", name="acceptReport")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
      */
     public function acceptReport(Request $request, EntityManagerInterface $entityManager)
     {
