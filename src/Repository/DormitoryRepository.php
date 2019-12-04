@@ -92,4 +92,17 @@ class DormitoryRepository extends ServiceEntityRepository
 
         return $messages;
     }
+
+    public function orderStudentsByPoints($id)
+    {
+        $entityManager = $this->getEntityManager();
+        $studentsRepo = $entityManager->getRepository(User::class);
+
+        $students = $studentsRepo->findBy(
+            ['dorm_id' => $id],
+            ['points' => 'DESC']
+        );
+
+        return $students;
+    }
 }

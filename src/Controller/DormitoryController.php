@@ -38,7 +38,7 @@ class DormitoryController extends AbstractController
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
 
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $students = $dormitoryRepo->getStudentsInDormitory($user->getDormId());
+        $students = $dormitoryRepo->orderStudentsByPoints($user->getDormId());
         $messages = $dormitoryRepo->getDormitoryMessages($user->getDormId());
 
         $message = new Message();
@@ -109,17 +109,7 @@ class DormitoryController extends AbstractController
         if (!$message || $user->getDormId() !== $message->getDormId()) {
             return $this->redirectToRoute('dormitory');
         }
-
-
-        // LAIKAS TARP PRANESIMU IR SIANDIENOS
-
-/*        $creationDate = $message->getCreatedAt();
-        $now = new \DateTime();
-
-        $interval = $creationDate->diff($now);
-
-        echo "The difference is " . $interval->days . " days.";*/
-
+        
         return $this->render('dormitory/message.html.twig', [
             'message' => $message,
             'dormitory' => $dormitory,
