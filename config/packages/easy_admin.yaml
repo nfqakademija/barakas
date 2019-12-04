@@ -12,6 +12,7 @@ easy_admin:
                     - 'isDisabled'
                     - { property: 'roles', template: 'admin/super/roles-type-read.html.twig' }
                     - { property: 'created_at', type: 'datetime' }
+                    - { property: 'lastActivityAt', type: 'datetime' }
             form:
                 fields:
                     - { property: 'email', type: 'email' }
@@ -21,10 +22,8 @@ easy_admin:
                     - { property: 'room_nr', type: 'text' }
                     - { property: 'isDisabled', type: 'number' }
                     - { property: 'created_at', type: 'datetime' }
-            
-            new:
-                fields:
-                    - { property: 'password', type: 'text'}
+                    - { property: 'lastActivityAt', type: 'datetime' }
+
         Academy:
           class: App\Entity\Academy
           list:  # <-- 'form' is applied to both 'new' and 'edit' views
