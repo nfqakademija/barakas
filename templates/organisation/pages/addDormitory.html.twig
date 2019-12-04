@@ -8,15 +8,17 @@
             <div class="panel-header">
                 <p>Pridėti bendrabutį</p>
             </div>
-            <div class="panel-content">
-                <p class="text-center">Į pridėtą bendrabutį galėsite kviesti studentus.
+            <div class="panel-content text-center">
+                <p>Į pridėtą bendrabutį galėsite kviesti studentus.
                 <br>
                 <img src="https://image.flaticon.com/icons/svg/619/619104.svg" class="index-panel-img">
                 </p>
+                <div class="col-md-4" style="margin: 0 auto">
                 {{ form_start(DormAddFormType) }}
                 {{ form_widget(DormAddFormType) }}
                 <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Pridėti bendrabutį</button>
                 {{ form_end(DormAddFormType) }}
+                </div>
             </div>
         </div>
 

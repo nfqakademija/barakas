@@ -14,7 +14,6 @@ class SendInvitationType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'style' => 'width:40%;',
                     'placeholder' => 'Vardas ir Pavardė',
                     'autocomplete' => 'off'
                 ]
@@ -22,7 +21,6 @@ class SendInvitationType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => false,
                 'attr' => [
-                    'style' => 'width:40%;',
                     'placeholder' => 'El pašto adresas',
                     'autocomplete' => 'off'
                 ]
@@ -30,7 +28,6 @@ class SendInvitationType extends AbstractType
             ->add('room', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'style' => 'width:25%;',
                     'placeholder' => 'Paskirtas kambarys',
                     'autocomplete' => 'off'
                 ]

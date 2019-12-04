@@ -3,11 +3,7 @@
 {% block title %}Organizacija {% endblock %}
 
 {% block body %}
-        <div class="panel">
-            <div class="panel-header">
-                <p>Bendrabučiai</p>
-            </div>
-            <div class="panel-content">
+    <h2>Bendrabučių administravimas</h2>
                 <a href="{{ path('addOrganisation') }}">
                     <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Pridėti bendrabutį</button>
                 </a>
@@ -39,6 +35,4 @@
 
                     {% endfor %}
                 </div>
-                </div>
-            </div>
 {% endblock %}

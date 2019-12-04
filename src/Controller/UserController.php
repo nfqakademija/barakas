@@ -117,6 +117,7 @@ class UserController extends AbstractController
             $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
             $organisation->setPassword($encodedPassword);
             $organisation->setRoles(array('ROLE_ADMIN'));
+            $organisation->setPoints(0);
 
             $entityManager->persist($organisation);
             $entityManager->flush();
@@ -213,6 +214,7 @@ class UserController extends AbstractController
             $student->setDormId($invitation->getDorm());
             $student->setRoomNr($invitation->getRoom());
             $student->setRoles(array('ROLE_USER'));
+            $student->setPoints(0);
             $entityManager->persist($student);
             $entityManager->flush();
 

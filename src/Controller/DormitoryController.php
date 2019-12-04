@@ -109,7 +109,7 @@ class DormitoryController extends AbstractController
         if (!$message || $user->getDormId() !== $message->getDormId()) {
             return $this->redirectToRoute('dormitory');
         }
-        
+
         return $this->render('dormitory/message.html.twig', [
             'message' => $message,
             'dormitory' => $dormitory,
