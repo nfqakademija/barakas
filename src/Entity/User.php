@@ -454,7 +454,7 @@ class User implements UserInterface
     /**
      * @return Datetime
      */
-    public function getLastActivityAt(): Datetime
+    public function getLastActivityAt(): ?Datetime
     {
         return $this->lastActivityAt;
     }
