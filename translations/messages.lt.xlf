@@ -36,6 +36,11 @@
                 <source>Password</source>
                 <target>Slaptažodis</target>
             </trans-unit>
+
+            <trans-unit id="Is disabled">
+                <source>Is disabled</source>
+                <target>Blokuoti</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
