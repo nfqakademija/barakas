@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% if students is empty %}
+        <p class="text-center">Kol kas bendrabutyje studentų nėra.
+            <br>
+            <img src="https://image.flaticon.com/icons/svg/1380/1380641.svg" style="height: 300px; opacity: 0.2">
+        </p>
+    {% else %}
+
+    <h2>TOP bendrabučio studentai</h2>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Vieta</th>
+            <th scope="col">Vardas</th>
+            <th scope="col">Taškai</th>
+            <th scope="col">Kambarys</th>
+        </tr>
+        </thead>
+        <tbody>{% set myVal = 0 %}
+        {% for student in students %}
+            {% set myVal = myVal + 1 %}
+        <tr>
+            {% if myVal == 1 %}
+                <th scope="row">1 <img src="https://image.flaticon.com/icons/svg/1021/1021220.svg"
+                                   style="height: 25px">
+                </th>
+            {% elseif myVal == 2 %}
+                <th scope="row">2 <img src="https://image.flaticon.com/icons/svg/179/179251.svg"
+                                       style="height: 25px">
+                </th>
+            {% elseif myVal == 3 %}
+                <th scope="row">3 <img src="https://image.flaticon.com/icons/svg/179/179250.svg"
+                                       style="height: 25px">
+                </th>
+            {% else %}
+                <th scope="row">{{ myVal }}</th>
+            {% endif %}
+            <td>{{ student.owner }}</td>
+            <td>
+                <img src="https://image.flaticon.com/icons/svg/438/438450.svg" style="height: 25px">
+                {{ student.points }}
+            </td>
+            <td>{{ student.roomNr }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}

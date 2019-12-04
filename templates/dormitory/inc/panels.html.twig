@@ -1,12 +1,21 @@
 <div class="col-md-4">
     <h2>Lyderiai</h2>
-    <ol>
+    <ul class="list-unstyled" id="topStudents">
         {% for student in students %}
-        <li>
-            {{ student.owner }} {{ student.points }}
+        <li style="padding-bottom: 5px">
+            {{ student.owner }}
+            <span class="float-right">
+            {{ student.points }}
+            <img src="https://image.flaticon.com/icons/svg/438/438450.svg" style="height: 20px; vertical-align: sub">
+            </span>
         </li>
         {% endfor %}
-    </ol>
+        <li class="text-center">
+            <a href="{{ path('dormitory_leaderboard') }}" class="btn btn-warning">
+                <img src="https://image.flaticon.com/icons/svg/166/166910.svg" style="height: 20px">
+                Visi bendrabučio studentai</a>
+        </li>
+    </ul>
     <br><br>
     <h2>Daugiau veiksmų</h2>
     <p>Jei norite pakeisti savo bendrabutį ar kambarį, pasinaudokite žemiau nurodytomis funkcijomis.</p>
@@ -17,3 +26,7 @@
         <i class="fas fa-exchange-alt"></i> Keisti kambarį
     </a>
 </div>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('dormitory') }}
+{% endblock %}
