@@ -130,7 +130,8 @@ input {
 }
 
 .help-button > img {
-  height: 20px
+  height: 20px;
+  vertical-align: sub;
 }
 
 .report-button {
@@ -143,7 +144,8 @@ input {
 }
 
 .report-button > img {
-  height: 20px
+  height: 20px;
+  vertical-align: sub;
 }
 
 .notification-url {
@@ -186,6 +188,10 @@ input {
 
 .messageContext {
   padding-left: 7%;
+}
+
+#postRequestForm label {
+  font-size: 22px;
 }
 
 .footer {
