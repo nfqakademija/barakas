@@ -52,9 +52,11 @@ class DormitoryController extends AbstractController
         $lastMessage = $messageRepo->findBy(['user' => $user->getId()], array('created_at'=>'DESC'), 1);
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
-            if ($lastMessage[0]->getCreatedAt() > new \DateTime('2 minutes ago')) {
-                $this->addFlash('error', 'Jūs katik siuntėte pranešimą, bandykite vėl po 2 minučių.');
-                return $this->redirectToRoute('dormitory');
+            if (!empty($lastMessage[0])) {
+                if ($lastMessage[0]->getCreatedAt() > new \DateTime('2 minutes ago')) {
+                    $this->addFlash('error', 'Jūs katik siuntėte pranešimą, bandykite vėl po 2 minučių.');
+                    return $this->redirectToRoute('dormitory');
+                }
             }
 
             $message->setUser($user);
