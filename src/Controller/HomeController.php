@@ -17,7 +17,7 @@ class HomeController extends AbstractController
                 return $this->redirectToRoute('organisation');
             } elseif ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER')) {
                 return $this->redirectToRoute('easyadmin');
-              }
+            }
             return $this->redirectToRoute('dormitory');
         }
         return $this->render('home/index.html.twig');
