@@ -27,7 +27,7 @@
             <strong><span>{{ message.user.owner }}</span></strong> <small><i>{{ message.createdAt|time_diff }}</i></small>
 
             <div style="padding-top: 2%">{{ message.content }}</div>
-            <div style="margin-top: -5%">
+            <div style="margin-top: -5%;">
                 <br>
             {% if message.user.id == app.user.id and message.solved == 0 %}
                 <br>
