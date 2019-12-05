@@ -15,6 +15,7 @@ body {
   position: relative;
   margin: 0;
   padding-bottom: 6rem;
+  background: #f7f7f7;
 }
 
 header {
@@ -125,7 +126,7 @@ input {
   color: #fff !important;
   border-radius: 5px;
   border: none;
-  padding: 10px;
+  padding: 6px;
 }
 
 .help-button > img {
@@ -138,7 +139,7 @@ input {
   color: white !important;
   border-radius: 5px;
   border: none;
-  padding: 10px;
+  padding: 6px;
 }
 
 .report-button > img {
@@ -163,6 +164,28 @@ input {
 .isDisabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.btn-purple {
+  background: #553BBB;
+  color: white;
+}
+
+.messageInfo {
+  background: #553BBB;
+  padding: 8px;
+  border-radius: 5px
+}
+
+.onlineUser {
+  background: #553bbb;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.messageContext {
+  padding-left: 7%;
 }
 
 .footer {
@@ -194,6 +217,9 @@ input {
   .badge1[data-badge]:after {
     right:32em;
   }
+  .messageContext {
+    padding-left: 12%;
+  }
 }
 
 @media only screen and (max-width: 767px) and (orientation: portrait) {
@@ -214,5 +240,8 @@ input {
   }
   .badge1[data-badge]:after {
     right:32em;
+  }
+  .messageContext {
+    padding-left: 12%;
   }
 }

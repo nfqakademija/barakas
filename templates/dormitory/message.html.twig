@@ -8,73 +8,78 @@
 
     <div style="font-size: 20px">
 
-    {% if(message.status == 0) %}
-        <img src="https://image.flaticon.com/icons/svg/785/785116.svg" style="height: 30px">
-    {% endif %}
+        <div class="float-left messageInfo">
+            {% if(message.status == 0) %}
+                <img src="https://image.flaticon.com/icons/svg/785/785116.svg">
+            {% endif %}
+            <br><br>
+            <div>
+                <img src="https://image.flaticon.com/icons/svg/465/465269.svg"
+                     style="height: 25px;">
+                <br>
+                <span style="color: white; font-size: 13px; font-weight: bold;">500</span>
+            </div>
+        </div>
 
-    <strong>{{ message.user.owner }}</strong> <small><i>{{ message.createdAt|date("Y-m-d H:m:s") }}</i></small>
-    <span class="float-right">
-        <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 25px">
-        {{ message.roomNr }}
-        <br>
-        <br>
-        <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 25px">
-        <span style="color: #0fbb0f;">500</span>
-        &nbsp;
-    </span>
+        <div style="padding-left: 7%">
+            <strong><span>{{ message.user.owner }}</span></strong> <small><i>{{ message.createdAt|time_diff }}</i></small>
 
-    <div style="padding-left: 3%">{{ message.content }}</div>
-    {% if message.user.id == app.user.id and message.solved == 0 %}
-        <br>
-        <small>
-            <span class="isDisabled btn btn-success help-button">
-                <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
-                <span>Padėti</span>
-            </span>
-        </small>
-        &nbsp;
-        <small>
-        <span class="isDisabled report-button">
-            <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
-            <span>Pranešti</span>
-        </span>
-        </small>
+            <div style="padding-top: 2%">{{ message.content }}</div>
+            <div style="margin-top: -4%">
+                <br>
+                {% if message.user.id == app.user.id and message.solved == 0 %}
+                    <br>
+                    <small>
+                    <span class="isDisabled btn btn-success help-button">
+                        <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
+                        <span>Padėti</span>
+                    </span>
+                    </small>
+                    &nbsp;
+                    <small>
+                    <span class="isDisabled btn btn-danger report-button">
+                        <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
+                        <span>Pranešti</span>
+                    </span>
+                    </small>
 
-    {% elseif message.solved == 1 %}
-        <br>
-        <small>
-            <span style="cursor: default" class="btn btn-success help-button">
-                <img src="https://image.flaticon.com/icons/svg/443/443138.svg">
-                <span>Pagalba suteikta</span>
-            </span>
-            <span class="float-right"><strong>{{ message.solver.owner }}</strong></span>
-        </small>
+                {% elseif message.solved and message.solver %}
+                    <br>
+                    <small>
+                        Pagalbą suteikė: <strong>{{ message.solver.owner }}</strong>
+                        | Taškai:
+                        <strong><span style="color: #0fbb0f;">375</span></strong>
+                        <img src="https://image.flaticon.com/icons/svg/438/438450.svg"
+                             style="height: 18px; vertical-align: text-top;">
+                    </small>
 
-    {% else %}
-        <br>
-        <small>
-            <a href="{{ path('dormitory_help', {'id': message.id}) }}" class="btn btn-success help-button">
-                <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
-                <span>Padėti</span>
-            </a>
-        </small>
-        &nbsp;
-        {% if message.reported %}
-            <small>
-                <button class="isDisabled report-button">
-                    <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
-                    <span>Pranešta administracijai</span>
-                </button>
-            </small>
-        {% else %}
-            <small>
-                <a href="{{ path('reportMessage', {'id': message.id}) }}" class="report-button">
-                    <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
-                    <span>Pranešti</span>
-                </a>
-            </small>
-        {% endif %}
-    {% endif %}
+                {% else %}
+                    <br>
+                    <small>
+                        <a href="{{ path('dormitory_help', {'id': message.id}) }}" class="btn btn-success help-button">
+                            <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
+                            <span>Padėti</span>
+                        </a>
+                    </small>
+                    &nbsp;
+                    {% if message.reported %}
+                        <small>
+                            <button class="isDisabled btn btn-danger report-button">
+                                <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
+                                <span>Pranešta administracijai</span>
+                            </button>
+                        </small>
+                    {% else %}
+                        <small>
+                            <a href="{{ path('reportMessage', {'id': message.id}) }}" class="btn btn-danger report-button">
+                                <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
+                                <span>Pranešti</span>
+                            </a>
+                        </small>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}
 

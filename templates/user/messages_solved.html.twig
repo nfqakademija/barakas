@@ -17,7 +17,7 @@
     <div class="row">
         {% for message in helpMessages %}
             <div class="col-md-4">
-                <div class="panel text-center" style="background: #f7f7f7">
+                <div class="panel text-center">
                     <img src="https://image.flaticon.com/icons/svg/391/391175.svg" style="height: 70px">
                     <br>
                     <h5>{{ message.user.owner }}
@@ -27,7 +27,7 @@
                     <h2>„</h2>{{message.message.content}}<h2>“</h2>
                     <hr>
                     <a href="{{ path('acceptHelp', {'id': message.id}) }}"
-                       class="btn btn-success"><i class="fas fa-check"></i> Patvirtinti
+                       class="btn btn-purple"><i class="fas fa-check"></i> Patvirtinti
                     </a>
                     <a href="{{ path('denyHelp', {'id': message.id}) }}"
                        class="btn btn-danger"><i class="fas fa-trash"></i> Pagalba nesuteikta

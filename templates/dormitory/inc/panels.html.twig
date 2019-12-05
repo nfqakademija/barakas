@@ -1,45 +1,40 @@
 <div class="col-md-4">
-    <h2>Prisijungę vartotojai</h2>
-    <div class="row">
-        {% for user in loggedInUsers %}
-                <div style="margin-left: 1rem">
-                <span style="background: #5739bd;color: white;padding: 5px;border-radius: 5px;">
-                    {{ user.owner }}</span>
-                <span style="background: black;color: white;padding: 5px 5px 5px 3px;border-radius: 5px;margin-left: -0.5rem;
-                    border-top-left-radius: 0; border-bottom-left-radius: 0;">
-                    {{ user.roomNr }}
-                </span>
-                </div>
-                &nbsp;
-        {% endfor %}
-    </div>
-    <br><br>
     <h2>Lyderiai</h2>
     <ul class="list-unstyled" id="topStudents">
         {% for student in students %}
-        <li style="padding-bottom: 5px">
-            {{ student.owner }}
-            <span class="float-right">
+            <li style="padding-bottom: 5px">
+                {{ student.owner }}
+                <span class="float-right">
             {{ student.points }}
             <img src="https://image.flaticon.com/icons/svg/438/438450.svg" style="height: 20px; vertical-align: sub">
             </span>
-        </li>
+            </li>
         {% endfor %}
-        <li class="text-center">
-            <a href="{{ path('dormitory_leaderboard') }}" class="btn btn-warning" style="background: #ffdf81">
-                <img src="https://image.flaticon.com/icons/svg/166/166910.svg" style="height: 20px;">
-                Visi bendrabučio studentai</a>
-        </li>
     </ul>
-    <br><br>
+
     <h2>Daugiau veiksmų</h2>
     <p>Jei norite pakeisti savo bendrabutį ar kambarį, pasinaudokite žemiau nurodytomis funkcijomis.</p>
-    <a href="{{ path('change_dormitory') }}" class="btn btn-success">
+    <a href="{{ path('change_dormitory') }}" class="btn btn-purple">
         <i class="fas fa-exchange-alt"></i> Keisti bendrabutį
     </a>
-    <a href="{{ path('change_room') }}" class="btn btn-primary">
+    <a href="{{ path('change_room') }}" class="btn btn-purple">
         <i class="fas fa-exchange-alt"></i> Keisti kambarį
     </a>
+    <br><br>
+    <h2>Prisijungę vartotojai</h2>
+    <div class="row" style="margin-left: 0">
+        {% for user in loggedInUsers %}
+            <div>
+                <span class="onlineUser">
+                    {{ user.owner }}</span>
+                <span style="background: black; color: white;padding: 5px 5px 5px 3px;border-radius: 5px;margin-left: -0.5rem;
+                    border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                    {{ user.roomNr }}
+                </span>
+            </div>
+            &nbsp;
+        {% endfor %}
+    </div>
 </div>
 
 {% block javascripts %}
