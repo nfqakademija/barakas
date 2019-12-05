@@ -16,61 +16,28 @@
 
     <div class="row">
         {% for message in helpMessages %}
-            <div class="col-md-4">
-                <div class="panel text-center" style="background: #f7f7f7">
-                    <img src="https://image.flaticon.com/icons/svg/391/391175.svg" style="height: 70px">
-                    <br>
-                    <h5>{{ message.user.owner }}
-                        <img src="https://image.flaticon.com/icons/svg/1229/1229996.svg" style="height: 25px; vertical-align: bottom">
-                        <strong>{{ message.user.roomNr }}</strong></h5>
-                    <small>{{ message.createdAt|date('Y-m-d H:i:s') }}</small>
-                    <h2>„</h2>{{message.message.content}}<h2>“</h2>
+
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-header">
+                        <p>Pagalbos siūlymas nuo: {{ message.user.owner }}</p>
+                    </div>
+                <div style="background: white; padding: 1%">
+                    <i class="fas fa-user"></i> <strong>{{ message.user.owner }}</strong>
+                    iš <strong>{{ message.user.roomNr }}</strong> tau siūlo pagalbą dėl:
+                    <br><br>
+                    {{message.message.content}}
                     <hr>
                     <a href="{{ path('acceptHelp', {'id': message.id}) }}"
-                       class="btn btn-success"><i class="fas fa-check"></i> Patvirtinti
+                       class="btn btn-purple"><i class="fas fa-check"></i> Patvirtinti
                     </a>
                     <a href="{{ path('denyHelp', {'id': message.id}) }}"
                        class="btn btn-danger"><i class="fas fa-trash"></i> Pagalba nesuteikta
                     </a>
-                    <br><br>
+                </div>
                 </div>
             </div>
+            <br>
         {% endfor %}
     </div>
-
-
-
-
-{#    <div class="panel">
-        <div class="panel-header">
-            <p>Pagalbos pranešimai</p>
-        </div>
-        <div class="panel-content">
-
-            {% for message in app.flashes('success') %}
-                <div class="alert alert-success">
-                    {{ message }}
-                </div>
-            {% endfor %}
-
-            {% for message in helpMessages %}
-                <strong>{{ message.user.owner }}</strong> gali tau padėti su
-                  tavo problema:
-                <br>
-                <strong>{{ message.message.content}}</strong>.
-                <br>
-                Užbėk į {{ message.user.roomNr }} kambarį.
-                <br>
-                <i>{{ message.createdAt|date('Y-m-d H:i:s') }}</i>
-                <br>
-                <a href="{{ path('acceptHelp', {'id': message.id}) }}"
-                   class="btn btn-success"><i class="fas fa-check"></i> Patvirtinti
-                </a>
-                <a href="{{ path('denyHelp', {'id': message.id}) }}"
-                   class="btn btn-danger"><i class="fas fa-trash"></i> Pagalba nesuteikta
-                </a>
-                <hr>
-            {% endfor %}
-        </div>
-    </div>#}
 {% endblock %}

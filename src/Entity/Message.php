@@ -205,12 +205,12 @@ class Message
 
     public function getSolver(): ?User
     {
-        return $this->user;
+        return $this->solver;
     }
 
     public function setSolver(?User $user): self
     {
-        $this->user = $user;
+        $this->solver = $user;
 
         return $this;
     }

@@ -249,6 +249,7 @@ class DormitoryController extends AbstractController
 
         $message = $helpRepository->findMessageFromHelp($helpId);
         $message->setSolved(SolvedType::notSolved());
+        $message->setSolver(null);
 
         $help = $helpRepository->find($helpId);
 

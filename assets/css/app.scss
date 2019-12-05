@@ -15,6 +15,7 @@ body {
   position: relative;
   margin: 0;
   padding-bottom: 6rem;
+  background: #f7f7f7;
 }
 
 header {
@@ -125,11 +126,12 @@ input {
   color: #fff !important;
   border-radius: 5px;
   border: none;
-  padding: 10px;
+  padding: 4px;
 }
 
 .help-button > img {
-  height: 20px
+  height: 20px;
+  vertical-align: sub;
 }
 
 .report-button {
@@ -138,11 +140,12 @@ input {
   color: white !important;
   border-radius: 5px;
   border: none;
-  padding: 10px;
+  padding: 4px;
 }
 
 .report-button > img {
-  height: 20px
+  height: 20px;
+  vertical-align: sub;
 }
 
 .notification-url {
@@ -163,6 +166,32 @@ input {
 .isDisabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.btn-purple {
+  background: #553BBB;
+  color: white;
+}
+
+.messageInfo {
+  background: #c1c1c1;
+  padding: 8px;
+  border-radius: 5px
+}
+
+.onlineUser {
+  background: #49a746;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.messageContext {
+  padding-left: 7%;
+}
+
+#postRequestForm label {
+  font-size: 22px;
 }
 
 .footer {
@@ -194,6 +223,9 @@ input {
   .badge1[data-badge]:after {
     right:32em;
   }
+  .messageContext {
+    padding-left: 12%;
+  }
 }
 
 @media only screen and (max-width: 767px) and (orientation: portrait) {
@@ -214,5 +246,8 @@ input {
   }
   .badge1[data-badge]:after {
     right:32em;
+  }
+  .messageContext {
+    padding-left: 12%;
   }
 }
