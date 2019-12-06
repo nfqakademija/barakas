@@ -17,7 +17,7 @@ class DormitoryService
         $minutes = intval($minutes);
         $points  = $maxPoints - $minutes;
         if ($points<=0) {
-            return 0;
+            return 1;
         }
         return $points;
     }
