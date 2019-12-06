@@ -10,6 +10,7 @@ use App\Entity\SolvedType;
 use App\Entity\StatusType;
 use App\Entity\User;
 use App\Form\MessageType;
+use App\Service\DormitoryService;
 use App\Service\StudentManager;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
@@ -217,12 +218,14 @@ class DormitoryController extends AbstractController
      */
     public function acceptHelpRequest(Request $request, EntityManagerInterface $entityManager)
     {
+        $dormService = new DormitoryService();
         $helpId = $request->get('id');
         $helpRepository = $this->getDoctrine()->getRepository(Help::class);
-
+        $helpMessage = $helpRepository->findOneBy(['id'=> $helpId]);
         $userWhoHelped = $helpRepository->findUserWhoProvidedHelp($helpId);
         $userWhoHelpedPoints = $userWhoHelped->getPoints();
-        $newPoints = $userWhoHelpedPoints + 500;
+        $newPoints = $userWhoHelpedPoints + $dormService->calculateRewardPoints($helpMessage->getCreatedAt(), 500);
+
         $userWhoHelped->setPoints($newPoints);
 
         $help = $helpRepository->find($helpId);
