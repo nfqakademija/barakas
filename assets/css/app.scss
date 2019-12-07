@@ -123,10 +123,11 @@ input {
 
 .help-button {
   cursor: pointer;
-  color: #fff !important;
+  color: black !important;
   border-radius: 5px;
   border: none;
   padding: 4px;
+  font-weight: bold;
 }
 
 .help-button > img {
@@ -136,11 +137,11 @@ input {
 
 .report-button {
   cursor: pointer;
-  background: #e20808;
-  color: white !important;
+  color: black !important;
   border-radius: 5px;
   border: none;
   padding: 4px;
+  font-weight: bold;
 }
 
 .report-button > img {
@@ -171,6 +172,11 @@ input {
 .btn-purple {
   background: #553BBB;
   color: white;
+}
+
+.btn-purple:hover {
+  color: white;
+  background: #372482;
 }
 
 .messageInfo {

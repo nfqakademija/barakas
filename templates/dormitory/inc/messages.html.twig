@@ -32,14 +32,14 @@
             {% if message.user.id == app.user.id and message.solved == 0 %}
                 <br>
                 <small>
-                    <span class="isDisabled btn btn-success help-button">
+                    <span class="isDisabled btn help-button">
                         <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
                         <span>Padėti</span>
                     </span>
                 </small>
                 &nbsp;
                 <small>
-                    <span class="isDisabled btn btn-danger report-button">
+                    <span class="isDisabled btn report-button">
                         <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
                         <span>Pranešti</span>
                     </span>
@@ -58,7 +58,7 @@
             {% else %}
                 <br>
                 <small>
-                    <a href="{{ path('dormitory_help', {'id': message.id}) }}" class="btn btn-success help-button">
+                    <a href="{{ path('dormitory_help', {'id': message.id}) }}" class="btn help-button">
                         <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
                         <span>Padėti</span>
                     </a>
@@ -66,14 +66,14 @@
                                 &nbsp;
                 {% if message.reported %}
                     <small>
-                        <button class="isDisabled btn btn-danger report-button">
+                        <button class="isDisabled btn report-button">
                             <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
                             <span>Pranešta administracijai</span>
                         </button>
                     </small>
                 {% else %}
                     <small>
-                        <a href="{{ path('reportMessage', {'id': message.id}) }}" class="btn btn-danger report-button">
+                        <a href="{{ path('reportMessage', {'id': message.id}) }}" class="btn report-button">
                             <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
                             <span>Pranešti</span>
                         </a>
