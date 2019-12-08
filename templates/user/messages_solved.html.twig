@@ -24,7 +24,7 @@
                     <br><br>
                     {{message.message.content}}
                     <hr>
-                    <a href="{{ path('acceptHelp', {'id': message.id}) }}"
+                    <a href="{{ path('acceptHelp', {'id': message.id, 'msg' : message.message.id}) }}"
                        class="btn btn-purple"><i class="fas fa-check"></i> Patvirtinti
                     </a>
                     <a href="{{ path('denyHelp', {'id': message.id}) }}"
