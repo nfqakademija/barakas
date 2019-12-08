@@ -180,24 +180,48 @@ input {
 }
 
 .messageInfo {
-  background: #c1c1c1;
   padding: 8px;
-  border-radius: 5px
 }
 
 .onlineUser {
   background: #49a746;
   color: white;
-  padding: 5px;
+  padding: 5px 6px 5px 5px;
   border-radius: 5px;
+}
+
+.onlineUserRoom {
+  background: black;
+  color: white;
+  padding: 5px 5px 5px 3px;
+  border-radius: 5px;
+  margin-left: -0.5rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .messageContext {
   padding-left: 7%;
 }
 
+.iconExplanation
+{
+  font-size: smaller;
+}
+
+.iconExplanation img {
+  height: 20px;
+}
+
 #postRequestForm label {
   font-size: 22px;
+}
+
+.box {
+  background: #fff;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.06);
+  border-radius: 4px;
+  padding: 30px;
 }
 
 .footer {
@@ -232,6 +256,9 @@ input {
   .messageContext {
     padding-left: 12%;
   }
+  .iconExplanation {
+    width: 35%;
+  }
 }
 
 @media only screen and (max-width: 767px) and (orientation: portrait) {
@@ -255,5 +282,8 @@ input {
   }
   .messageContext {
     padding-left: 12%;
+  }
+  .iconExplanation {
+    width: 35%;
   }
 }
