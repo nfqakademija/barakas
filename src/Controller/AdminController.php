@@ -10,7 +10,7 @@ use App\Entity\RoomChange;
 use App\Entity\User;
 use App\Entity\Invite;
 use App\Form\SendInvitationType;
-use App\Service\EmailService;
+use App\Service\AdminService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,65 +24,43 @@ class AdminController extends AbstractController
     /**
      * @Route("/organisation/admin", name="admin_panel")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param EmailService $emailService
+     * @param AdminService $adminService
      * @return RedirectResponse|Response
      */
-    public function index(Request $request, EntityManagerInterface $entityManager, EmailService $emailService)
+    public function index(Request $request, AdminService $adminService)
     {
-
-        $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
-        $invitesRepository = $this->getDoctrine()->getRepository(Invite::class);
-        $studentsRepository = $this->getDoctrine()->getRepository(User::class);
-
         $id = $request->query->get('id');
-        
-        $invites = $invitesRepository->getInvitations($id);
-        $students = $studentsRepository->getStudents($id);
+        $adminPageInfo = $adminService->indexPage($id);
 
-        $dormitoryInfo = $dormitoryRepository->find($id);
-
-        $organisationID = $dormitoryInfo->getOrganisationId();
-
-        $dormitory = $dormitoryRepository->findOrganisationDormitory($organisationID);
-
-        if (!$dormitory) {
+        if (!$adminPageInfo) {
             return $this->redirectToRoute('home');
         }
-        
+
+        $organisationDormitory = $adminService->getOrganisationDormitory($id);
+
         $invitation = new Invite();
         $form = $this->createForm(SendInvitationType::class, $invitation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $url = $invitation->generateUrl();
-            $invitation->setName($invitation->getName());
-            $invitation->setEmail($invitation->getEmail());
-            $invitation->setRoom($invitation->getRoom());
-            $invitation->setUrl($url);
-            $invitation->setDorm($dormitoryInfo->getId());
+            $dormitory = $adminService->getDormitory($id);
+            $sendInvitation = $adminService->addNewStudentToDormitory($form->getData(), $invitation, $dormitory);
 
-            $studentExists = $studentsRepository->findBy(['email' => $invitation->getEmail()]);
-
-            if ($studentExists) {
+            if (!$sendInvitation) {
                 $this->addFlash('warning', 'El. pašto adresas jau užregistruotas.');
                 return $this->redirectToRoute('admin_panel', ['id' => $id]);
             }
-
-            $entityManager->persist($invitation);
-            $entityManager->flush();
-            $emailService->sendInviteMail($invitation->getEmail(), $url, $invitation->getName());
 
             $this->addFlash('success', 'Pakvietimas studentui sėkmingai išsiųstas.');
 
             return $this->redirectToRoute('admin_panel', ['id' => $id]);
         }
-        
+
         return $this->render('admin/index.html.twig', [
-            'dormitoryInfo' => $dormitoryInfo,
-            'invites' => $invites,
-            'students' => $students,
-            'dormitory' => $dormitory,
+            'dormitoryInfo' => $adminPageInfo['dormitoryInfo'],
+            'invites' => $adminPageInfo['invites'],
+            'students' => $adminPageInfo['students'],
+            'dormitory' => $organisationDormitory,
             'SendInvitationType' => $form->createView()
         ]);
     }
@@ -90,13 +68,12 @@ class AdminController extends AbstractController
     /**
      * @Route("organisation/dormitory-change-requests", name="dormitory_change_req")
      * @param EntityManagerInterface $entityManager
+     * @param AdminService $adminService
      * @return Response
      */
-    public function dormitoryChangeRequests(EntityManagerInterface $entityManager)
+    public function dormitoryChangeRequests(EntityManagerInterface $entityManager, AdminService $adminService)
     {
-        $requestsRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
-        $requests = $requestsRepo->getNotApprovedRequests($this->getUser());
-
+        $requests = $adminService->getDormitoryChangeRequests();
         return $this->render('/organisation/pages/dormitoryChangeRequests.html.twig', [
             'requests' => $requests
         ]);
@@ -105,67 +82,48 @@ class AdminController extends AbstractController
     /**
      * @Route("/organisation/approve-dormitory-change-request", name="approve_change_dorm_req")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param AdminService $adminService
      * @return Response
      */
-    public function approveDormitoryChangeRequest(Request $request, EntityManagerInterface $entityManager)
+    public function approveDormitoryChangeRequest(Request $request, AdminService $adminService)
     {
         $requestId = $request->query->get('id');
-        $requestRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
-
-        $request = $requestRepo->find($requestId);
+        $request = $adminService->approveDormitoryChangeRequest($requestId);
 
         if (!$request) {
-            return $this->redirectToRoute('organisation');
+            return $this->redirectToRoute('dormitory_change_req');
         }
-
-        $user = $request->getUser();
-
-        $request->setApproved(ApprovedType::approved());
-        $user->setDormId($request->getDormitory()->getId());
-        $user->setRoomNr($request->getRoomNr());
-
-        $entityManager->flush();
-
         $this->addFlash('success', 'Prašymas patvirtintas sėkmingai.');
-
         return $this->redirectToRoute('dormitory_change_req');
     }
 
     /**
      * @Route("/organisation/remove-dormitory-change-request", name="remove_change_dorm_req")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param AdminService $adminService
      * @return RedirectResponse
      */
-    public function removeDormitoryChangeRequest(Request $request, EntityManagerInterface $entityManager)
+    public function removeDormitoryChangeRequest(Request $request, AdminService $adminService)
     {
         $requestId = $request->query->get('id');
-        $requestRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
-
-        $request = $requestRepo->find($requestId);
+        $request = $adminService->removeDormitoryChangeRequest($requestId);
 
         if (!$request) {
-            return $this->redirectToRoute('organisation');
+            return $this->redirectToRoute('dormitory_change_req');
         }
 
-        $entityManager->remove($request);
-        $entityManager->flush();
-
         $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
-
         return $this->redirectToRoute('dormitory_change_req');
     }
 
     /**
      * @Route("organisation/room-change-requests", name="room_change_req")
-     * @param EntityManagerInterface $entityManager
+     * @param AdminService $adminService
      * @return Response
      */
-    public function roomChangeRequests(EntityManagerInterface $entityManager)
+    public function roomChangeRequests(AdminService $adminService)
     {
-        $requestsRepo = $this->getDoctrine()->getRepository(RoomChange::class);
-        $requests = $requestsRepo->findNotApprovedRequests($this->getUser());
+        $requests = $adminService->getRoomChangeRequests();
 
         return $this->render('/organisation/pages/roomChangeRequests.html.twig', [
             'requests' => $requests
@@ -175,54 +133,38 @@ class AdminController extends AbstractController
     /**
      * @Route("/organisation/approve-room-change-request", name="approve_change_room_req")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param AdminService $adminService
      * @return Response
      */
-    public function approveRoomChangeRequest(Request $request, EntityManagerInterface $entityManager)
+    public function approveRoomChangeRequest(Request $request, AdminService $adminService)
     {
         $requestId = $request->query->get('id');
-        $requestRepo = $this->getDoctrine()->getRepository(RoomChange::class);
-
-        $request = $requestRepo->find($requestId);
+        $request = $adminService->approveRoomChangeRequest($requestId);
 
         if (!$request) {
-            return $this->redirectToRoute('organisation');
+            $this->redirectToRoute('room_change_req');
         }
 
-        $user = $request->getUser();
-
-        $request->setApproved(ApprovedType::approved());
-        $user->setRoomNr($request->getNewRoomNr());
-
-        $entityManager->flush();
-
         $this->addFlash('success', 'Prašymas patvirtintas sėkmingai.');
-
         return $this->redirectToRoute('room_change_req');
     }
 
     /**
      * @Route("/organisation/remove-room-change-request", name="remove_change_room_req")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param AdminService $adminService
      * @return RedirectResponse
      */
-    public function removeRoomChangeRequest(Request $request, EntityManagerInterface $entityManager)
+    public function removeRoomChangeRequest(Request $request, AdminService $adminService)
     {
         $requestId = $request->query->get('id');
-        $requestRepo = $this->getDoctrine()->getRepository(RoomChange::class);
-
-        $request = $requestRepo->find($requestId);
+        $request = $adminService->removeRoomChangeRequest($requestId);
 
         if (!$request) {
-            return $this->redirectToRoute('organisation');
+            $this->redirectToRoute('room_change_req');
         }
 
-        $entityManager->remove($request);
-        $entityManager->flush();
-
         $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
-
         return $this->redirectToRoute('room_change_req');
     }
 
