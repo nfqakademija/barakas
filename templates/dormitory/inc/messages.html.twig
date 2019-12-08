@@ -19,6 +19,7 @@
     {% endif %}
 
     {% for message in messages %}
+        {% if message.user.owner != app.user.owner %}
         <li style="font-size: 17px; margin-left: 1%">
             <div class="float-left">
                 {% if message.solved %}
@@ -92,6 +93,7 @@
             </div>
             <hr>
         </li>
+        {% endif %}
     {% endfor %}
 </ul>
 </div>

@@ -394,4 +394,26 @@ class UserController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+    /**
+     * @Route("/my-messages", name="my-messages")
+     */
+    public function userMessages()
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('home');
+        }
+
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('organisation');
+        }
+
+        $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
+        $messages = $messagesRepo->getUserMessages($user);
+
+        return $this->render('user/messages.html.twig', [
+            'messages' => $messages
+        ]);
+    }
 }

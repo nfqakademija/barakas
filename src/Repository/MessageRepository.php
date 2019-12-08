@@ -24,4 +24,9 @@ class MessageRepository extends ServiceEntityRepository
     {
         return $this->findBy(['reported' => true]);
     }
+
+    public function getUserMessages($user)
+    {
+        return $this->findBy(['user' => $user]);
+    }
 }

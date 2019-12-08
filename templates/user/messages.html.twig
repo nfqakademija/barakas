@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="box">
+    <h2>Mano pranešimai <span class="badge badge-primary">{{ messages|length }}</span></h2>
+    <ul class="list-unstyled">
+        {% for message in messages %}
+        <li class="row">
+            <div class="col-md-9">
+            <strong>{{ message.createdAt|date('Y-m-d h:m:s') }}</strong>
+            <a href="{{ path('message', {'id': message.id}) }}">Peržiūrėti</a>
+            <br>
+            {{ message.content }}
+            </div>
+            <div class="col-md-3">
+            {% if message.solved == false %}
+                <img src="https://image.flaticon.com/icons/png/128/753/753345.png" style="height: 25px">
+                Laukiama pagalbos
+            {% else %}
+                <img src="https://image.flaticon.com/icons/png/128/845/845646.png" style="height: 25px">
+                Pagalba suteikta
+            {% endif %}
+            </div>
+        </li>
+            <hr>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
