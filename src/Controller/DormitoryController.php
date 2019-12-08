@@ -28,13 +28,15 @@ class DormitoryController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param StudentManager $studentManager
+     * @param DormitoryService $dormitoryService
      * @return Response
      * @throws Exception
      */
     public function index(
         Request $request,
         EntityManagerInterface $entityManager,
-        StudentManager $studentManager
+        StudentManager $studentManager,
+        DormitoryService $dormitoryService
     ) {
         $user = $this->getUser();
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
@@ -48,16 +50,10 @@ class DormitoryController extends AbstractController
 
         $formRequest->handleRequest($request);
 
-        $messageRepo = $entityManager->getRepository(Message::class);
-
-        $lastMessage = $messageRepo->findBy(['user' => $user->getId()], array('created_at'=>'DESC'), 1);
-
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
-            if (!empty($lastMessage[0])) {
-                if ($lastMessage[0]->getCreatedAt() > new \DateTime('2 minutes ago')) {
-                    $this->addFlash('error', 'Jūs katik siuntėte pranešimą, bandykite vėl po 2 minučių.');
-                    return $this->redirectToRoute('dormitory');
-                }
+            if (!$dormitoryService->canSendMessage($user)) {
+                $this->addFlash('error', 'Jūs katik siuntėte pranešimą, bandykite vėl po 2 minučių.');
+                return $this->redirectToRoute('dormitory');
             }
 
             $message->setUser($user);
@@ -94,17 +90,7 @@ class DormitoryController extends AbstractController
             return $this->redirectToRoute('dormitory');
         }
 
-        $studentsRepo = $entityManager->getRepository(User::class);
-        $delay = new \DateTime('2 minutes ago');
-        $expression = Criteria::expr();
-        $criteria = Criteria::create();
-        $criteria->where(
-            $expression->gt('lastActivityAt', $delay)
-        )
-            ->andWhere($expression->eq('dorm_id', $user->getDormId()));
-        $criteria->orderBy(['lastActivityAt' => Criteria::DESC]);
-        $loggedInUsers = $studentsRepo->matching($criteria);
-
+        $loggedInUsers = $dormitoryService->getAllLoggedInUsers($user);
 
         return $this->render('dormitory/index.html.twig', [
             'dormitory' => $dormitory,
@@ -225,17 +211,23 @@ class DormitoryController extends AbstractController
      * @Route("/dormitory/accept-help-request", name="acceptHelp")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
+     * @param DormitoryService $dormitoryService
      * @return RedirectResponse
      */
-    public function acceptHelpRequest(Request $request, EntityManagerInterface $entityManager)
-    {
-        $dormService = new DormitoryService();
+    public function acceptHelpRequest(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        DormitoryService $dormitoryService
+    ) {
         $helpId = $request->get('id');
+        $messageId = $request->get('msg');
         $helpRepository = $this->getDoctrine()->getRepository(Help::class);
-        $helpMessage = $helpRepository->findOneBy(['id'=> $helpId]);
+        $messageRepository = $this->getDoctrine()->getRepository(Message::class);
+        $message = $messageRepository->findOneBy(['id'=> $messageId]);
         $userWhoHelped = $helpRepository->findUserWhoProvidedHelp($helpId);
         $userWhoHelpedPoints = $userWhoHelped->getPoints();
-        $newPoints = $userWhoHelpedPoints + $dormService->calculateRewardPoints($helpMessage->getCreatedAt(), 500);
+        $newPoints = $userWhoHelpedPoints + $dormitoryService->
+            calculateRewardPoints($message->getCreatedAt(), 500);
 
         $userWhoHelped->setPoints($newPoints);
 
