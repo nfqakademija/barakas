@@ -5,45 +5,35 @@ namespace App\Controller;
 use App\Entity\Dormitory;
 use App\Entity\Help;
 use App\Entity\Message;
-use App\Entity\Notification;
 use App\Entity\SolvedType;
-use App\Entity\StatusType;
-use App\Entity\User;
 use App\Form\MessageType;
 use App\Service\DormitoryService;
 use App\Service\StudentManager;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class DormitoryController extends AbstractController
 {
     /**
      * @Route("/dormitory", name="dormitory")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param StudentManager $studentManager
      * @param DormitoryService $dormitoryService
+     * @param StudentManager $studentManager
      * @return Response
-     * @throws Exception
      */
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager,
-        StudentManager $studentManager,
-        DormitoryService $dormitoryService
+        DormitoryService $dormitoryService,
+        StudentManager $studentManager
     ) {
-        $user = $this->getUser();
-        $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
-
-        $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $students = $dormitoryRepo->orderTopStudentsByPoints($user->getDormId());
-        $messages = $dormitoryRepo->getDormitoryMessages($user->getDormId());
+        $dormitory = $dormitoryService->getDormitory();
+        $students = $dormitoryService->getStudents();
+        $messages = $dormitoryService->getMessages();
 
         $message = new Message();
         $formRequest = $this->createForm(MessageType::class, $message);
@@ -51,35 +41,17 @@ class DormitoryController extends AbstractController
         $formRequest->handleRequest($request);
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
-            if (!$dormitoryService->canSendMessage($user)) {
+            if (!$dormitoryService->canSendMessage()) {
                 $this->addFlash('error', 'Jūs katik siuntėte pranešimą, bandykite vėl po 2 minučių.');
                 return $this->redirectToRoute('dormitory');
             }
+            $data = $formRequest->getData();
 
-            $message->setUser($user);
-            $message->setDormId($user->getDormId());
-            $message->setRoomNr($user->getRoomNr());
-            $message->setContent($message->getContent());
-            $message->setStatus(StatusType::urgent());
-            $message->setSolved(SolvedType::notSolved());
+            $message = $dormitoryService->saveMessage($data->getContent());
 
-            $entityManager->persist($message);
-            $entityManager->flush();
+            $students = $studentManager->removeStudentFromStudentsArray($students);
 
-            $students = $studentManager->removeStudentFromStudentsArray($students, $user);
-
-            foreach ($students as $student) {
-                $notification = new Notification();
-                $notification->setUser($message->getUser());
-                $notification->setCreatedAt(new \DateTime());
-                $notification->setRoomNr($message->getRoomNr());
-                $notification->setDormId($message->getDormId());
-                $notification->setContent($message->getContent());
-                $notification->setRecipientId($student->getId());
-                $notification->setMessage($message);
-                $entityManager->persist($notification);
-                $entityManager->flush();
-            }
+            $dormitoryService->saveNotifications($students, $message);
 
             $this->addFlash('success', 'Prašymas išsiųstas sėkmingai!');
             return $this->redirectToRoute('dormitory');
@@ -90,7 +62,7 @@ class DormitoryController extends AbstractController
             return $this->redirectToRoute('dormitory');
         }
 
-        $loggedInUsers = $dormitoryService->getAllLoggedInUsers($user);
+        $loggedInUsers = $dormitoryService->getAllLoggedInUsers();
 
         return $this->render('dormitory/index.html.twig', [
             'dormitory' => $dormitory,
@@ -104,18 +76,17 @@ class DormitoryController extends AbstractController
     /**
      * @Route("dormitory/message/{id}", name="message")
      * @param $id
+     * @param DormitoryService $dormitoryService
      * @return Response
      */
-    public function showMessage($id)
+    public function showMessage($id, DormitoryService $dormitoryService)
     {
         $user = $this->getUser();
-        $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
-        $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
 
-        $message = $messagesRepo->find($id);
+        $message = $dormitoryService->findMessage($id);
 
-        $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $students = $dormitoryRepo->getStudentsInDormitory($user->getDormId());
+        $dormitory = $dormitoryService->getLoggedInUserDormitory();
+        $students = $dormitoryService->getStudentsInDormitory();
 
         if (!$message || $user->getDormId() !== $message->getDormId()) {
             return $this->redirectToRoute('dormitory');
@@ -132,11 +103,12 @@ class DormitoryController extends AbstractController
      * @Route("/dormitory/help/{id}", name="dormitory_help")
      * @param $id
      * @param EntityManagerInterface $entityManager
+     * @param Security $security
      * @return RedirectResponse
      */
-    public function helpUser($id, EntityManagerInterface $entityManager)
+    public function helpUser($id, EntityManagerInterface $entityManager, Security $security)
     {
-        $user = $this->getUser();
+        $user = $security->getUser();
         $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
         $helpRepo = $this->getDoctrine()->getRepository(Help::class);
@@ -269,10 +241,12 @@ class DormitoryController extends AbstractController
 
     /**
      * @Route("/dormitory/students", name="dormitory_leaderboard")
+     * @param Security $security
+     * @return Response
      */
-    public function allDormitoryStudents()
+    public function allDormitoryStudents(Security $security)
     {
-        $user = $this->getUser();
+        $user = $security->getUser();
 
         $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
 

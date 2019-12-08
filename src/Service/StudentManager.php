@@ -3,14 +3,28 @@
 
 namespace App\Service;
 
+use Symfony\Component\Security\Core\Security;
+
 class StudentManager
 {
-    public function removeStudentFromStudentsArray($students, $user)
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
+    public function getUser()
+    {
+        return $this->security->getUser();
+    }
+
+    public function removeStudentFromStudentsArray($students)
     {
         $studentToRemove = null;
 
         foreach ($students as $struct) {
-            if ($user->getOwner() == $struct->getOwner()) {
+            if ($this->getUser()->getOwner() == $struct->getOwner()) {
                 $studentToRemove = $struct;
                 break;
             }
