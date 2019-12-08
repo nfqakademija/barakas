@@ -1,4 +1,14 @@
-<h2>Pranešimai</h2>
+<div class="box">
+    <div style="display: flex; justify-content: space-between;">
+        <h2>Pranešimai</h2>
+        <p class="iconExplanation">
+            <img src="https://image.flaticon.com/icons/png/128/845/845646.png"> - Suteikta pagalba
+            <img src="https://image.flaticon.com/icons/png/128/753/753345.png"> - Laukia pagalbos
+            <img src="https://image.flaticon.com/icons/svg/465/465269.svg"> - Galimas taškų kiekis
+        </p>
+    </div>
+    {% include 'dormitory/inc/request_form.html.twig' %}
+    <br>
 <ul class="list-unstyled">
 
     {% if messages is empty %}
@@ -10,22 +20,20 @@
 
     {% for message in messages %}
         <li style="font-size: 17px; margin-left: 1%">
-            <div class="float-left messageInfo">
-                {% if(message.status == 0) %}
-                    <img src="https://image.flaticon.com/icons/svg/785/785116.svg">
+            <div class="float-left">
+                {% if message.solved %}
+                    <img src="https://image.flaticon.com/icons/png/128/845/845646.png" style="height: 25px">
+                {% else %}
+                    <img src="https://image.flaticon.com/icons/png/128/753/753345.png" style="height: 25px">
                 {% endif %}
-                <br><br>
-                <div>
-                <img src="https://image.flaticon.com/icons/svg/465/465269.svg"
-                     style="height: 25px;">
-                <br>
-                <span style="color: white; font-size: 13px; font-weight: bold;">500</span>
-                </div>
             </div>
 
             <div class="messageContext">
-            <strong><span>{{ message.user.owner }}</span></strong> <small><i>{{ message.createdAt|time_diff }}</i></small>
-
+                <strong><span>{{ message.user.owner }}</span></strong> <small><i>{{ message.createdAt|time_diff }}</i></small>
+                <div class="float-right">
+                    <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 25px;">
+                    <p style="font-size: 16px; font-weight: bold">500</p>
+                </div>
             <div style="padding-top: 2%">{{ message.content }}</div>
             <div style="margin-top: -5%;">
                 <br>
@@ -86,3 +94,4 @@
         </li>
     {% endfor %}
 </ul>
+</div>
