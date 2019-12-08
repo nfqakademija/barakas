@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="lt" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="Email">
+                <source>Email</source>
+                <target>El. Paštas</target>
+            </trans-unit>
+            
+            <trans-unit id="Dorm id">
+                <source>Dorm id</source>
+                <target>Bendarbučio ID</target>
+            </trans-unit>
+            
+            <trans-unit id="Owner">
+                <source>Owner</source>
+                <target>Vardas Pavardė</target>
+            </trans-unit>
+            
+            <trans-unit id="Room nr">
+                <source>Room nr</source>
+                <target>Kambario numeris</target>
+            </trans-unit>
+            
+            <trans-unit id="Roles">
+                <source>Roles</source>
+                <target>Rolė</target>
+            </trans-unit>  
+            
+            <trans-unit id="Created at">
+                <source>Created at</source>
+                <target>Registracijos data</target>
+            </trans-unit>  
+            
+            <trans-unit id="Password">
+                <source>Password</source>
+                <target>Slaptažodis</target>
+            </trans-unit>
+
+            <trans-unit id="Is disabled">
+                <source>Is disabled</source>
+                <target>Blokuoti</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
