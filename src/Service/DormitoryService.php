@@ -8,6 +8,7 @@ use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class DormitoryService
 {
@@ -46,8 +47,9 @@ class DormitoryService
         return true;
     }
 
-    public function getAllLoggedInUsers(User $user)
+    public function getAllLoggedInUsers(Security $security)
     {
+        $user = $security->getUser();
         $studentsRepo = $this->entityManager->getRepository(User::class);
         $delay = new \DateTime('2 minutes ago');
         $expression = Criteria::expr();

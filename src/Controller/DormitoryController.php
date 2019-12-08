@@ -12,12 +12,15 @@ use App\Form\MessageType;
 use App\Service\DormitoryService;
 use App\Service\StudentManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Repository\RepositoryFactory;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class DormitoryController extends AbstractController
 {
@@ -27,6 +30,7 @@ class DormitoryController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @param StudentManager $studentManager
      * @param DormitoryService $dormitoryService
+     * @param Security $security
      * @return Response
      * @throws Exception
      */
@@ -34,10 +38,12 @@ class DormitoryController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         StudentManager $studentManager,
-        DormitoryService $dormitoryService
+        DormitoryService $dormitoryService,
+        Security $security
     ) {
-        $user = $this->getUser();
-        $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
+        $user = $security->getUser();
+
+        $dormitoryRepo = $entityManager->getRepository(Dormitory::class);
 
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
         $students = $dormitoryRepo->orderTopStudentsByPoints($user->getDormId());
@@ -88,7 +94,7 @@ class DormitoryController extends AbstractController
             return $this->redirectToRoute('dormitory');
         }
 
-        $loggedInUsers = $dormitoryService->getAllLoggedInUsers($user);
+        $loggedInUsers = $dormitoryService->getAllLoggedInUsers($security);
 
         return $this->render('dormitory/index.html.twig', [
             'dormitory' => $dormitory,
