@@ -4,6 +4,7 @@
 namespace App\Service;
 
 use App\Entity\Dormitory;
+use App\Entity\Help;
 use App\Entity\Message;
 use App\Entity\Notification;
 use App\Entity\SolvedType;
@@ -12,17 +13,23 @@ use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Security\Core\Security;
 
 class DormitoryService
 {
     private $entityManager;
     private $security;
+    private $studentManager;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Security $security,
+        StudentManager $studentManager
+    ) {
         $this->entityManager = $entityManager;
         $this->security = $security;
+        $this->studentManager = $studentManager;
     }
 
     public function calculateRewardPoints(DateTime $created_at, int $maxPoints): int
@@ -43,7 +50,7 @@ class DormitoryService
     public function canSendMessage(): bool
     {
         $user = $this->security->getUser();
-        $messageRepo = $this->getMessagesRepository();
+        $messageRepo = $this->getRepository(Message::class);
         $lastMessage = $messageRepo->findBy(['user' => $user->getId()], array('created_at'=>'DESC'), 1);
 
         if (!empty($lastMessage[0])) {
@@ -57,7 +64,7 @@ class DormitoryService
     public function getAllLoggedInUsers()
     {
         $user = $this->security->getUser();
-        $studentsRepo = $this->getUserRepository();
+        $studentsRepo = $this->getRepository(User::class);
         $delay = new \DateTime('2 minutes ago');
         $expression = Criteria::expr();
         $criteria = Criteria::create();
@@ -69,25 +76,14 @@ class DormitoryService
         return $loggedInUsers = $studentsRepo->matching($criteria);
     }
 
+    private function getRepository(string $entity)
+    {
+        return $this->entityManager->getRepository($entity);
+    }
+
     public function getDormitory()
     {
-
-        return $this->getDormitoryRepository()->getLoggedInUserDormitory($this->getUser()->getDormId());
-    }
-
-    protected function getDormitoryRepository()
-    {
-        return $this->entityManager->getRepository(Dormitory::class);
-    }
-
-    protected function getMessagesRepository()
-    {
-        return $this->entityManager->getRepository(Message::class);
-    }
-
-    protected function getUserRepository()
-    {
-        return $this->entityManager->getRepository(User::class);
+        return $this->getRepository(Dormitory::class)->getLoggedInUserDormitory($this->getUser()->getDormId());
     }
 
     protected function getUser()
@@ -97,12 +93,12 @@ class DormitoryService
 
     public function getStudents()
     {
-        return $this->getDormitoryRepository()->orderTopStudentsByPoints($this->getUser()->getDormId());
+        return $this->getRepository(Dormitory::class)->orderTopStudentsByPoints($this->getUser()->getDormId());
     }
 
     public function getMessages()
     {
-        return $this->getDormitoryRepository()->getDormitoryMessages($this->getUser()->getDormId());
+        return $this->getRepository(Dormitory::class)->getDormitoryMessages($this->getUser()->getDormId());
     }
 
     public function saveNotifications(Array $students, Message $message)
@@ -121,7 +117,7 @@ class DormitoryService
         }
     }
 
-    public function saveMessage($content)
+    public function saveMessage(string $content): Message
     {
         $message = new Message();
         $message->setUser($this->getUser());
@@ -138,18 +134,145 @@ class DormitoryService
 
     public function findMessage(int $id)
     {
-        $repository = $this->getMessagesRepository();
+        $repository = $this->getRepository(Message::class);
         return $repository->find($id);
     }
+
     public function getLoggedInUserDormitory()
     {
-        $repository = $this->getDormitoryRepository();
+        $repository = $this->getRepository(Dormitory::class);
         return $repository->getLoggedInUserDormitory($this->getUser()->getDormId());
     }
 
     public function getStudentsInDormitory()
     {
-        $repository = $this->getDormitoryRepository();
+        $repository = $this->getRepository(Dormitory::class);
         return $repository->getStudentsInDormitory($this->getUser()->getDormId());
+    }
+
+    public function provideHelp(int $id): bool
+    {
+        $user = $this->getUser();
+        $message = $this->getRepository(Message::class)->find($id);
+        $dormitory = $this->getRepository(Dormitory::class)->getLoggedInUserDormitory($user->getDormId());
+        $help = $this->getRepository(Help::class)->findUserProvidedHelp(
+            $message->getUser()->getId(),
+            $user->getId(),
+            $message
+        );
+
+        if (!$message || $help) {
+            return false;
+        }
+
+        $help = new Help();
+        $help->setMessage($message);
+        $help->setUser($user);
+        $help->setDormId($dormitory->getId());
+        $help->setRoomNr($user->getRoomNr());
+        $help->setRequesterId($message->getUser()->getId());
+
+        $this->entityManager->persist($help);
+        $message->setSolved(SolvedType::solved());
+        $message->setSolver($user);
+
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    public function reportMessage(int $id): bool
+    {
+        $message = $this->getRepository(Message::class)->find($id);
+
+        if (!$message) {
+            return false;
+        }
+
+        $message->setReported(true);
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    public function acceptHelpRequest(int $helpId, int $messageId): bool
+    {
+        $message = $this->getRepository(Message::class)->find($messageId);
+        $userWhoHelped = $this->getRepository(Help::class)->findUserWhoProvidedHelp($helpId);
+        $userWhoHelpedPoints = $userWhoHelped->getPoints();
+        $newPoints = $userWhoHelpedPoints + $this->
+            calculateRewardPoints($message->getCreatedAt(), 500);
+
+        $userWhoHelped->setPoints($newPoints);
+
+        $help = $this->getRepository(Help::class)->find($helpId);
+
+        $this->entityManager->remove($help);
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    public function denyHelpRequest(int $id): bool
+    {
+        $helpRepository = $this->getRepository(Help::class);
+
+        $message = $helpRepository->findMessageFromHelp($id);
+        $message->setSolved(SolvedType::notSolved());
+        $message->setSolver(null);
+
+        $help = $helpRepository->find($id);
+
+        if (!$help) {
+            return false;
+        }
+
+        $this->entityManager->remove($help);
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    public function getDormitoryWithStudents(User $user)
+    {
+        $dormitoryRepo = $this->getRepository(Dormitory::class);
+
+        $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
+        $students = $dormitoryRepo->orderAllStudentsByPoints($user->getDormId());
+
+        if (!$dormitory) {
+            return false;
+        }
+
+        return array('dormitory' => $dormitory, 'students' => $students);
+    }
+
+    public function getDormitoryInfo()
+    {
+        $dormitory = $this->getDormitory();
+        $students = $this->getStudents();
+        $messages = $this->getMessages();
+
+        if (!$dormitory) {
+            return false;
+        }
+
+        return array('dormitory' => $dormitory, 'students' => $students, 'messages' => $messages);
+    }
+
+    public function postNewMessage($data): bool
+    {
+        if (!$data) {
+            return false;
+        }
+
+        $message = $this->saveMessage($data->getContent());
+        $students = $this->getDormitoryInfo();
+
+        $students = $this->studentManager->removeStudentFromStudentsArray($students['students']);
+
+        $this->saveNotifications($students, $message);
+
+        return true;
     }
 }

@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     {% if requests is empty %}
     <p class="text-center">Kol kas pranešimų apie kambarių keitimus nėra.
         <br>
@@ -17,11 +21,6 @@
                 <p>Kambarių keitimo prašymai</p>
             </div>
             <div class="panel-content">
-                {% for message in app.flashes('success') %}
-                    <div class="alert alert-success">
-                        {{ message }}
-                    </div>
-                {% endfor %}
                 <table class="table table-borderless">
                     <tr>
                         <th scope="col">#</th>

@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Dormitory;
-use App\Entity\Help;
 use App\Entity\Message;
-use App\Entity\SolvedType;
 use App\Form\MessageType;
 use App\Service\DormitoryService;
 use App\Service\StudentManager;
@@ -23,35 +21,31 @@ class DormitoryController extends AbstractController
      * @Route("/dormitory", name="dormitory")
      * @param Request $request
      * @param DormitoryService $dormitoryService
-     * @param StudentManager $studentManager
      * @return Response
      */
-    public function index(
-        Request $request,
-        DormitoryService $dormitoryService,
-        StudentManager $studentManager
-    ) {
-        $dormitory = $dormitoryService->getDormitory();
-        $students = $dormitoryService->getStudents();
-        $messages = $dormitoryService->getMessages();
+    public function index(Request $request, DormitoryService $dormitoryService)
+    {
+        $dormitoryInfo = $dormitoryService->getDormitoryInfo();
+
+        if (!$dormitoryInfo) {
+            return $this->redirectToRoute('home');
+        }
 
         $message = new Message();
         $formRequest = $this->createForm(MessageType::class, $message);
-
         $formRequest->handleRequest($request);
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
             if (!$dormitoryService->canSendMessage()) {
-                $this->addFlash('error', 'Jūs katik siuntėte pranešimą, bandykite vėl po 2 minučių.');
+                $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
                 return $this->redirectToRoute('dormitory');
             }
-            $data = $formRequest->getData();
 
-            $message = $dormitoryService->saveMessage($data->getContent());
+            $submitedMessage = $dormitoryService->postNewMessage($formRequest->getData());
 
-            $students = $studentManager->removeStudentFromStudentsArray($students);
-
-            $dormitoryService->saveNotifications($students, $message);
+            if (!$submitedMessage) {
+                return $this->redirectToRoute('dormitory');
+            }
 
             $this->addFlash('success', 'Prašymas išsiųstas sėkmingai!');
             return $this->redirectToRoute('dormitory');
@@ -65,9 +59,9 @@ class DormitoryController extends AbstractController
         $loggedInUsers = $dormitoryService->getAllLoggedInUsers();
 
         return $this->render('dormitory/index.html.twig', [
-            'dormitory' => $dormitory,
-            'students' => $students,
-            'messages' => $messages,
+            'dormitory' => $dormitoryInfo['dormitory'],
+            'students' => $dormitoryInfo['students'],
+            'messages' => $dormitoryInfo['messages'],
             'formRequest' => $formRequest->createView(),
             'loggedInUsers' => $loggedInUsers,
         ]);
@@ -102,41 +96,18 @@ class DormitoryController extends AbstractController
     /**
      * @Route("/dormitory/help/{id}", name="dormitory_help")
      * @param $id
-     * @param EntityManagerInterface $entityManager
-     * @param Security $security
+     * @param DormitoryService $dormitoryService
      * @return RedirectResponse
      */
-    public function helpUser($id, EntityManagerInterface $entityManager, Security $security)
+    public function helpUser($id, DormitoryService $dormitoryService)
     {
-        $user = $security->getUser();
-        $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
-        $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
-        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
+        $help = $dormitoryService->provideHelp($id);
 
-        $message = $messagesRepo->find($id);
-        $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $help = $helpRepo->findUserProvidedHelp($message->getUser()->getId(), $user->getId(), $message);
-
-        if (!$message || $help) {
+        if (!$help) {
             return $this->redirectToRoute('dormitory');
         }
 
-        $help = new Help();
-        $help->setMessage($message);
-        $help->setUser($user);
-        $help->setDormId($dormitory->getId());
-        $help->setRoomNr($user->getRoomNr());
-        $help->setRequesterId($message->getUser()->getId());
-
-        $entityManager->persist($help);
-        $message->setSolved(SolvedType::solved());
-        $message->setSolver($user);
-
-        $entityManager->flush();
-
-
         $this->addFlash('success', 'Pagalbos siūlymas išsiųstas sėkmingai!');
-
         return $this->redirectToRoute('dormitory');
     }
 
@@ -158,84 +129,56 @@ class DormitoryController extends AbstractController
     /**
      * @Route("/dormitory/report/message", name="reportMessage")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param DormitoryService $dormitoryService
      * @return RedirectResponse
      */
-    public function reportMessage(Request $request, EntityManagerInterface $entityManager)
+    public function reportMessage(Request $request, DormitoryService $dormitoryService)
     {
         $reportMessageId = $request->get('id');
-        $messageRepository = $this->getDoctrine()->getRepository(Message::class);
-        $message = $messageRepository->find($reportMessageId);
+        $reported = $dormitoryService->reportMessage($reportMessageId);
 
-        if (!$message) {
+        if (!$reported) {
             return $this->redirectToRoute('dormitory');
         }
 
-        $message->setReported(true);
-        $entityManager->flush();
-
         $this->addFlash('success', 'Apie netinkamą pranešimą pranešta administracijai.');
-
         return $this->redirectToRoute('dormitory');
     }
 
     /**
      * @Route("/dormitory/accept-help-request", name="acceptHelp")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
      * @param DormitoryService $dormitoryService
      * @return RedirectResponse
      */
-    public function acceptHelpRequest(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        DormitoryService $dormitoryService
-    ) {
+    public function acceptHelpRequest(Request $request, DormitoryService $dormitoryService)
+    {
         $helpId = $request->get('id');
         $messageId = $request->get('msg');
-        $helpRepository = $this->getDoctrine()->getRepository(Help::class);
-        $messageRepository = $this->getDoctrine()->getRepository(Message::class);
-        $message = $messageRepository->findOneBy(['id'=> $messageId]);
-        $userWhoHelped = $helpRepository->findUserWhoProvidedHelp($helpId);
-        $userWhoHelpedPoints = $userWhoHelped->getPoints();
-        $newPoints = $userWhoHelpedPoints + $dormitoryService->
-            calculateRewardPoints($message->getCreatedAt(), 500);
+        $acceptedHelp = $dormitoryService->acceptHelpRequest($helpId, $messageId);
 
-        $userWhoHelped->setPoints($newPoints);
-
-        $help = $helpRepository->find($helpId);
-
-        $entityManager->remove($help);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Pagalbos siūlymas patvirtintas.');
-
-
-        return $this->redirectToRoute('provided_help');
+        if ($acceptedHelp) {
+            $this->addFlash('success', 'Pagalbos siūlymas patvirtintas.');
+            return $this->redirectToRoute('provided_help');
+        }
     }
 
     /**
      * @Route("/dormitory/deny-help-request", name="denyHelp")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param DormitoryService $dormitoryService
      * @return RedirectResponse
      */
-    public function denyHelpRequest(Request $request, EntityManagerInterface $entityManager)
+    public function denyHelpRequest(Request $request, DormitoryService $dormitoryService)
     {
         $helpId = $request->get('id');
-        $helpRepository = $this->getDoctrine()->getRepository(Help::class);
+        $denyHelp = $dormitoryService->denyHelpRequest($helpId);
 
-        $message = $helpRepository->findMessageFromHelp($helpId);
-        $message->setSolved(SolvedType::notSolved());
-        $message->setSolver(null);
-
-        $help = $helpRepository->find($helpId);
-
-        $entityManager->remove($help);
-        $entityManager->flush();
+        if (!$denyHelp) {
+            return $this->redirectToRoute('dormitory');
+        }
 
         $this->addFlash('success', 'Pagalbos siūlymas pašalintas, pranešimas gražintas į pradinę stadiją.');
-
         return $this->redirectToRoute('provided_help');
     }
 
@@ -244,18 +187,18 @@ class DormitoryController extends AbstractController
      * @param Security $security
      * @return Response
      */
-    public function allDormitoryStudents(Security $security)
+    public function allDormitoryStudents(Security $security, DormitoryService $dormitoryService)
     {
         $user = $security->getUser();
+        $dormitory = $dormitoryService->getDormitoryWithStudents($user);
 
-        $dormitoryRepo = $this->getDoctrine()->getRepository(Dormitory::class);
-
-        $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $students = $dormitoryRepo->orderAllStudentsByPoints($user->getDormId());
+        if (!$dormitory) {
+            return $this->redirectToRoute('dormitory');
+        }
 
         return $this->render('/dormitory/dormitory_leaderboard.html.twig', [
-            'students' => $students,
-            'dormitory' => $dormitory
+            'students' => $dormitory['students'],
+            'dormitory' => $dormitory['dormitory']
         ]);
     }
 }
