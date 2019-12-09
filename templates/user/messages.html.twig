@@ -21,13 +21,13 @@
             {{ message.content }}
             </div>
             <div class="col-md-3">
-            {% if message.solved == false %}
-                <img src="https://image.flaticon.com/icons/png/128/753/753345.png" style="height: 25px">
-                Laukiama pagalbos
-            {% else %}
-                <img src="https://image.flaticon.com/icons/png/128/845/845646.png" style="height: 25px">
-                Pagalba suteikta
-            {% endif %}
+                {% if message.solved and message.status == 2 and message.solver %}
+                    <img src="https://image.flaticon.com/icons/png/128/845/845646.png" style="height: 25px">
+                {% elseif message.solved and message.solver and message.status == 1 %}
+                    <img src="https://image.flaticon.com/icons/png/128/1250/1250273.png" style="height: 25px">
+                {% else %}
+                    <img src="https://image.flaticon.com/icons/png/128/753/753345.png" style="height: 25px">
+                {% endif %}
             </div>
         </li>
             <hr>
