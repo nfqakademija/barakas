@@ -12,26 +12,9 @@ use App\Entity\StatusType;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Entity;
-use Symfony\Component\Security\Core\Security;
 
-class DormitoryService
+class DormitoryService extends Service
 {
-    private $entityManager;
-    private $security;
-    private $studentManager;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        Security $security,
-        StudentManager $studentManager
-    ) {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-        $this->studentManager = $studentManager;
-    }
-
     public function calculateRewardPoints(DateTime $created_at, int $maxPoints): int
     {
         $currentTime =  new DateTime();
@@ -76,19 +59,9 @@ class DormitoryService
         return $loggedInUsers = $studentsRepo->matching($criteria);
     }
 
-    private function getRepository(string $entity)
-    {
-        return $this->entityManager->getRepository($entity);
-    }
-
     public function getDormitory()
     {
         return $this->getRepository(Dormitory::class)->getLoggedInUserDormitory($this->getUser()->getDormId());
-    }
-
-    protected function getUser()
-    {
-        return $this->security->getUser();
     }
 
     public function getStudents()

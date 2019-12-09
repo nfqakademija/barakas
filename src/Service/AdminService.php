@@ -13,28 +13,8 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
-class AdminService
+class AdminService extends Service
 {
-    private $entityManager;
-    private $emailService;
-    private $security;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        EmailService $emailService,
-        Security $security
-    ) {
-        $this->entityManager = $entityManager;
-        $this->emailService = $emailService;
-        $this->security = $security;
-    }
-
-    private function getRepository(string $entity)
-    {
-        return $this->entityManager->getRepository($entity);
-    }
-
-
     public function getDormitory(int $id)
     {
         $dormitoryRepository = $this->getRepository(Dormitory::class);
