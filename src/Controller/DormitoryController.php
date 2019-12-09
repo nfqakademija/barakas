@@ -6,7 +6,6 @@ use App\Entity\Dormitory;
 use App\Entity\Message;
 use App\Form\MessageType;
 use App\Service\DormitoryService;
-use App\Service\StudentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -185,6 +184,7 @@ class DormitoryController extends AbstractController
     /**
      * @Route("/dormitory/students", name="dormitory_leaderboard")
      * @param Security $security
+     * @param DormitoryService $dormitoryService
      * @return Response
      */
     public function allDormitoryStudents(Security $security, DormitoryService $dormitoryService)
