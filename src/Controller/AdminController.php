@@ -89,10 +89,11 @@ class AdminController extends AbstractController
     {
         $requestId = $request->query->get('id');
         $request = $adminService->approveDormitoryChangeRequest($requestId);
-
+        
         if (!$request) {
             return $this->redirectToRoute('dormitory_change_req');
         }
+
         $this->addFlash('success', 'Prašymas patvirtintas sėkmingai.');
         return $this->redirectToRoute('dormitory_change_req');
     }
