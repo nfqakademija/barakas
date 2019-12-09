@@ -124,8 +124,9 @@ class DormitoryService
         $message->setDormId($this->getUser()->getDormId());
         $message->setRoomNr($this->getUser()->getRoomNr());
         $message->setContent($content);
-        $message->setStatus(StatusType::urgent());
+        $message->setStatus(StatusType::posted());
         $message->setSolved(SolvedType::notSolved());
+        $message->setPoints(500);
 
         $this->entityManager->persist($message);
         $this->entityManager->flush();
@@ -174,6 +175,8 @@ class DormitoryService
 
         $this->entityManager->persist($help);
         $message->setSolved(SolvedType::solved());
+        $message->setStatus(StatusType::pending());
+        $message->setPoints($this->calculateRewardPoints($message->getCreatedAt(), 500));
         $message->setSolver($user);
 
         $this->entityManager->flush();
@@ -204,6 +207,7 @@ class DormitoryService
             calculateRewardPoints($message->getCreatedAt(), 500);
 
         $userWhoHelped->setPoints($newPoints);
+        $message->setStatus(StatusType::approved());
 
         $help = $this->getRepository(Help::class)->find($helpId);
 
