@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Academy;
-use App\Entity\AcademyType;
 use App\Entity\ApprovedType;
 use App\Entity\DormitoryChange;
 use App\Entity\Help;
@@ -21,6 +19,7 @@ use App\Form\StudentRegisterType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
 use App\Service\EmailService;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,43 +34,33 @@ class UserController extends AbstractController
 {
     /**
      * @Route("/organisation/add", name="addOrganisation")
-     * @param EntityManagerInterface $em
      * @param Request $request
+     * @param UserService $userService
      * @return Response
-     * @throws Exception
      */
-    public function addDormitory(EntityManagerInterface $em, Request $request)
+    public function addDormitory(Request $request, UserService $userService)
     {
-        $user = $this->getUser();
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $dormitory = new Dormitory();
-
         $form = $this->createForm(DormAddFormType::class, $dormitory);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $dormitory->setAddress($dormitory->getAddress());
-            $dormitory->setOrganisationId($user->getId());
-            $dormitory->setTitle($dormitory->getTitle());
-
-            $em->persist($dormitory);
-            $em->flush();
-
+            $userService->insertDormitory($dormitory);
             return $this->redirectToRoute('organisation');
         }
         return $this->render('organisation/pages/addDormitory.html.twig', [
             'DormAddFormType' => $form->createView(),
         ]);
     }
+
     /**
      * @Route("/organisation", name="organisation")
+     * @param UserService $userService
+     * @return Response
      */
-    public function index()
+    public function index(UserService $userService)
     {
-        $user = $this->getUser();
-        $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
-        $dormitories = $dormitoryRepository->getUserDormitories($user->getId());
+        $dormitories = $userService->getUserDormitories();
 
         return $this->render('organisation/pages/organisation.html.twig', [
             'dormitories' => $dormitories
@@ -81,17 +70,12 @@ class UserController extends AbstractController
     /**
      * @Route("/registration", name="org_registration")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param UserPasswordEncoderInterface $encoder
-     * @param EmailService $emailService
+     * @param UserService $userService
      * @return Response
-     * @throws Exception
      */
     public function register(
         Request $request,
-        EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $encoder,
-        EmailService $emailService
+        UserService $userService
     ) {
         
         if ($this->getUser()) {
@@ -99,10 +83,8 @@ class UserController extends AbstractController
         }
         $organisation = new User();
 
-        $academyRepository = $this->getDoctrine()->getRepository(Academy::class);
-
-        $universities = $academyRepository->findBy(['academyType' => AcademyType::university()->id()]);
-        $colleges = $academyRepository->findBy(['academyType' => AcademyType::college()->id()]);
+        $universities = $userService->getUniversities();
+        $colleges = $userService->getColleges();
 
         $form = $this->createForm(UserRegisterType::class, $organisation, array(
             'universities' => $universities,
@@ -112,16 +94,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $organisation->generateRandomPassword();
-            $encodedPassword = $encoder->encodePassword($organisation, $plainPassword);
-            $organisation->setPassword($encodedPassword);
-            $organisation->setRoles(array('ROLE_ADMIN'));
-            $organisation->setPoints(0);
-
-            $entityManager->persist($organisation);
-            $entityManager->flush();
-
-            $emailService->sendOrganisationSignupMail($organisation->getEmail(), $plainPassword);
+            $userService->insertOrganisation($organisation);
 
             return $this->render('organisation/register/success.html.twig', [
                 'email' => $organisation->getEmail(),
