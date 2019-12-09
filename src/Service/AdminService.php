@@ -206,7 +206,7 @@ class AdminService
         return true;
     }
 
-    public function studentStatus($id, $user)
+    public function studentStatus(int $id, $user)
     {
         $studentsRepository = $this->getRepository(User::class);
         $student = $studentsRepository->findOneBy(['id' => $id]);
