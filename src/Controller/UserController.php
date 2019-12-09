@@ -209,21 +209,15 @@ class UserController extends AbstractController
      * @Route("/dormitory/change-dormitory", name="change_dormitory")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
+     * @param UserService $userService
      * @return Response
      */
-    public function changeDormitory(Request $request, EntityManagerInterface $entityManager)
+    public function changeDormitory(Request $request, EntityManagerInterface $entityManager, UserService $userService)
     {
         $user = $this->getUser();
-
         $changeDormitory = new DormitoryChange();
         $dormitoryChangeRepo = $this->getDoctrine()->getRepository(DormitoryChange::class);
-        $userRepo = $this->getDoctrine()->getRepository(User::class);
-
-        $userDormitoryId = $user->getDormId();
-
-        $academy = $userRepo->findUserAcademy($userDormitoryId);
-
-        $dorms = $dormitoryChangeRepo->removeUserDormitoryFromArray($user, $userDormitoryId);
+        $dorms = $dormitoryChangeRepo->removeUserDormitoryFromArray($user, $user->getDormId());
 
         $form = $this->createForm(DormitoryChangeType::class, $changeDormitory, array(
             'dorms' => $dorms
@@ -232,11 +226,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $changeDormitory->setAcademy($academy);
-            $changeDormitory->setUser($user);
-            $changeDormitory->setApproved(ApprovedType::notApproved());
-            $entityManager->persist($changeDormitory);
-            $entityManager->flush();
+            $userService->insertChangeDormitory($changeDormitory);
 
             $this->addFlash('success', 'Prašymas buvo sėkmingai išsiųstas, 
             kuris bus peržiūrėtas per 24 val.');
@@ -255,13 +245,12 @@ class UserController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function addRules(Request $request, EntityManagerInterface $entityManager)
+    public function addRules(Request $request, EntityManagerInterface $entityManager, UserService $userService)
     {
         $dorm_id = $request->get('id');
         $formRequest = $this->createForm(AddRulesType::class);
         $formRequest->handleRequest($request);
-        $user = $this->getUser();
-        $dorm = $entityManager->getRepository(Dormitory::class)->getOrganisationDormitoryById($user->getId(), $dorm_id);
+        $dorm = $userService->getOrganisationDormitoryById($dorm_id);
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
             $dorm->setRules($formRequest->getData()->getRules());
             $entityManager->persist($dorm);
@@ -284,42 +273,29 @@ class UserController extends AbstractController
     /**
      * @Route("/change-room", name="change_room")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param UserService $userService
      * @return Response
      */
-    public function changeRoom(Request $request, EntityManagerInterface $entityManager)
+    public function changeRoom(Request $request, UserService $userService)
     {
         $user = $this->getUser();
-        $userRepo = $this->getDoctrine()->getRepository(User::class);
-        $userDormitoryId = $user->getDormId();
-        $academy = $userRepo->findUserAcademy($userDormitoryId);
-
         $roomChange = new RoomChange();
-
 
         $form = $this->createForm(RoomChangeType::class, $roomChange);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $roomChangeRepo = $this->getDoctrine()->getRepository(RoomChange::class);
-            $notApprovedRequest = $roomChangeRepo->findNotApprovedUserRoomChange($user);
-
+            $notApprovedRequest = $userService->findNotApprovedUserRoomChange();
             if ($notApprovedRequest) {
                 $this->addFlash('danger', 'Jūs jau esate išsiuntęs prašymą dėl kambario keitimo.');
                 return $this->redirectToRoute('change_room');
             }
-
             if ($user->getRoomNr() === $roomChange->getNewRoomNr()) {
                 $this->addFlash('danger', 'Jūs jau esate nurodytame kambaryje.');
                 return $this->redirectToRoute('change_room');
             }
 
-            $roomChange->setCurrentRoom($user->getRoomNr());
-            $roomChange->setUser($user);
-            $roomChange->setApproved(ApprovedType::notApproved());
-            $roomChange->setAcademy($academy);
-            $entityManager->persist($roomChange);
-            $entityManager->flush();
+            $userService->insertChangeRoom($roomChange);
 
             $this->addFlash('success', 'Prašymas buvo sėkmingai išsiųstas, 
             kuris bus peržiūrėtas per 24 val.');
@@ -331,23 +307,22 @@ class UserController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
     /**
      * @Route("/my-messages", name="my-messages")
+     * @param UserService $userService
+     * @return RedirectResponse|Response
      */
-    public function userMessages()
+    public function userMessages(UserService $userService)
     {
-        $user = $this->getUser();
-
-        if (!$user) {
+        if (!$this->getUser()) {
             return $this->redirectToRoute('home');
         }
 
         if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('organisation');
         }
-
-        $messagesRepo = $this->getDoctrine()->getRepository(Message::class);
-        $messages = $messagesRepo->getUserMessages($user);
+        $messages = $userService->getUserMessages();
 
         return $this->render('user/messages.html.twig', [
             'messages' => $messages

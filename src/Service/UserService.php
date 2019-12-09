@@ -5,10 +5,14 @@ namespace App\Service;
 
 use App\Entity\Academy;
 use App\Entity\AcademyType;
+use App\Entity\ApprovedType;
 use App\Entity\Dormitory;
+use App\Entity\DormitoryChange;
 use App\Entity\Help;
 use App\Entity\Invite;
+use App\Entity\Message;
 use App\Entity\Notification;
+use App\Entity\RoomChange;
 use App\Entity\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -108,5 +112,52 @@ class UserService extends Service
         $user = $this->getUser();
         $helpRepo = $this->getRepository(Help::class);
         return $helpRepo->userProblemSolvers($user->getId());
+    }
+
+    public function insertChangeDormitory(DormitoryChange $changeDormitory)
+    {
+        $academy = $this->findUserAcademy($this->getUser()->getDormId());
+        $changeDormitory->setAcademy($academy);
+        $changeDormitory->setUser($this->getUser());
+        $changeDormitory->setApproved(ApprovedType::notApproved());
+        $this->entityManager->persist($changeDormitory);
+        $this->entityManager->flush();
+    }
+
+    public function getUserMessages()
+    {
+        $messagesRepo = $this->getRepository(Message::class);
+        return $messagesRepo->getUserMessages($this->getUser());
+    }
+
+    public function findUserAcademy(int $dormId)
+    {
+        $userRepo = $this->getRepository(User::class);
+        return $userRepo->findUserAcademy($dormId);
+    }
+
+    public function findNotApprovedUserRoomChange()
+    {
+        $roomChangeRepo = $this->getRepository(RoomChange::class);
+        return $roomChangeRepo->findNotApprovedUserRoomChange($this->getUser());
+    }
+
+    public function insertChangeRoom(RoomChange $roomChange): void
+    {
+        $academy = $this->findUserAcademy($this->getUser()->getDormId());
+        $roomChange->setCurrentRoom($this->getUser()->getRoomNr());
+        $roomChange->setUser($this->getUser());
+        $roomChange->setApproved(ApprovedType::notApproved());
+        $roomChange->setAcademy($academy);
+        $this->entityManager->persist($roomChange);
+        $this->entityManager->flush();
+    }
+
+    public function getOrganisationDormitoryById(int $dorm_id)
+    {
+        return $this->
+        entityManager->
+        getRepository(Dormitory::class)->
+        getOrganisationDormitoryById($this->getUser()->getId(), $dorm_id);
     }
 }
