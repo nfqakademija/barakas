@@ -11,17 +11,14 @@ class Service
     protected $entityManager;
     protected $security;
     protected $emailService;
-    protected $studentManager;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         Security $security,
-        EmailService $emailService,
-        StudentManager $studentManager
+        EmailService $emailService
     ) {
         $this->entityManager = $entityManager;
         $this->security = $security;
-        $this->studentManager = $studentManager;
         $this->emailService = $emailService;
     }
 

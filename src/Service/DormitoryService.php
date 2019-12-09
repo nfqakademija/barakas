@@ -246,10 +246,27 @@ class DormitoryService extends Service
         $message = $this->saveMessage($data->getContent());
         $students = $this->getDormitoryInfo();
 
-        $students = $this->studentManager->removeStudentFromStudentsArray($students['students']);
+        $students = $this->removeStudentFromStudentsArray($students['students']);
 
         $this->saveNotifications($students, $message);
 
         return true;
+    }
+
+    public function removeStudentFromStudentsArray($students)
+    {
+        $studentToRemove = null;
+
+        foreach ($students as $struct) {
+            if ($this->getUser()->getOwner() == $struct->getOwner()) {
+                $studentToRemove = $struct;
+                break;
+            }
+        }
+
+        $key = array_search($studentToRemove, $students);
+        unset($students[$key]);
+
+        return $students;
     }
 }
