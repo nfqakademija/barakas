@@ -28,26 +28,26 @@ class AdminService
         $this->security = $security;
     }
 
-    private function getRepository($entity)
+    private function getRepository(string $entity)
     {
         return $this->entityManager->getRepository($entity);
     }
 
 
-    public function getDormitory($id)
+    public function getDormitory(int $id)
     {
         $dormitoryRepository = $this->getRepository(Dormitory::class);
         return $dormitoryRepository->find($id);
     }
 
-    public function getOrganisationDormitory($id)
+    public function getOrganisationDormitory(int $id)
     {
         $dormitoryRepo = $this->getRepository(Dormitory::class);
         $dormitory = $this->getDormitory($id);
         return $dormitoryRepo->findOrganisationDormitory($dormitory->getOrganisationId());
     }
 
-    public function indexPage($id)
+    public function indexPage(int $id)
     {
         $dormitoryInfo = $this->getDormitory($id);
 
@@ -70,7 +70,7 @@ class AdminService
             'dormitoryOrganisation' => $dormitoryOrganisation);
     }
 
-    public function addNewStudentToDormitory($formData, $invitation, $dormitory)
+    public function addNewStudentToDormitory($formData, $invitation, $dormitory): bool
     {
         $studentsRepository = $this->getRepository(User::class);
 
@@ -89,7 +89,8 @@ class AdminService
 
         $this->entityManager->persist($invitation);
         $this->entityManager->flush();
-        return $this->emailService->sendInviteMail($invitation->getEmail(), $url, $invitation->getName());
+        $this->emailService->sendInviteMail($invitation->getEmail(), $url, $invitation->getName());
+        return true;
     }
 
     public function getDormitoryChangeRequests()
@@ -106,7 +107,7 @@ class AdminService
         return $requestsRepo->findNotApprovedRequests($user);
     }
 
-    public function approveDormitoryChangeRequest($id)
+    public function approveDormitoryChangeRequest(int $id): bool
     {
         $requestRepo = $this->getRepository(DormitoryChange::class);
         $request = $requestRepo->find($id);
@@ -125,7 +126,7 @@ class AdminService
         return true;
     }
 
-    public function removeDormitoryChangeRequest($id)
+    public function removeDormitoryChangeRequest(int $id): bool
     {
         $requestRepo = $this->getRepository(DormitoryChange::class);
         $request = $requestRepo->find($id);
@@ -139,7 +140,7 @@ class AdminService
         return true;
     }
 
-    public function approveRoomChangeRequest($id)
+    public function approveRoomChangeRequest(int $id): bool
     {
         $requestRepo = $this->getRepository(RoomChange::class);
         $request = $requestRepo->find($id);
@@ -156,7 +157,7 @@ class AdminService
         return true;
     }
 
-    public function removeRoomChangeRequest($id)
+    public function removeRoomChangeRequest(int $id): bool
     {
         $requestRepo = $this->getRepository(RoomChange::class);
         $request = $requestRepo->find($id);

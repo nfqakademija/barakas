@@ -13,6 +13,7 @@ use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Security\Core\Security;
 
 class DormitoryService
@@ -49,7 +50,7 @@ class DormitoryService
     public function canSendMessage(): bool
     {
         $user = $this->security->getUser();
-        $messageRepo = $this->getMessagesRepository();
+        $messageRepo = $this->getRepository(Message::class);
         $lastMessage = $messageRepo->findBy(['user' => $user->getId()], array('created_at'=>'DESC'), 1);
 
         if (!empty($lastMessage[0])) {
@@ -63,7 +64,7 @@ class DormitoryService
     public function getAllLoggedInUsers()
     {
         $user = $this->security->getUser();
-        $studentsRepo = $this->getUserRepository();
+        $studentsRepo = $this->getRepository(User::class);
         $delay = new \DateTime('2 minutes ago');
         $expression = Criteria::expr();
         $criteria = Criteria::create();
@@ -75,30 +76,14 @@ class DormitoryService
         return $loggedInUsers = $studentsRepo->matching($criteria);
     }
 
+    private function getRepository(string $entity)
+    {
+        return $this->entityManager->getRepository($entity);
+    }
+
     public function getDormitory()
     {
-
-        return $this->getDormitoryRepository()->getLoggedInUserDormitory($this->getUser()->getDormId());
-    }
-
-    protected function getDormitoryRepository()
-    {
-        return $this->entityManager->getRepository(Dormitory::class);
-    }
-
-    protected function getMessagesRepository()
-    {
-        return $this->entityManager->getRepository(Message::class);
-    }
-
-    protected function getUserRepository()
-    {
-        return $this->entityManager->getRepository(User::class);
-    }
-
-    protected function getHelpRepository()
-    {
-        return $this->entityManager->getRepository(Help::class);
+        return $this->getRepository(Dormitory::class)->getLoggedInUserDormitory($this->getUser()->getDormId());
     }
 
     protected function getUser()
@@ -108,12 +93,12 @@ class DormitoryService
 
     public function getStudents()
     {
-        return $this->getDormitoryRepository()->orderTopStudentsByPoints($this->getUser()->getDormId());
+        return $this->getRepository(Dormitory::class)->orderTopStudentsByPoints($this->getUser()->getDormId());
     }
 
     public function getMessages()
     {
-        return $this->getDormitoryRepository()->getDormitoryMessages($this->getUser()->getDormId());
+        return $this->getRepository(Dormitory::class)->getDormitoryMessages($this->getUser()->getDormId());
     }
 
     public function saveNotifications(Array $students, Message $message)
@@ -132,7 +117,7 @@ class DormitoryService
         }
     }
 
-    public function saveMessage($content)
+    public function saveMessage(string $content): Message
     {
         $message = new Message();
         $message->setUser($this->getUser());
@@ -149,28 +134,28 @@ class DormitoryService
 
     public function findMessage(int $id)
     {
-        $repository = $this->getMessagesRepository();
+        $repository = $this->getRepository(Message::class);
         return $repository->find($id);
     }
 
     public function getLoggedInUserDormitory()
     {
-        $repository = $this->getDormitoryRepository();
+        $repository = $this->getRepository(Dormitory::class);
         return $repository->getLoggedInUserDormitory($this->getUser()->getDormId());
     }
 
     public function getStudentsInDormitory()
     {
-        $repository = $this->getDormitoryRepository();
+        $repository = $this->getRepository(Dormitory::class);
         return $repository->getStudentsInDormitory($this->getUser()->getDormId());
     }
 
-    public function provideHelp($id)
+    public function provideHelp(int $id): bool
     {
         $user = $this->getUser();
-        $message = $this->getMessagesRepository()->find($id);
-        $dormitory = $this->getDormitoryRepository()->getLoggedInUserDormitory($user->getDormId());
-        $help = $this->getHelpRepository()->findUserProvidedHelp(
+        $message = $this->getRepository(Message::class)->find($id);
+        $dormitory = $this->getRepository(Dormitory::class)->getLoggedInUserDormitory($user->getDormId());
+        $help = $this->getRepository(Help::class)->findUserProvidedHelp(
             $message->getUser()->getId(),
             $user->getId(),
             $message
@@ -196,9 +181,9 @@ class DormitoryService
         return true;
     }
 
-    public function reportMessage($id)
+    public function reportMessage(int $id): bool
     {
-        $message = $this->getMessagesRepository()->find($id);
+        $message = $this->getRepository(Message::class)->find($id);
 
         if (!$message) {
             return false;
@@ -210,17 +195,17 @@ class DormitoryService
         return true;
     }
 
-    public function acceptHelpRequest($helpId, $messageId)
+    public function acceptHelpRequest(int $helpId, int $messageId): bool
     {
-        $message = $this->getMessagesRepository()->find($messageId);
-        $userWhoHelped = $this->getHelpRepository()->findUserWhoProvidedHelp($helpId);
+        $message = $this->getRepository(Message::class)->find($messageId);
+        $userWhoHelped = $this->getRepository(Help::class)->findUserWhoProvidedHelp($helpId);
         $userWhoHelpedPoints = $userWhoHelped->getPoints();
         $newPoints = $userWhoHelpedPoints + $this->
             calculateRewardPoints($message->getCreatedAt(), 500);
 
         $userWhoHelped->setPoints($newPoints);
 
-        $help = $this->getHelpRepository()->find($helpId);
+        $help = $this->getRepository(Help::class)->find($helpId);
 
         $this->entityManager->remove($help);
         $this->entityManager->flush();
@@ -228,9 +213,9 @@ class DormitoryService
         return true;
     }
 
-    public function denyHelpRequest($id)
+    public function denyHelpRequest(int $id): bool
     {
-        $helpRepository = $this->getHelpRepository();
+        $helpRepository = $this->getRepository(Help::class);
 
         $message = $helpRepository->findMessageFromHelp($id);
         $message->setSolved(SolvedType::notSolved());
@@ -248,9 +233,9 @@ class DormitoryService
         return true;
     }
 
-    public function getDormitoryWithStudents($user)
+    public function getDormitoryWithStudents(User $user)
     {
-        $dormitoryRepo = $this->getDormitoryRepository();
+        $dormitoryRepo = $this->getRepository(Dormitory::class);
 
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
         $students = $dormitoryRepo->orderAllStudentsByPoints($user->getDormId());
@@ -275,7 +260,7 @@ class DormitoryService
         return array('dormitory' => $dormitory, 'students' => $students, 'messages' => $messages);
     }
 
-    public function postNewMessage($data)
+    public function postNewMessage($data): bool
     {
         if (!$data) {
             return false;
