@@ -20,7 +20,6 @@ use App\Form\RoomChangeType;
 use App\Form\StudentRegisterType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
-use App\Repository\DormitoryRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
