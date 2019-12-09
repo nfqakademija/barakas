@@ -7,6 +7,8 @@ use App\Entity\Academy;
 use App\Entity\AcademyType;
 use App\Entity\Dormitory;
 use App\Entity\User;
+use App\Repository\AcademyRepository;
+use PhpParser\Node\Expr\Array_;
 
 class UserService extends Service
 {
@@ -36,10 +38,10 @@ class UserService extends Service
     public function getColleges()
     {
         $academyRepository = $this->getRepository(Academy::class);
-        $academyRepository->findBy(['academyType' => AcademyType::college()->id()]);
+        return $academyRepository->findBy(['academyType' => AcademyType::college()->id()]);
     }
 
-    public function insertOrganisation(User $organisation)
+    public function insertOrganisation(User $organisation): User
     {
         $plainPassword = $organisation->generateRandomPassword();
         $encodedPassword = $this->encoder->encodePassword($organisation, $plainPassword);
@@ -51,5 +53,6 @@ class UserService extends Service
         $this->entityManager->flush();
 
         $this->emailService->sendOrganisationSignupMail($organisation->getEmail(), $plainPassword);
+        return $organisation;
     }
 }

@@ -18,7 +18,6 @@ use App\Form\RoomChangeType;
 use App\Form\StudentRegisterType;
 use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
-use App\Service\EmailService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -82,7 +81,6 @@ class UserController extends AbstractController
             return $this->redirectToRoute('home');
         }
         $organisation = new User();
-
         $universities = $userService->getUniversities();
         $colleges = $userService->getColleges();
 
@@ -90,9 +88,7 @@ class UserController extends AbstractController
             'universities' => $universities,
             'colleges' => $colleges
         ));
-
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $userService->insertOrganisation($organisation);
 
