@@ -2,12 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\ApprovedType;
-use App\Entity\Dormitory;
-use App\Entity\DormitoryChange;
-use App\Entity\Message;
-use App\Entity\RoomChange;
-use App\Entity\User;
 use App\Entity\Invite;
 use App\Form\SendInvitationType;
 use App\Service\AdminService;
@@ -172,35 +166,19 @@ class AdminController extends AbstractController
     /**
      * @Route("/organisation/accountdisable", name="disable_account")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param AdminService $adminService
      * @param UserInterface $user
      * @return RedirectResponse
      */
-    public function toggleAccount(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
+    public function toggleAccount(Request $request, AdminService $adminService, UserInterface $user)
     {
-            $user_id = $request->get('id');
-            $studentsRepository = $this->getDoctrine()->getRepository(User::class);
-            $student = $studentsRepository->findOneBy(['id' => $user_id]);
-            $dormitoryRepository = $this->getDoctrine()->getRepository(Dormitory::class);
-            $dorms = $dormitoryRepository->getUserDormitories($user->getId());
+        $changeStudentStatus = $adminService->studentStatus($request->get('id'), $user);
 
-        foreach ($dorms as $dorm) {
-            $dorm_ids[] = $dorm->getId();
-        }
-
-        if (!in_array($student->getDormId(), $dorm_ids)) {
+        if (!$changeStudentStatus) {
             return $this->redirect($request->headers->get('referer'));
         }
 
-        if ($student->getIsDisabled()===true) {
-            $student->setIsDisabled(false);
-            $this->addFlash('success', 'Paskyra atblokuota');
-        } else {
-            $student->setIsDisabled(true);
-            $this->addFlash('success', 'Paskyra užblokuota');
-        }
-        $entityManager->persist($student);
-        $entityManager->flush();
+        $this->addFlash('success', $changeStudentStatus['message']);
         return $this->redirect($request->headers->get('referer'));
     }
 

@@ -205,4 +205,34 @@ class AdminService
         $this->entityManager->flush();
         return true;
     }
+
+    public function studentStatus($id, $user)
+    {
+        $studentsRepository = $this->getRepository(User::class);
+        $student = $studentsRepository->findOneBy(['id' => $id]);
+        $dormitoryRepository = $this->getRepository(Dormitory::class);
+        $dorms = $dormitoryRepository->getUserDormitories($user->getId());
+
+        foreach ($dorms as $dorm) {
+            $dorm_ids[] = $dorm->getId();
+        }
+
+        if (!in_array($student->getDormId(), $dorm_ids)) {
+            return false;
+        }
+
+        if ($student->getIsDisabled()===true) {
+            $student->setIsDisabled(false);
+            $blockStatus = 'unblock';
+            $message = 'Paskyra atblokuota';
+        } else {
+            $student->setIsDisabled(true);
+            $blockStatus = 'block';
+            $message = 'Paskyra užblokuota';
+        }
+
+        $this->entityManager->persist($student);
+        $this->entityManager->flush();
+        return array('blockStatus' => $blockStatus, 'message' => $message);
+    }
 }
