@@ -6,13 +6,18 @@ use HappyTypes\EnumerableType;
 
 class StatusType extends EnumerableType
 {
-    final public static function urgent()
+    final public static function posted()
     {
-        return self::get(0, 'urgent');
+        return self::get(0, 'posted');
     }
 
-    final public static function normal()
+    final public static function pending()
     {
-        return self::get(1, 'normal');
+        return self::get(1, 'pending');
+    }
+
+    final public static function approved()
+    {
+        return self::get(2, 'approved');
     }
 }

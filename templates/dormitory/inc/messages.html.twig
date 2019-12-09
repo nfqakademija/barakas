@@ -1,12 +1,14 @@
 <div class="box">
-    <div style="display: flex; justify-content: space-between;">
         <h2>Pranešimai</h2>
         <p class="iconExplanation">
             <img src="https://image.flaticon.com/icons/png/128/845/845646.png"> - Suteikta pagalba
+            &nbsp;
             <img src="https://image.flaticon.com/icons/png/128/753/753345.png"> - Laukia pagalbos
-            <img src="https://image.flaticon.com/icons/svg/465/465269.svg"> - Galimas taškų kiekis
+            &nbsp;
+            <img src="https://image.flaticon.com/icons/png/128/1250/1250273.png"> - Pagalba išsiųsta
+            &nbsp;
+            <img src="https://image.flaticon.com/icons/svg/465/465269.svg"> - Skirtas taškų kiekis
         </p>
-    </div>
     {% include 'dormitory/inc/request_form.html.twig' %}
     <br>
 <ul class="list-unstyled">
@@ -22,8 +24,10 @@
         {% if message.user.owner != app.user.owner %}
         <li style="font-size: 17px; margin-left: 1%">
             <div class="float-left">
-                {% if message.solved %}
+                {% if message.solved and message.status == 2 and message.solver %}
                     <img src="https://image.flaticon.com/icons/png/128/845/845646.png" style="height: 25px">
+                {% elseif message.solved and message.solver and message.status == 1 %}
+                    <img src="https://image.flaticon.com/icons/png/128/1250/1250273.png" style="height: 25px">
                 {% else %}
                     <img src="https://image.flaticon.com/icons/png/128/753/753345.png" style="height: 25px">
                 {% endif %}
@@ -31,10 +35,12 @@
 
             <div class="messageContext">
                 <strong><span>{{ message.user.owner }}</span></strong> <small><i>{{ message.createdAt|time_diff }}</i></small>
+                {% if message.solved and message.solver and message.status == 2 %}
                 <div class="float-right">
                     <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 25px;">
-                    <p style="font-size: 16px; font-weight: bold">500</p>
+                    <p style="font-size: 16px; font-weight: bold;" class="text-center">{{ message.points }}</p>
                 </div>
+                {% endif %}
             <div style="padding-top: 2%">{{ message.content }}</div>
             <div style="margin-top: -5%;">
                 <br>
@@ -54,14 +60,17 @@
                     </span>
                 </small>
 
-            {% elseif message.solved and message.solver %}
+            {% elseif message.solved and message.solver and message.status == 1 %}
+                <br>
+                <small>
+                    Pagalbą pasiūlė: <strong>{{ message.solver.owner }}</strong>
+                    (Laukiama patvirtinimo)
+                </small>
+
+            {% elseif message.solved and message.solver and message.status == 2 %}
                 <br>
                 <small>
                     Pagalbą suteikė: <strong>{{ message.solver.owner }}</strong>
-                    | Taškai:
-                    <strong><span style="color: #0fbb0f;">375</span></strong>
-                    <img src="https://image.flaticon.com/icons/svg/438/438450.svg"
-                             style="height: 18px; vertical-align: text-top;">
                 </small>
 
             {% else %}
