@@ -7,6 +7,7 @@ use App\Entity\ApprovedType;
 use App\Entity\Dormitory;
 use App\Entity\DormitoryChange;
 use App\Entity\Invite;
+use App\Entity\Message;
 use App\Entity\RoomChange;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -167,6 +168,40 @@ class AdminService
         }
 
         $this->entityManager->remove($request);
+        $this->entityManager->flush();
+        return true;
+    }
+
+    public function getReportedMessages()
+    {
+        $messagesRepo = $this->getRepository(Message::class);
+        return $messagesRepo->getReportedMessages();
+    }
+
+    public function closeReport(int $id): bool
+    {
+        $messagesRepo = $this->getRepository(Message::class);
+        $message = $messagesRepo->find($id);
+
+        if (!$message) {
+            return false;
+        }
+
+        $message->setReported(false);
+        $this->entityManager->flush();
+        return true;
+    }
+
+    public function acceptReport(int $id): bool
+    {
+        $messagesRepo = $this->getRepository(Message::class);
+        $message = $messagesRepo->find($id);
+
+        if (!$message) {
+            return false;
+        }
+
+        $this->entityManager->remove($message);
         $this->entityManager->flush();
         return true;
     }
