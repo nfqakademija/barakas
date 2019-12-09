@@ -109,34 +109,28 @@ class UserController extends AbstractController
      * @param UserPasswordEncoderInterface $encoder
      * @param EntityManagerInterface $entityManager
      * @param UserInterface $user
+     * @param UserService $userService
      * @return Response
      */
     public function passwordChange(
         Request $request,
         UserPasswordEncoderInterface $encoder,
-        EntityManagerInterface $entityManager,
-        UserInterface $user
+        UserInterface $user,
+        UserService $userService
     ): Response {
-        if (!$this->getUser()) {
-            return $this->redirectToRoute('app_login');
-        }
 
         $form = $this->createForm(PasswordChangeType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             if ($encoder->isPasswordValid($user, $data['oldPassword']) && $data['password']===$data['newPassword']) {
-                $newPassword = $encoder->encodePassword($user, $data['password']);
-                $user->setPassword($newPassword);
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $userService->changePassword($data, $user);
                 $this->addFlash(
                     'success',
                     'Slaptažodis pakeistas!'
                 );
             }
         }
-
         return $this->render('user/passwordChange.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -145,15 +139,12 @@ class UserController extends AbstractController
     /**
      * @Route("/register/invite", name="invite")
      * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
-     * @param EntityManagerInterface $entityManager
+     * @param UserService $userService
      * @return Response
-     * @throws Exception
      */
     public function generateStudentAccount(
         Request $request,
-        UserPasswordEncoderInterface $encoder,
-        EntityManagerInterface $entityManager
+        UserService $userService
     ) {
         $invitation = $this
             ->getDoctrine()
@@ -174,29 +165,13 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $student->getPassword();
-            $encodedPassword = $encoder->encodePassword($student, $plainPassword);
-            $student->setOwner($invitation->getName());
-            $student->setEmail($invitation->getEmail());
-            $student->setPassword($encodedPassword);
-            $student->setDormId($invitation->getDorm());
-            $student->setRoomNr($invitation->getRoom());
-            $student->setRoles(array('ROLE_USER'));
-            $student->setPoints(0);
-            $entityManager->persist($student);
-            $entityManager->flush();
-
+            $userService->insertStudentAccount($student, $request->get('invite'));
             $this->addFlash(
                 'success',
                 'Sveikiname sėkmingai užsiregistravus! Dabar galite prisijungti.'
             );
-
-            $entityManager->remove($invitation);
-            $entityManager->flush();
-
             return $this->redirectToRoute('home');
         }
-
         return $this->render('user/register.html.twig', [
             'form' => $form->createView()
         ]);
@@ -204,32 +179,26 @@ class UserController extends AbstractController
 
     /**
      * @Route("clear-notifications", name="clear_notifications")
-     * @param EntityManagerInterface $entityManager
+     * @param UserService $userService
      * @return RedirectResponse
      */
-    public function clearNotifications(EntityManagerInterface $entityManager)
-    {
-        $user = $this->getUser();
-        $notificationRepo = $this->getDoctrine()->getRepository(Notification::class);
-        $notifications = $notificationRepo->getNotificationsByUser($user->getId());
-
-        foreach ($notifications as $notification) {
-            $entityManager->remove($notification);
-        }
-
-        $entityManager->flush();
+    public function clearNotifications(
+        UserService $userService
+    ) {
+        $notifications = $userService->getNotificationsByUser();
+        $userService->deleteAll($notifications);
         return $this->redirectToRoute('dormitory');
     }
 
     /**
      * @Route("/dormitory/help-provided", name="provided_help")
+     * @param UserService $userService
+     * @return Response
      */
-    public function providedHelp()
-    {
-        $user = $this->getUser();
-        $helpRepo = $this->getDoctrine()->getRepository(Help::class);
-
-        $helpMessages = $helpRepo->userProblemSolvers($user->getId());
+    public function providedHelp(
+        UserService $userService
+    ) {
+        $helpMessages = $userService->getHelpMessages();
 
         return $this->render('user/messages_solved.html.twig', [
             'helpMessages' => $helpMessages,
