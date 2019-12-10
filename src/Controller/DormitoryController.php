@@ -38,10 +38,10 @@ class DormitoryController extends AbstractController
         $formRequest->handleRequest($request);
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
-//            if (!$dormitoryService->canSendMessage()) {
-//                $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
-//                return $this->redirectToRoute('dormitory');
-//            }
+            if (!$dormitoryService->canSendMessage()) {
+                $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
+                return $this->redirectToRoute('dormitory');
+            }
 
             $submitedMessage = $dormitoryService->postNewMessage($formRequest->getData());
 
