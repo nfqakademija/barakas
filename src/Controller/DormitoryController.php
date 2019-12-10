@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Update;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
@@ -20,9 +22,10 @@ class DormitoryController extends AbstractController
      * @Route("/dormitory", name="dormitory")
      * @param Request $request
      * @param DormitoryService $dormitoryService
+     * @param MessageBusInterface $bus
      * @return Response
      */
-    public function index(Request $request, DormitoryService $dormitoryService)
+    public function index(Request $request, DormitoryService $dormitoryService, MessageBusInterface $bus)
     {
         $dormitoryInfo = $dormitoryService->getDormitoryInfo();
 
@@ -35,16 +38,24 @@ class DormitoryController extends AbstractController
         $formRequest->handleRequest($request);
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
-            if (!$dormitoryService->canSendMessage()) {
-                $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
-                return $this->redirectToRoute('dormitory');
-            }
+//            if (!$dormitoryService->canSendMessage()) {
+//                $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
+//                return $this->redirectToRoute('dormitory');
+//            }
 
             $submitedMessage = $dormitoryService->postNewMessage($formRequest->getData());
 
             if (!$submitedMessage) {
                 return $this->redirectToRoute('dormitory');
             }
+
+
+            $update = new Update(
+                $_SERVER['SITE_ADDRESS'].'/dormitory',
+                json_encode(['status' => 'OutOfStock'])
+            );
+            $bus->dispatch($update);
+
 
             $this->addFlash('success', 'Prašymas išsiųstas sėkmingai!');
             return $this->redirectToRoute('dormitory');

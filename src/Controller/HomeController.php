@@ -30,4 +30,12 @@ class HomeController extends AbstractController
     {
         return $this->render('home/contacts.html.twig');
     }
+
+    /**
+     * @Route("/getMercureUrl", name="mercure")
+     */
+    public function getMercureUrl()
+    {
+        return $this->json(['mercure' => $_SERVER['MERCURE_ACTUAL_URL']]);
+    }
 }
