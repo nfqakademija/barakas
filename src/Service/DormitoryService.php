@@ -12,6 +12,7 @@ use App\Entity\StatusType;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
+use Exception;
 
 class DormitoryService extends Service
 {
@@ -124,7 +125,7 @@ class DormitoryService extends Service
         return $repository->getStudentsInDormitory($this->getUser()->getDormId());
     }
 
-    public function provideHelp(int $id): bool
+    public function provideHelp(int $id): void
     {
         $user = $this->getUser();
         $message = $this->getRepository(Message::class)->find($id);
@@ -136,7 +137,7 @@ class DormitoryService extends Service
         );
 
         if (!$message || $help) {
-            return false;
+            throw new Exception('Message or user was not found');
         }
 
         $help = new Help();
@@ -153,28 +154,34 @@ class DormitoryService extends Service
         $message->setSolver($user);
 
         $this->entityManager->flush();
-
-        return true;
     }
 
-    public function reportMessage(int $id): bool
+    public function reportMessage(int $id): void
     {
         $message = $this->getRepository(Message::class)->find($id);
 
         if (!$message) {
-            return false;
+            throw new Exception('Message not found.');
         }
 
         $message->setReported(true);
         $this->entityManager->flush();
-
-        return true;
     }
 
-    public function acceptHelpRequest(int $helpId, int $messageId): bool
+    public function acceptHelpRequest(int $helpId, int $messageId): void
     {
         $message = $this->getRepository(Message::class)->find($messageId);
+
+        if (!$message) {
+            throw new Exception('Message not found.');
+        }
+
         $userWhoHelped = $this->getRepository(Help::class)->findUserWhoProvidedHelp($helpId);
+
+        if (!$userWhoHelped) {
+            throw new Exception('User who provided help was not found.');
+        }
+
         $userWhoHelpedPoints = $userWhoHelped->getPoints();
         $newPoints = $userWhoHelpedPoints + $this->
             calculateRewardPoints($message->getCreatedAt(), 500);
@@ -186,61 +193,71 @@ class DormitoryService extends Service
 
         $this->entityManager->remove($help);
         $this->entityManager->flush();
-
-        return true;
     }
 
-    public function denyHelpRequest(int $id): bool
+    public function denyHelpRequest(int $id): void
     {
         $helpRepository = $this->getRepository(Help::class);
-
         $message = $helpRepository->findMessageFromHelp($id);
+
+        if (!$message) {
+            throw new Exception('Message not found.');
+        }
+
         $message->setSolved(SolvedType::notSolved());
         $message->setSolver(null);
 
         $help = $helpRepository->find($id);
 
         if (!$help) {
-            return false;
+            throw new Exception('Help request not found.');
         }
 
         $this->entityManager->remove($help);
         $this->entityManager->flush();
-
-        return true;
     }
 
-    public function getDormitoryWithStudents(User $user)
+    public function getDormitoryWithStudents($user): array
     {
         $dormitoryRepo = $this->getRepository(Dormitory::class);
 
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $students = $dormitoryRepo->orderAllStudentsByPoints($user->getDormId());
 
         if (!$dormitory) {
-            return false;
+            throw new Exception('Dormitory not found.');
+        }
+
+        $students = $dormitoryRepo->orderAllStudentsByPoints($user->getDormId());
+
+        if (!$students) {
+            throw new Exception('Students not found.');
         }
 
         return array('dormitory' => $dormitory, 'students' => $students);
     }
 
-    public function getDormitoryInfo()
+    public function getDormitoryInfo(): array
     {
         $dormitory = $this->getDormitory();
-        $students = $this->getStudents();
-        $messages = $this->getMessages();
-
         if (!$dormitory) {
-            return false;
+            throw new Exception('Dormitory not found.');
+        }
+        $students = $this->getStudents();
+        if (!$students) {
+            throw new Exception('Students not found.');
+        }
+        $messages = $this->getMessages();
+        if (!$messages) {
+            throw new Exception('Messages not found.');
         }
 
         return array('dormitory' => $dormitory, 'students' => $students, 'messages' => $messages);
     }
 
-    public function postNewMessage($data): bool
+    public function postNewMessage($data): void
     {
         if (!$data) {
-            return false;
+            throw new Exception('No data was provided.');
         }
 
         $message = $this->saveMessage($data->getContent());
@@ -249,8 +266,6 @@ class DormitoryService extends Service
         $students = $this->removeStudentFromStudentsArray($students['students']);
 
         $this->saveNotifications($students, $message);
-
-        return true;
     }
 
     public function removeStudentFromStudentsArray($students)

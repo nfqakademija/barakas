@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="col-md-10 box mx-auto">
+        <div style="display: flex; justify-content: space-between">
+            <h2>Paskyra</h2>
+            <div>
+                <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 45px">
+                <p class="text-center"><strong>{{ user.points }}</strong></p>
+            </div>
+        </div>
+        <ul class="list-unstyled list-group row" style="font-size: 20px; padding: 0px 30px 30px 30px">
+            <li><strong>Bendra informacija</strong></li>
+            <li class="list-group-item col-xs-6">
+                <strong>Vardas:</strong> {{ user.owner }}
+            </li>
+            <li class="list-group-item col-xs-6">
+                <strong>El. paštas:</strong> {{ user.email }}
+            </li>
+            <li class="list-group-item col-xs-6">
+                <strong>Pranešimai:</strong> {{ messages|length }}
+            </li>
+            <li class="list-group-item col-xs-6">
+                <strong>Pasiūlyta pagalbų:</strong> {{ helps|length }}
+            </li>
+            <br>
+            <li><strong>Aukštoji mokykla</strong></li>
+            <li class="list-group-item col-xs-6">
+                {{ academy.title }}
+            </li>
+            <br>
+            <li><strong>Bendrabučio informacija</strong></li>
+            <li class="list-group-item col-xs-6">
+                <strong>Bendrabutis:</strong> {{ dorm.title }}
+            </li>
+            <li class="list-group-item col-xs-6">
+                <strong>Gatvė:</strong> {{ dorm.address }}
+            </li>
+            <li class="list-group-item col-xs-6">
+                <strong>Kambarys:</strong> {{ user.roomNr }}
+            </li>
+        </ul>
+    </div>
+{% endblock %}

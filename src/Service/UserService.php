@@ -160,4 +160,26 @@ class UserService extends Service
         getRepository(Dormitory::class)->
         getOrganisationDormitoryById($this->getUser()->getId(), $dorm_id);
     }
+
+    public function getUserProfile(int $id): array
+    {
+        $userRepo = $this->entityManager->getRepository(User::class);
+        $helpRepo = $this->entityManager->getRepository(Help::class);
+        $dormRepo = $this->entityManager->getRepository(Dormitory::class);
+
+        $user = $userRepo->findOneBy(array('id' => $id));
+
+        if (!$user) {
+            throw new \Exception('User was not found.');
+        }
+
+        $helps = $helpRepo->findBy(array('user' => $id));
+        $dorm = $dormRepo->findOneBy(['id' => $user->getDormId()]);
+        $academy = $userRepo->findUserAcademy($dorm);
+
+        $messages = $this->getUserMessages();
+
+        return array('user' => $user, 'helps' => $helps,
+            'dorm' => $dorm, 'academy' => $academy, 'messages' => $messages);
+    }
 }
