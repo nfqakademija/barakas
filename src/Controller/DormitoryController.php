@@ -25,7 +25,7 @@ class DormitoryController extends AbstractController
      * @param MessageBusInterface $bus
      * @return Response
      */
-    public function index(Request $request, DormitoryService $dormitoryService, MessageBusInterface $bus)
+    public function index(Request $request, DormitoryService $dormitoryService)
     {
         $dormitoryInfo = $dormitoryService->getDormitoryInfo();
 
@@ -38,23 +38,16 @@ class DormitoryController extends AbstractController
         $formRequest->handleRequest($request);
 
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
-            if (!$dormitoryService->canSendMessage()) {
-                $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
-                return $this->redirectToRoute('dormitory');
-            }
+//            if (!$dormitoryService->canSendMessage()) {
+//                $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
+//                return $this->redirectToRoute('dormitory');
+//            }
 
             $submitedMessage = $dormitoryService->postNewMessage($formRequest->getData());
 
             if (!$submitedMessage) {
                 return $this->redirectToRoute('dormitory');
             }
-
-
-            $update = new Update(
-                $_SERVER['SITE_ADDRESS'].'/dormitory',
-                json_encode(['status' => 'OutOfStock'])
-            );
-            $bus->dispatch($update);
 
 
             $this->addFlash('success', 'Prašymas išsiųstas sėkmingai!');

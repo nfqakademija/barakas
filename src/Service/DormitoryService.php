@@ -12,6 +12,7 @@ use App\Entity\StatusType;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
+use Symfony\Component\Mercure\Update;
 
 class DormitoryService extends Service
 {
@@ -249,8 +250,21 @@ class DormitoryService extends Service
         $students = $this->removeStudentFromStudentsArray($students['students']);
 
         $this->saveNotifications($students, $message);
-
+        $this->pushMessage($message);
         return true;
+    }
+
+    private function pushMessage(Message $message)
+    {
+        $update = new Update(
+            $_SERVER['SITE_ADDRESS'].'/dormitory',
+            json_encode([
+                'content' => $message->getContent(),
+                'owner' => $this->getUser()->getOwner(),
+                'id' => $message->getId()
+            ])
+        );
+        $this->bus->dispatch($update);
     }
 
     public function removeStudentFromStudentsArray($students)

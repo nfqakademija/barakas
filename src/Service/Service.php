@@ -4,6 +4,7 @@
 namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -13,17 +14,20 @@ class Service
     protected $security;
     protected $emailService;
     protected $encoder;
+    protected $bus;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         Security $security,
         EmailService $emailService,
-        UserPasswordEncoderInterface $encoder
+        UserPasswordEncoderInterface $encoder,
+        MessageBusInterface $bus
     ) {
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->emailService = $emailService;
         $this->encoder = $encoder;
+        $this->bus = $bus;
     }
 
     protected function getRepository(string $entity)
