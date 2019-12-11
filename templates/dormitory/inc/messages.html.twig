@@ -11,7 +11,7 @@
         </p>
     {% include 'dormitory/inc/request_form.html.twig' %}
     <br>
-<ul class="list-unstyled">
+<ul class="list-unstyled" id="realmessage" data-mercure-link="{{ link }}">
 
     {% if messages is empty %}
         <p class="text-center">Kol kas bendrabutyje pranešimų nėra.
@@ -106,3 +106,6 @@
     {% endfor %}
 </ul>
 </div>
+{% block javascripts %}
+    {{ encore_entry_script_tags('realTimeMessages') }}
+{% endblock %}

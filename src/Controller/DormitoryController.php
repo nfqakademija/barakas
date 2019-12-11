@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Update;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
@@ -63,6 +65,7 @@ class DormitoryController extends AbstractController
             'messages' => $dormitoryInfo['messages'],
             'formRequest' => $formRequest->createView(),
             'loggedInUsers' => $loggedInUsers,
+            'link' => $_SERVER['MERCURE_ACTUAL_URL']
         ]);
     }
 
