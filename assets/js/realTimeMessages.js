@@ -1,4 +1,5 @@
-const u = new URL('http://127.0.0.1:9090/.well-known/mercure');
+const link = $("#realmessage").data('mercureLink');
+const u = new URL(link);
 u.searchParams.append('topic', window.location.href);
 const es = new EventSource(u);
 es.onmessage = e => {
