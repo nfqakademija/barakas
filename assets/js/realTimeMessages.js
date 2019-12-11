@@ -1,6 +1,6 @@
 const link = $("#realmessage").data('mercureLink');
 const u = new URL(link);
-u.searchParams.append('topic', window.location.href);
+u.searchParams.append('topic', encodeURI(window.location.href));
 const es = new EventSource(u);
 es.onmessage = e => {
     const ul = $("#realmessage");
