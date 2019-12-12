@@ -258,7 +258,11 @@ class DormitoryService extends Service
     private function pushMessage(Message $message)
     {
         $update = new Update(
-            $this->router->generate('dormitory', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->router->generate(
+                'dormitory',
+                ['id' => $this->getUser()->getDormId()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
             json_encode([
                 'content' => $message->getContent(),
                 'owner' => $this->getUser()->getOwner(),

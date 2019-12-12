@@ -11,15 +11,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mercure\Update;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
 class DormitoryController extends AbstractController
 {
     /**
-     * @Route("/dormitory", name="dormitory")
+     * @Route("/dormitory/{id}", name="dormitory")
      * @param Request $request
      * @param DormitoryService $dormitoryService
      * @return Response
@@ -39,22 +37,22 @@ class DormitoryController extends AbstractController
         if ($formRequest->isSubmitted() && $formRequest->isValid()) {
             if (!$dormitoryService->canSendMessage()) {
                 $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
-                return $this->redirectToRoute('dormitory');
+                return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
             }
 
             $submitedMessage = $dormitoryService->postNewMessage($formRequest->getData());
 
             if (!$submitedMessage) {
-                return $this->redirectToRoute('dormitory');
+                return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
             }
 
             $this->addFlash('success', 'Prašymas išsiųstas sėkmingai!');
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         if ($formRequest->isSubmitted() && !$formRequest->isValid()) {
             $this->addFlash('error', 'Prašymas nebuvo išsiųstas. Prašymas turi sudaryti nuo 7 iki 300 simbolių.');
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         $loggedInUsers = $dormitoryService->getAllLoggedInUsers();
@@ -65,10 +63,10 @@ class DormitoryController extends AbstractController
             'messages' => $dormitoryInfo['messages'],
             'formRequest' => $formRequest->createView(),
             'loggedInUsers' => $loggedInUsers,
-            'link' => $_SERVER['MERCURE_ACTUAL_URL']
+            'link' => $_ENV['MERCURE_ACTUAL_URL']
         ]);
     }
-
+    
     /**
      * @Route("dormitory/message/{id}", name="message")
      * @param $id
@@ -85,7 +83,7 @@ class DormitoryController extends AbstractController
         $students = $dormitoryService->getStudentsInDormitory();
 
         if (!$message || $user->getDormId() !== $message->getDormId()) {
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         return $this->render('dormitory/message.html.twig', [
@@ -106,11 +104,11 @@ class DormitoryController extends AbstractController
         $help = $dormitoryService->provideHelp($id);
 
         if (!$help) {
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         $this->addFlash('success', 'Pagalbos siūlymas išsiųstas sėkmingai!');
-        return $this->redirectToRoute('dormitory');
+        return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
     }
 
     /**
@@ -140,11 +138,11 @@ class DormitoryController extends AbstractController
         $reported = $dormitoryService->reportMessage($reportMessageId);
 
         if (!$reported) {
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         $this->addFlash('success', 'Apie netinkamą pranešimą pranešta administracijai.');
-        return $this->redirectToRoute('dormitory');
+        return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
     }
 
     /**
@@ -177,7 +175,7 @@ class DormitoryController extends AbstractController
         $denyHelp = $dormitoryService->denyHelpRequest($helpId);
 
         if (!$denyHelp) {
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         $this->addFlash('success', 'Pagalbos siūlymas pašalintas, pranešimas gražintas į pradinę stadiją.');
@@ -196,7 +194,7 @@ class DormitoryController extends AbstractController
         $dormitory = $dormitoryService->getDormitoryWithStudents($user);
 
         if (!$dormitory) {
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         return $this->render('/dormitory/dormitory_leaderboard.html.twig', [
