@@ -13,6 +13,7 @@ use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\Mercure\Update;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DormitoryService extends Service
 {
@@ -257,7 +258,7 @@ class DormitoryService extends Service
     private function pushMessage(Message $message)
     {
         $update = new Update(
-            $_SERVER['SITE_ADDRESS'].$this->router->generate('dormitory'),
+            $this->router->generate('dormitory', [], UrlGeneratorInterface::ABSOLUTE_URL),
             json_encode([
                 'content' => $message->getContent(),
                 'owner' => $this->getUser()->getOwner(),
