@@ -35,7 +35,7 @@ security:
     access_control:
          - { path: ^/organisation, roles: ROLE_ADMIN }
          - { path: ^/dormitory, roles: ROLE_USER }
-         - { path: ^/dormitory/message, roles: ROLE_USER }
+         - { path: ^/achievements, roles: ROLE_USER}
          - { path: ^/user, roles: ROLE_USER }
          - { path: ^/admin, roles: ROLE_SUPER }
     access_denied_url: /login
