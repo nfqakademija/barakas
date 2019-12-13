@@ -187,7 +187,7 @@ class UserController extends AbstractController
     ) {
         $notifications = $userService->getNotificationsByUser();
         $userService->deleteAll($notifications);
-        return $this->redirectToRoute('dormitory');
+        return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
     }
 
     /**
@@ -231,7 +231,7 @@ class UserController extends AbstractController
             $this->addFlash('success', 'Prašymas buvo sėkmingai išsiųstas, 
             kuris bus peržiūrėtas per 24 val.');
 
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         return $this->render('user/change_dormitory.html.twig', [
@@ -300,7 +300,7 @@ class UserController extends AbstractController
             $this->addFlash('success', 'Prašymas buvo sėkmingai išsiųstas, 
             kuris bus peržiūrėtas per 24 val.');
 
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         return $this->render('user/change_room.html.twig', [

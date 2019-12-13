@@ -34,7 +34,5 @@ es.onmessage = e => {
         '            <hr>\n' +
         '        </li>';
     ul.prepend(html);
-    console.log(JSON.parse(e.data));
-    console.log(ul);
 }
 
