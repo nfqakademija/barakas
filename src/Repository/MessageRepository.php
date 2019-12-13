@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Help;
 use App\Entity\Message;
+use App\Entity\StatusType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -28,5 +29,10 @@ class MessageRepository extends ServiceEntityRepository
     public function getUserMessages($user)
     {
         return $this->findBy(['user' => $user]);
+    }
+
+    public function getUserSolvedProblems($user)
+    {
+        return $this->findBy(['solver' => $user, 'solved' => true, 'status' => StatusType::approved()->id()]);
     }
 }

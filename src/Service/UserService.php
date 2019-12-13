@@ -164,7 +164,7 @@ class UserService extends Service
     public function getUserProfile(int $id): array
     {
         $userRepo = $this->entityManager->getRepository(User::class);
-        $helpRepo = $this->entityManager->getRepository(Help::class);
+        $messagesRepo = $this->entityManager->getRepository(Message::class);
         $dormRepo = $this->entityManager->getRepository(Dormitory::class);
 
         $user = $userRepo->findOneBy(array('id' => $id));
@@ -173,7 +173,7 @@ class UserService extends Service
             throw new \Exception('User was not found.');
         }
 
-        $helps = $helpRepo->findBy(array('user' => $id));
+        $helps = $messagesRepo->getUserSolvedProblems($user);
         $dorm = $dormRepo->findOneBy(['id' => $user->getDormId()]);
         $academy = $userRepo->findUserAcademy($dorm);
 

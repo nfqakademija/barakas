@@ -350,7 +350,8 @@ class UserController extends AbstractController
                 'academy' => $userData['academy'],
             ]);
         } catch (Exception $exception) {
-            return $this->redirectToRoute('home');
+            /*return $this->redirectToRoute('home');*/
+            return new Response($exception);
         }
     }
 }
