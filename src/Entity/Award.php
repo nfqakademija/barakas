@@ -54,12 +54,12 @@ class Award
         return $this;
     }
 
-    public function getAchievement(): ?Achievemenet
+    public function getAchievement(): ?Achievement
     {
         return $this->achievement;
     }
 
-    public function setAchievement(?Achievemenet $achievement): self
+    public function setAchievement(?Achievement $achievement): self
     {
         $this->achievement = $achievement;
 

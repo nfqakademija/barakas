@@ -42,7 +42,7 @@ class Notification
     private $recipient_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Message", inversedBy="notifications")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Message", inversedBy="notifications", cascade={"remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $message;
