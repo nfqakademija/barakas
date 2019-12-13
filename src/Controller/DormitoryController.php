@@ -63,7 +63,7 @@ class DormitoryController extends AbstractController
             'messages' => $dormitoryInfo['messages'],
             'formRequest' => $formRequest->createView(),
             'loggedInUsers' => $loggedInUsers,
-            'link' => $_ENV['MERCURE_ACTUAL_URL']
+            'link' => $this->getParameter('mercureUrl')
         ]);
     }
     
