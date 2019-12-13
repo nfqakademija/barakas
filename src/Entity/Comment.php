@@ -107,7 +107,7 @@ class Comment
         return $this->room_nr;
     }
 
-    public function setRoomNr(string $room_nr): self
+    public function setRoomNr(string $room_nr): void
     {
         $this->room_nr = $room_nr;
     }

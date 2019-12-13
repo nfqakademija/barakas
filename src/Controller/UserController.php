@@ -2,12 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\ApprovedType;
 use App\Entity\DormitoryChange;
-use App\Entity\Help;
 use App\Entity\Invite;
-use App\Entity\Message;
-use App\Entity\Notification;
 use App\Entity\RoomChange;
 use App\Entity\User;
 use App\Entity\Dormitory;
@@ -20,7 +16,6 @@ use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -208,11 +203,10 @@ class UserController extends AbstractController
     /**
      * @Route("/dormitory/change-dormitory", name="change_dormitory")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
      * @param UserService $userService
      * @return Response
      */
-    public function changeDormitory(Request $request, EntityManagerInterface $entityManager, UserService $userService)
+    public function changeDormitory(Request $request, UserService $userService)
     {
         $user = $this->getUser();
         $changeDormitory = new DormitoryChange();

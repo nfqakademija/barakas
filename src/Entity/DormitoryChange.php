@@ -102,11 +102,6 @@ class DormitoryChange
         return $this->approved;
     }
 
-    public function getAcademyType()
-    {
-        return AcademyType::fromId($this->academyType);
-    }
-
     public function setApproved(ApprovedType $approvedType): void
     {
         $this->approved = $approvedType->id();
