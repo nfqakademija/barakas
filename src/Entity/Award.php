@@ -23,7 +23,7 @@ class Award
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Achievemenet")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Achievement")
      */
     private $achievement;
 

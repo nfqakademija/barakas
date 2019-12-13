@@ -243,13 +243,8 @@ class DormitoryService extends Service
             throw new Exception('Dormitory not found.');
         }
         $students = $this->getStudents();
-        if (!$students) {
-            throw new Exception('Students not found.');
-        }
+
         $messages = $this->getMessages();
-        if (!$messages) {
-            throw new Exception('Messages not found.');
-        }
 
         return array('dormitory' => $dormitory, 'students' => $students, 'messages' => $messages);
     }
