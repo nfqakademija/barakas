@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Security;
 class DormitoryController extends AbstractController
 {
     /**
-     * @Route("/dormitory/{id}", name="dormitory")
+     * @Route("/dorm/{id}", name="dormitory")
      * @param Request $request
      * @param DormitoryService $dormitoryService
      * @return Response
