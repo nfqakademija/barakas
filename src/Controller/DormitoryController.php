@@ -34,10 +34,10 @@ class DormitoryController extends AbstractController
             $formRequest->handleRequest($request);
 
             if ($formRequest->isSubmitted() && $formRequest->isValid()) {
-/*                if (!$dormitoryService->canSendMessage()) {
+                if (!$dormitoryService->canSendMessage()) {
                     $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
                     return $this->redirectToRoute('dormitory');
-                }*/
+                }
 
                 $dormitoryService->postNewMessage($formRequest->getData());
                 $this->addFlash('success', 'Prašymas išsiųstas sėkmingai!');
@@ -59,8 +59,7 @@ class DormitoryController extends AbstractController
                 'loggedInUsers' => $loggedInUsers,
             ]);
         } catch (Exception $e) {
-            //return $this->redirectToRoute('home');
-            return new Response($e);
+            return $this->redirectToRoute('home');
         }
     }
 
