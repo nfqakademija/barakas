@@ -3,71 +3,73 @@
 
 namespace App\Service;
 
+use App\Entity\Achievement;
 use App\Entity\AchievementType;
 use App\Entity\Award;
-use Doctrine\ORM\EntityManagerInterface;
 
 class AchievementService extends Service
 {
-    private function giveAchievement(int $achievementId)
+    private function giveAchievement($achievementId, $user): void
     {
-        $user = $this->getUser();
+        $achievementRepo = $this->getRepository(Achievement::class);
+
+        $achievement = $achievementRepo->find($achievementId);
 
         $award = new Award();
         $award->setUser($user);
-        $award->setAchievement($achievementId);
+        $award->setAchievement($achievement);
 
         $this->entityManager->persist($award);
         $this->entityManager->flush();
     }
 
-    public function giveFirstAidAchievement()
+    public function giveFirstAidAchievement($user)
     {
-        $this->giveAchievement(AchievementType::firstAid()->id());
+        $this->giveAchievement(AchievementType::firstAid()->id(), $user);
     }
 
-    public function giveTenHelpAchievement()
+    public function giveTenHelpAchievement($user)
     {
-        $this->giveAchievement(AchievementType::tenHelpProvided()->id());
+        $this->giveAchievement(AchievementType::tenHelpProvided()->id(), $user);
     }
 
-    public function giveTwentyHelpAchievement()
+    public function giveTwentyHelpAchievement($user)
     {
-        $this->giveAchievement(AchievementType::twentyHelpProvided()->id());
+        $this->giveAchievement(AchievementType::twentyHelpProvided()->id(), $user);
     }
 
-    public function giveOneThousandPointsAchievement()
+    public function giveOneThousandPointsAchievement($user)
     {
-        $this->giveAchievement(AchievementType::thousandPoints()->id());
+        $this->giveAchievement(AchievementType::thousandPoints()->id(), $user);
     }
 
-    public function giveTwoThousandPointsAchievement()
+    public function giveTwoThousandPointsAchievement($user)
     {
-        $this->giveAchievement(AchievementType::twoThousandPoints()->id());
+        $this->giveAchievement(AchievementType::twoThousandPoints()->id(), $user);
     }
 
-    public function giveFiveThousandPointsAchievement()
+    public function giveFiveThousandPointsAchievement($user)
     {
-        $this->giveAchievement(AchievementType::fiveThousandPoints()->id());
+        $this->giveAchievement(AchievementType::fiveThousandPoints()->id(), $user);
     }
 
-    public function giveTenThousandPointsAchievement()
+    public function giveTenThousandPointsAchievement($user)
     {
-        $this->giveAchievement(AchievementType::tenThousandPoints()->id());
+        $this->giveAchievement(AchievementType::tenThousandPoints()->id(), $user);
     }
 
-    public function giveTenMessagesAchievement()
+    public function giveTenMessagesAchievement($user)
     {
-        $this->giveAchievement(AchievementType::tenMessages()->id());
+        $this->giveAchievement(AchievementType::tenMessages()->id(), $user);
     }
 
-    public function giveTwentyMessagesAchievement()
+    public function giveTwentyMessagesAchievement($user)
     {
-        $this->giveAchievement(AchievementType::twentyMessages()->id());
+        $this->giveAchievement(AchievementType::twentyMessages()->id(), $user);
     }
 
-    public function giveThirtyMessagesAchievement()
+    public function giveThirtyMessagesAchievement($user)
     {
-        $this->giveAchievement(AchievementType::thirtyMessages()->id());
+        $this->giveAchievement(AchievementType::thirtyMessages()->id(), $user);
     }
 }

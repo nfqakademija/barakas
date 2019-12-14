@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\AchievementType;
 use App\Entity\Award;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -19,32 +20,83 @@ class AwardRepository extends ServiceEntityRepository
         parent::__construct($registry, Award::class);
     }
 
-    // /**
-    //  * @return Award[] Returns an array of Award objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findTenMessagesAchievementByUser($user)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::tenMessages()->id()
+        ]);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Award
+    public function findTwentyMessagesAchievementByUser($user)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::twentyMessages()->id()
+        ]);
     }
-    */
+
+    public function findThirtyMessagesAchievementByUser($user)
+    {
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::thirtyMessages()->id()
+        ]);
+    }
+
+    public function findFirstAidAchievementByUser($user)
+    {
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::firstAid()->id()
+        ]);
+    }
+
+    public function findTenHelpAchievementByUser($user)
+    {
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::tenHelpProvided()->id()
+        ]);
+    }
+
+    public function findTwentyHelpAchievementByUser($user)
+    {
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::twentyHelpProvided()->id()
+        ]);
+    }
+
+    public function findOneThousandPointsAchievementByUser($user)
+    {
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::thousandPoints()->id()
+        ]);
+    }
+
+    public function findTwoThousandPointsAchievementByUser($user)
+    {
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::twoThousandPoints()->id()
+        ]);
+    }
+
+    public function findFiveThousandPointsAchievementByUser($user)
+    {
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::fiveThousandPoints()->id()
+        ]);
+    }
+
+    public function findTenThousandPointsAchievementByUser($user)
+    {
+        return $this->findBy([
+            'user' => $user,
+            'achievement' => AchievementType::tenThousandPoints()->id()
+        ]);
+    }
 }

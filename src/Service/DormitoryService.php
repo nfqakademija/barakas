@@ -3,6 +3,8 @@
 
 namespace App\Service;
 
+use App\Entity\AchievementType;
+use App\Entity\Award;
 use App\Entity\Dormitory;
 use App\Entity\Help;
 use App\Entity\Message;
@@ -12,10 +14,26 @@ use App\Entity\StatusType;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 
 class DormitoryService extends Service
 {
+    private $achievementService;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Security $security,
+        EmailService $emailService,
+        UserPasswordEncoderInterface $encoder,
+        AchievementService $achievementService
+    ) {
+        parent::__construct($entityManager, $security, $emailService, $encoder);
+        $this->achievementService = $achievementService;
+    }
+
     public function calculateRewardPoints(DateTime $created_at, int $maxPoints): int
     {
         $currentTime =  new DateTime();
@@ -93,6 +111,8 @@ class DormitoryService extends Service
 
     public function saveMessage(string $content): Message
     {
+        $messagesRepo = $this->getRepository(Message::class);
+
         $message = new Message();
         $message->setUser($this->getUser());
         $message->setDormId($this->getUser()->getDormId());
@@ -104,7 +124,35 @@ class DormitoryService extends Service
 
         $this->entityManager->persist($message);
         $this->entityManager->flush();
+
+        $userMessages = $messagesRepo->getUserMessages($this->getUser());
+        $messagesAchievements = $this->getMessagesAchievements($this->getUser());
+
+        if (!$messagesAchievements['tenMessagesAchievement'] && count($userMessages) === 10) {
+            $this->achievementService->giveTenMessagesAchievement($this->getUser());
+        }
+
+        if (!$messagesAchievements['twentyMessagesAchievement'] && count($userMessages) === 20) {
+            $this->achievementService->giveTwentyMessagesAchievement($this->getUser());
+        }
+
+        if (!$messagesAchievements['thirtyMessagesAchievement'] && count($userMessages) === 30) {
+            $this->achievementService->giveThirtyMessagesAchievement($this->getUser());
+        }
+
         return $message;
+    }
+
+    private function getMessagesAchievements($user): array
+    {
+        $awardsRepo = $this->getRepository(Award::class);
+        $tenMessagesAchievement = $awardsRepo->findTenMessagesAchievementByUser($user);
+        $twentyMessagesAchievement = $awardsRepo->findTwentyMessagesAchievementByUser($user);
+        $thirtyMessagesAchievement = $awardsRepo->findThirtyMessagesAchievementByUser($user);
+
+        return array('tenMessagesAchievement' => $tenMessagesAchievement,
+            'twentyMessagesAchievement' => $twentyMessagesAchievement,
+            'thirtyMessagesAchievement' => $thirtyMessagesAchievement);
     }
 
     public function findMessage(int $id)
@@ -193,6 +241,51 @@ class DormitoryService extends Service
 
         $this->entityManager->remove($help);
         $this->entityManager->flush();
+
+        $messagesRepo = $this->getRepository(Message::class);
+        $helps = $messagesRepo->getUserSolvedProblems($userWhoHelped);
+        $helpAchievements = $this->getHelpAchievements($userWhoHelped);
+
+        if (!$helpAchievements['firstAidAchievement'] && count($helps) === 1) {
+            $this->achievementService->giveFirstAidAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['tenHelpsAchievement'] && count($helps) === 10) {
+            $this->achievementService->giveTenHelpAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['twentyHelpsAchievement'] && count($helps) === 20) {
+            $this->achievementService->giveTwentyHelpAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['oneThousandPointsAchievement'] && $newPoints >= 1000 && $newPoints < 2500) {
+            $this->achievementService->giveOneThousandPointsAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['twoThousandPointsAchievement'] && $newPoints >= 2500 && $newPoints < 5000) {
+            $this->achievementService->giveTwoThousandPointsAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['fiveThousandPointsAchievement'] && $newPoints >= 5000 && $newPoints < 10000) {
+            $this->achievementService->giveFiveThousandPointsAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['tenThousandPointsAchievement'] && $newPoints >= 10000) {
+            $this->achievementService->giveTenThousandPointsAchievement($userWhoHelped);
+        }
+    }
+
+    private function getHelpAchievements($userWhoHelped): array
+    {
+        $awardsRepo = $this->getRepository(Award::class);
+        $firstAidAchievement = $awardsRepo->findFirstAidAchievementByUser($userWhoHelped);
+        $tenHelpsAchievement = $awardsRepo->findTenHelpAchievementByUser($userWhoHelped);
+        $twentyHelpsAchievement = $awardsRepo->findTwentyHelpAchievementByUser($userWhoHelped);
+        $oneThousandPointsAchievement = $awardsRepo->findOneThousandPointsAchievementByUser($userWhoHelped);
+        $twoThousandPointsAchievement = $awardsRepo->findTwoThousandPointsAchievementByUser($userWhoHelped);
+        $fiveThousandPointsAchievement = $awardsRepo->findFiveThousandPointsAchievementByUser($userWhoHelped);
+        $tenThousandPointsAchievement = $awardsRepo->findTenThousandPointsAchievementByUser($userWhoHelped);
+
+        return array('firstAidAchievement' => $firstAidAchievement, 'tenHelpsAchievement' => $tenHelpsAchievement,
+            'twentyHelpsAchievement' => $twentyHelpsAchievement,
+            'oneThousandPointsAchievement' => $oneThousandPointsAchievement,
+            'twoThousandPointsAchievement' => $twoThousandPointsAchievement,
+            'fiveThousandPointsAchievement' => $fiveThousandPointsAchievement,
+            'tenThousandPointsAchievement' => $tenThousandPointsAchievement);
     }
 
     public function denyHelpRequest(int $id): void
