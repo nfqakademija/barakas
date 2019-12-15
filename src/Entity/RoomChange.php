@@ -36,7 +36,7 @@ class RoomChange
     private $created_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="roomChanges, cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="roomChanges", cascade={"remove"})
      */
     private $user;
 
