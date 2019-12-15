@@ -364,6 +364,8 @@ class DormitoryService extends Service
 
     private function pushMessage(Message $message)
     {
+
+        $message = htmlspecialchars($message);
         $update = new Update(
             [
                 $this->router->generate(
