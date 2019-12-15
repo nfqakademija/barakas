@@ -259,7 +259,11 @@ class DormitoryService extends Service
     {
         $update = new Update(
             [
-                $this->router->generate('dormitory', ['id' => $this->getUser()->getDormId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->router->generate(
+                    'dormitory',
+                    ['id' => $this->getUser()->getDormId()],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
                 $this->router->generate('rules', [], UrlGeneratorInterface::ABSOLUTE_URL),
                 $this->router->generate('my-messages', [], UrlGeneratorInterface::ABSOLUTE_URL),
                 $this->router->generate('acceptHelp', [], UrlGeneratorInterface::ABSOLUTE_URL),
