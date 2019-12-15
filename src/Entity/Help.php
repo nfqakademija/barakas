@@ -27,7 +27,7 @@ class Help
     private $room_nr;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Message", inversedBy="helps", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Message", inversedBy="helps")
      */
     private $message;
 
