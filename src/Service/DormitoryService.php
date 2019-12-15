@@ -16,6 +16,7 @@ use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Mercure\Update;
@@ -30,9 +31,11 @@ class DormitoryService extends Service
         Security $security,
         EmailService $emailService,
         UserPasswordEncoderInterface $encoder,
-        AchievementService $achievementService
+        AchievementService $achievementService,
+        MessageBusInterface $bus,
+        UrlGeneratorInterface $router
     ) {
-        parent::__construct($entityManager, $security, $emailService, $encoder);
+        parent::__construct($entityManager, $security, $emailService, $encoder, $bus, $router);
         $this->achievementService = $achievementService;
     }
 
