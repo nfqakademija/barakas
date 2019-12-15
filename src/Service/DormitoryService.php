@@ -365,7 +365,6 @@ class DormitoryService extends Service
     private function pushMessage(Message $message)
     {
 
-        $message = htmlspecialchars($message);
         $update = new Update(
             [
                 $this->router->generate(
@@ -384,10 +383,10 @@ class DormitoryService extends Service
                 $this->router->generate('dormitory_leaderboard', [], UrlGeneratorInterface::ABSOLUTE_URL),
                 ],
             json_encode([
-                'content' => $message->getContent(),
-                'owner' => $this->getUser()->getOwner(),
-                'id' => $message->getId(),
-                'room' => $this->getUser()->getRoomNr()
+                'content' => htmlspecialchars($message->getContent()),
+                'owner' => htmlspecialchars($this->getUser()->getOwner()),
+                'id' => htmlspecialchars($message->getId()),
+                'room' => htmlspecialchars($this->getUser()->getRoomNr())
             ])
         );
         $this->bus->dispatch($update);
