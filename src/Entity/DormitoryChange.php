@@ -20,7 +20,7 @@ class DormitoryChange
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="dormitoryChange")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="dormitoryChange", cascade={"remove"})
      */
     private $user;
 
