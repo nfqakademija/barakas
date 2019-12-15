@@ -16,6 +16,7 @@ use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -343,8 +344,7 @@ class UserController extends AbstractController
                 'academy' => $userData['academy'],
             ]);
         } catch (Exception $exception) {
-            /*return $this->redirectToRoute('home');*/
-            return new Response($exception);
+            return $this->redirectToRoute('home');
         }
     }
 }
