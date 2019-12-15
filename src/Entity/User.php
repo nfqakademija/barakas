@@ -116,7 +116,7 @@ class User implements UserInterface
     protected $lastActivityAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Award", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Award", mappedBy="user", cascade={"remove"})
      */
     private $awards;
 
