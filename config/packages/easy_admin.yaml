@@ -25,6 +25,13 @@ easy_admin:
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'lastActivityAt', type: 'datetime' }
 
+        Achievement:
+          class: App\Entity\Achievement
+          list:  # <-- 'form' is applied to both 'new' and 'edit' views
+            fields:
+              - 'img'
+              - 'description'
+              
         Academy:
           class: App\Entity\Academy
           list:  # <-- 'form' is applied to both 'new' and 'edit' views
@@ -35,7 +42,6 @@ easy_admin:
             fields:
               - { property: 'title', type: 'text' }
               - { property: 'academyType', type: 'number' }
-
         Comment:
           class: App\Entity\Comment
           list:  # <-- 'form' is applied to both 'new' and 'edit' views
