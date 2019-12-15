@@ -36,7 +36,7 @@ easy_admin:
           list:  # <-- 'form' is applied to both 'new' and 'edit' views
             fields:
               - 'user_id'
-              - 'achievement_id'              
+              - 'achievement_id'          
         Academy:
           class: App\Entity\Academy
           list:  # <-- 'form' is applied to both 'new' and 'edit' views
