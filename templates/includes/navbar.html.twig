@@ -126,5 +126,7 @@
     </div>
 </nav>
 {% block javascripts %}
+    {% if app.user %}
     {{ encore_entry_script_tags('navMessage') }}
+    {% endif %}
 {% endblock %}
