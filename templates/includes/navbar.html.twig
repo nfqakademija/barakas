@@ -80,7 +80,7 @@
         {% if app.user %}
             {% if not is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('dormitory') }}"><i class="fas fa-hotel"></i> Bendrabutis</a>
+                <a class="nav-link" href="{{ path('dormitory',{id: app.user.DormId}) }}"><i class="fas fa-hotel"></i> Bendrabutis</a>
             </li>
                 {% endif %}
             <li class="nav-item dropdown">

@@ -2,12 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\ApprovedType;
 use App\Entity\DormitoryChange;
-use App\Entity\Help;
 use App\Entity\Invite;
-use App\Entity\Message;
-use App\Entity\Notification;
 use App\Entity\RoomChange;
 use App\Entity\User;
 use App\Entity\Dormitory;
@@ -20,7 +16,6 @@ use App\Form\UserRegisterType;
 use App\Form\DormAddFormType;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -187,7 +182,7 @@ class UserController extends AbstractController
     ) {
         $notifications = $userService->getNotificationsByUser();
         $userService->deleteAll($notifications);
-        return $this->redirectToRoute('dormitory');
+        return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
     }
 
     /**
@@ -208,11 +203,10 @@ class UserController extends AbstractController
     /**
      * @Route("/dormitory/change-dormitory", name="change_dormitory")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
      * @param UserService $userService
      * @return Response
      */
-    public function changeDormitory(Request $request, EntityManagerInterface $entityManager, UserService $userService)
+    public function changeDormitory(Request $request, UserService $userService)
     {
         $user = $this->getUser();
         $changeDormitory = new DormitoryChange();
@@ -231,7 +225,7 @@ class UserController extends AbstractController
             $this->addFlash('success', 'Prašymas buvo sėkmingai išsiųstas, 
             kuris bus peržiūrėtas per 24 val.');
 
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         return $this->render('user/change_dormitory.html.twig', [
@@ -300,7 +294,7 @@ class UserController extends AbstractController
             $this->addFlash('success', 'Prašymas buvo sėkmingai išsiųstas, 
             kuris bus peržiūrėtas per 24 val.');
 
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         return $this->render('user/change_room.html.twig', [

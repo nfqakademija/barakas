@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Security;
 class DormitoryController extends AbstractController
 {
     /**
-     * @Route("/dormitory", name="dormitory")
+     * @Route("/dorm/{id}", name="dormitory")
      * @param Request $request
      * @param DormitoryService $dormitoryService
      * @return Response
@@ -36,17 +36,17 @@ class DormitoryController extends AbstractController
             if ($formRequest->isSubmitted() && $formRequest->isValid()) {
                 if (!$dormitoryService->canSendMessage()) {
                     $this->addFlash('error', 'Jūs ką tik siuntėte pranešimą, bandykite vėl po 2 minučių.');
-                    return $this->redirectToRoute('dormitory');
+                    return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
                 }
 
                 $dormitoryService->postNewMessage($formRequest->getData());
                 $this->addFlash('success', 'Prašymas išsiųstas sėkmingai!');
-                return $this->redirectToRoute('dormitory');
+                return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
             }
 
             if ($formRequest->isSubmitted() && !$formRequest->isValid()) {
                 $this->addFlash('error', 'Prašymas nebuvo išsiųstas. Prašymas turi sudaryti nuo 7 iki 300 simbolių.');
-                return $this->redirectToRoute('dormitory');
+                return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
             }
 
             $loggedInUsers = $dormitoryService->getAllLoggedInUsers();
@@ -57,12 +57,13 @@ class DormitoryController extends AbstractController
                 'messages' => $dormitoryInfo['messages'],
                 'formRequest' => $formRequest->createView(),
                 'loggedInUsers' => $loggedInUsers,
+                'link' => $this->getParameter('mercureUrl')
             ]);
         } catch (Exception $e) {
             return $this->redirectToRoute('home');
         }
     }
-
+    
     /**
      * @Route("dormitory/message/{id}", name="message")
      * @param $id
@@ -78,7 +79,7 @@ class DormitoryController extends AbstractController
         $students = $dormitoryService->getStudentsInDormitory();
 
         if (!$message || $user->getDormId() !== $message->getDormId()) {
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
 
         return $this->render('dormitory/message.html.twig', [
@@ -100,9 +101,9 @@ class DormitoryController extends AbstractController
         try {
             $dormitoryService->provideHelp($id);
             $this->addFlash('success', 'Pagalbos siūlymas išsiųstas sėkmingai!');
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         } catch (Exception $e) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
     }
 
@@ -135,9 +136,9 @@ class DormitoryController extends AbstractController
             $dormitoryService->reportMessage($reportMessageId);
 
             $this->addFlash('success', 'Apie netinkamą pranešimą pranešta administracijai.');
-            return $this->redirectToRoute('dormitory');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         } catch (Exception $e) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
     }
 
@@ -178,7 +179,7 @@ class DormitoryController extends AbstractController
             $this->addFlash('success', 'Pagalbos siūlymas pašalintas, pranešimas gražintas į pradinę stadiją.');
             return $this->redirectToRoute('provided_help');
         } catch (Exception $e) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
     }
 
@@ -200,7 +201,7 @@ class DormitoryController extends AbstractController
                 'dormitory' => $dormitory['dormitory']
             ]);
         } catch (Exception $e) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('dormitory', ['id' => $this->getUser()->getDormId()]);
         }
     }
 }
