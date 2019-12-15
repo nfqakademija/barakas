@@ -96,12 +96,12 @@
                     {% endif %}
                     {% if is_granted('ROLE_SUPER') %}
                     <a class="dropdown-item" href="{{ path('easyadmin') }}"><i class="fas fa-tools"></i> Administravimas</a>
-                    {% if not is_granted('ROLE_ADMIN') %}
+                    {% endif %}
+		    {% if not is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('profile', {'id': app.user.id}) }}" class="dropdown-item"><i class="far fa-address-card"></i> Mano paskyra</a>
                     <a href="{{ path('my-messages') }}" class="dropdown-item"><i class="fas fa-envelope"></i> Mano prašymai</a>
 
                     {% endif %}
-		    {% endif %}
                     <a class="dropdown-item" href="{{ path('passwordChange') }}"><i class="fas fa-lock"></i> Pakeisti slaptažodį</a>
                     <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Atsijungti</a>
                 </div>
