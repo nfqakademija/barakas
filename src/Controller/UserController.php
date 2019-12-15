@@ -173,7 +173,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("clear-notifications", name="clear_notifications")
+     * @Route("/clear-notifications", name="clear_notifications")
      * @param UserService $userService
      * @return RedirectResponse
      */
