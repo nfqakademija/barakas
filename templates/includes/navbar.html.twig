@@ -16,6 +16,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{path('rules')}}"><i class="fas fa-scroll"></i> Taisyklės</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{path('achievements')}}"><i class="fas fa-trophy"></i> Apdovanojimai</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{path('dormitory_leaderboard')}}"><i class="fas fa-users"></i> Bendrabučio gyventojai</a>
+            </li>
             {% endif %}
         </ul>
         <ul class="navbar-nav mr-4">
@@ -24,9 +30,6 @@
 			
 			
             {% if app.user and not is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER')%}
-            <li class="nav-item">
-                <a href="{{ path('my-messages') }}" class="nav-link"><i class="fas fa-envelope"></i> Mano prašymai</a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('provided_help') }}"><i class="fas fa-hands-helping"></i> Pagalbos pranešimai
                     {% if helpMessages() %}
@@ -40,16 +43,18 @@
                 <a style="cursor: pointer" class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown">
                     <i class="fas fa-bell"></i> Bendrabučio pranešimai
                  {% if notifications() %}
-                    <span class="badge badge-danger">{{ notifications()|length }}</span>
+                    <span id="navCount"  class="badge badge-danger" data-count="{{ notifications()|length }}">{{ notifications()|length }}</span>
                 {% else %}
-
+                    <span id="navCount"  class="badge badge-danger" data-count="0"></span>
                 {% endif %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width: 25em; max-height: 250px; overflow-y: scroll;">
+                    <ul class="list-unstyled dropdown-item" id="navMessage" data-mercure-link="{{ link() }}" >
+                        <a href="{{ path('clear_notifications') }}" class="btn btn-sm btn-dark float-right"><i class="fas fa-check"></i> Perskaityta</a>
+                        <br>
+                        <div id="append"></div>
                     {% if notifications() %}
-                        <ul class="list-unstyled dropdown-item">
-                            <a href="{{ path('clear_notifications') }}" class="btn btn-sm btn-dark float-right"><i class="fas fa-check"></i> Perskaityta</a>
-                           <br>
+
                             {% for notification in notifications() %}
                                 <li>
                                     <small>
@@ -63,10 +68,11 @@
                                     <hr>
                                 </li>
                             {% endfor %}
-                        </ul>
+
                     {% else %}
                     <small style="padding: 5px">Šiuo metu naujų pranešimų nėra.</small>
                     {% endif %}
+                        </ul>
                 </div>
             </li>
             {% endif %}
@@ -90,6 +96,10 @@
                     {% endif %}
                     {% if is_granted('ROLE_SUPER') %}
                     <a class="dropdown-item" href="{{ path('easyadmin') }}"><i class="fas fa-tools"></i> Administravimas</a>
+                    {% if not is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('profile', {'id': app.user.id}) }}" class="dropdown-item"><i class="far fa-address-card"></i> Mano paskyra</a>
+                    <a href="{{ path('my-messages') }}" class="dropdown-item"><i class="fas fa-envelope"></i> Mano prašymai</a>
+
                     {% endif %}
                     <a class="dropdown-item" href="{{ path('passwordChange') }}"><i class="fas fa-lock"></i> Pakeisti slaptažodį</a>
                     <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Atsijungti</a>
@@ -98,7 +108,7 @@
             {% if not is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
                 <span class="nav-link">
-                    <img src="https://image.flaticon.com/icons/svg/438/438450.svg" style="height: 20px; vertical-align: sub">
+                    <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 20px; vertical-align: sub">
                     {{ app.user.points }}
                 </span>
             </li>
@@ -114,3 +124,6 @@
         </ul>
     </div>
 </nav>
+{% block javascripts %}
+    {{ encore_entry_script_tags('navMessage') }}
+{% endblock %}

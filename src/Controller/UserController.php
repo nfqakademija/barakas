@@ -102,7 +102,6 @@ class UserController extends AbstractController
      * @Route("/user/changepassword", name="passwordChange")
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
-     * @param EntityManagerInterface $entityManager
      * @param UserInterface $user
      * @param UserService $userService
      * @return Response
@@ -321,5 +320,31 @@ class UserController extends AbstractController
         return $this->render('user/messages.html.twig', [
             'messages' => $messages
         ]);
+    }
+
+    /**
+     * @Route("/user/{id}", name="profile")
+     * @param Request $request
+     * @param UserService $userService
+     * @return Response
+     * @throws Exception
+     */
+    public function userProfile(Request $request, UserService $userService)
+    {
+        try {
+            $id = $request->get('id');
+            $userData = $userService->getUserProfile($id);
+
+            return $this->render('user/profile.html.twig', [
+                'user' => $userData['user'],
+                'messages' => $userData['messages'],
+                'helps' => $userData['helps'],
+                'dorm' => $userData['dorm'],
+                'academy' => $userData['academy'],
+            ]);
+        } catch (Exception $exception) {
+            /*return $this->redirectToRoute('home');*/
+            return new Response($exception);
+        }
     }
 }

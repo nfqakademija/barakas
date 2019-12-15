@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+<div class="box">
     {% if students is empty %}
         <p class="text-center">Kol kas bendrabutyje studentų nėra.
             <br>
@@ -9,9 +9,10 @@
         </p>
     {% else %}
 
-    <h2>TOP bendrabučio studentai</h2>
-    <table class="table">
-        <thead class="thead-dark">
+    <h2>Bendrabučio gyventojai</h2>
+    <p>Jūsų bendrabučio gyventojai sureitinguoti pagal turimus taškų kiekius.</p>
+    <table class="table table-striped">
+        <thead>
         <tr>
             <th scope="col">Vieta</th>
             <th scope="col">Vardas</th>
@@ -25,22 +26,22 @@
         <tr>
             {% if myVal == 1 %}
                 <th scope="row">1 <img src="https://image.flaticon.com/icons/svg/1021/1021220.svg"
-                                   style="height: 25px">
+                                   style="height: 25px; vertical-align: bottom;">
                 </th>
             {% elseif myVal == 2 %}
                 <th scope="row">2 <img src="https://image.flaticon.com/icons/svg/179/179251.svg"
-                                       style="height: 25px">
+                                       style="height: 25px; vertical-align: bottom;">
                 </th>
             {% elseif myVal == 3 %}
                 <th scope="row">3 <img src="https://image.flaticon.com/icons/svg/179/179250.svg"
-                                       style="height: 25px">
+                                       style="height: 25px; vertical-align: bottom;">
                 </th>
             {% else %}
                 <th scope="row">{{ myVal }}</th>
             {% endif %}
             <td>{{ student.owner }}</td>
             <td>
-                <img src="https://image.flaticon.com/icons/svg/438/438450.svg" style="height: 25px">
+                <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 20px; vertical-align: inherit;">
                 {{ student.points }}
             </td>
             <td>{{ student.roomNr }}</td>
@@ -49,4 +50,5 @@
         </tbody>
     </table>
     {% endif %}
+</div>
 {% endblock %}

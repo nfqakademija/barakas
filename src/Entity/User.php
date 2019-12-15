@@ -115,6 +115,11 @@ class User implements UserInterface
      */
     protected $lastActivityAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Award", mappedBy="user")
+     */
+    private $awards;
+
     public function __construct()
     {
         $this->created_at = new DateTime();
@@ -122,6 +127,7 @@ class User implements UserInterface
         $this->helps = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->roomChanges = new ArrayCollection();
+        $this->awards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -472,5 +478,36 @@ class User implements UserInterface
         $delay = new \DateTime('2 minutes ago');
 
         return ( $this->getLastActivityAt() > $delay );
+    }
+
+    /**
+     * @return Collection|Award[]
+     */
+    public function getAwards(): Collection
+    {
+        return $this->awards;
+    }
+
+    public function addAward(Award $award): self
+    {
+        if (!$this->awards->contains($award)) {
+            $this->awards[] = $award;
+            $award->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAward(Award $award): self
+    {
+        if ($this->awards->contains($award)) {
+            $this->awards->removeElement($award);
+            // set the owning side to null (unless already changed)
+            if ($award->getUser() === $this) {
+                $award->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

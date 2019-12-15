@@ -23,12 +23,19 @@ class AdminService extends Service
     {
         $dormitoryRepo = $this->getRepository(Dormitory::class);
         $dormitory = $this->getDormitory($id);
+        if (!$dormitory) {
+            throw new \Exception('Dormitory not found.');
+        }
         return $dormitoryRepo->findOrganisationDormitory($dormitory->getOrganisationId());
     }
 
-    public function indexPage(int $id)
+    public function indexPage(int $id): array
     {
         $dormitoryInfo = $this->getDormitory($id);
+
+        if (!$dormitoryInfo) {
+            throw new \Exception('Dormitory not found.');
+        }
 
         $dormitoryRepository = $this->getRepository(Dormitory::class);
         $invitesRepository = $this->getRepository(Invite::class);
@@ -38,12 +45,8 @@ class AdminService extends Service
         $students = $studentsRepository->getStudents($id);
 
         $organisationID = $dormitoryInfo->getOrganisationId();
-
         $dormitoryOrganisation = $dormitoryRepository->findOrganisationDormitory($organisationID);
 
-        if (!$dormitoryInfo) {
-            return false;
-        }
 
         return array('students' => $students, 'invites' => $invites, 'dormitoryInfo' => $dormitoryInfo,
             'dormitoryOrganisation' => $dormitoryOrganisation);
@@ -86,13 +89,13 @@ class AdminService extends Service
         return $requestsRepo->findNotApprovedRequests($user);
     }
 
-    public function approveDormitoryChangeRequest(int $id): bool
+    public function approveDormitoryChangeRequest(int $id): void
     {
         $requestRepo = $this->getRepository(DormitoryChange::class);
         $request = $requestRepo->find($id);
 
         if (!$request) {
-            return false;
+            throw new \Exception('Request not found.');
         }
 
         $user = $request->getUser();
@@ -102,30 +105,28 @@ class AdminService extends Service
         $user->setRoomNr($request->getRoomNr());
 
         $this->entityManager->flush();
-        return true;
     }
 
-    public function removeDormitoryChangeRequest(int $id): bool
+    public function removeDormitoryChangeRequest(int $id): void
     {
         $requestRepo = $this->getRepository(DormitoryChange::class);
         $request = $requestRepo->find($id);
 
         if (!$request) {
-            return false;
+            throw new \Exception('Request not found.');
         }
 
         $this->entityManager->remove($request);
         $this->entityManager->flush();
-        return true;
     }
 
-    public function approveRoomChangeRequest(int $id): bool
+    public function approveRoomChangeRequest(int $id): void
     {
         $requestRepo = $this->getRepository(RoomChange::class);
         $request = $requestRepo->find($id);
 
         if (!$request) {
-            return false;
+            throw new \Exception('Request not found.');
         }
 
         $user = $request->getUser();
@@ -133,58 +134,54 @@ class AdminService extends Service
         $user->setRoomNr($request->getNewRoomNr());
 
         $this->entityManager->flush();
-        return true;
     }
 
-    public function removeRoomChangeRequest(int $id): bool
+    public function removeRoomChangeRequest(int $id): void
     {
         $requestRepo = $this->getRepository(RoomChange::class);
         $request = $requestRepo->find($id);
 
         if (!$request) {
-            return false;
+            throw new \Exception('Request not found.');
         }
 
         $this->entityManager->remove($request);
         $this->entityManager->flush();
-        return true;
     }
 
-    public function getReportedMessages()
+    public function getReportedMessages(): array
     {
         $messagesRepo = $this->getRepository(Message::class);
         return $messagesRepo->getReportedMessages();
     }
 
-    public function closeReport(int $id): bool
+    public function closeReport(int $id): void
     {
         $messagesRepo = $this->getRepository(Message::class);
         $message = $messagesRepo->find($id);
 
         if (!$message) {
-            return false;
+            throw new \Exception('Message not found.');
         }
 
         $message->setReported(false);
         $this->entityManager->flush();
-        return true;
     }
 
-    public function acceptReport(int $id): bool
+    public function acceptReport(int $id): void
     {
         $messagesRepo = $this->getRepository(Message::class);
         $message = $messagesRepo->find($id);
 
         if (!$message) {
-            return false;
+            throw new \Exception('Message not found.');
         }
 
         $this->entityManager->remove($message);
         $this->entityManager->flush();
-        return true;
     }
 
-    public function studentStatus(int $id, $user)
+    public function studentStatus(int $id, $user): array
     {
         $studentsRepository = $this->getRepository(User::class);
         $student = $studentsRepository->findOneBy(['id' => $id]);
@@ -196,7 +193,7 @@ class AdminService extends Service
         }
 
         if (!in_array($student->getDormId(), $dorm_ids)) {
-            return false;
+            throw new \Exception('Student is not in dormitory.');
         }
 
         if ($student->getIsDisabled()===true) {
