@@ -12,7 +12,6 @@
                 <h4>Apdovanojimai</h4>
                 {% for award in user.awards %}
                     <img src="/awards/{{ award.achievement.img }}" title="{{ award.achievement.title }}">
-                    {{ award.achievement.id }}
                 {% endfor %}
                 
             </div>
