@@ -17,7 +17,7 @@
         </div>
 
         <div style="padding-left: 7%">
-            <strong><span>{{ message.user.owner }}</span></strong> <small></small> <small><i>{{ message.createdAt|time_diff }}</i></small>
+            <strong><span>{{ message.user.owner }}</span></strong> <small>| Kambarys: {{ message.user.roomNr }}</small> | <small><i>{{ message.createdAt|time_diff }}</i></small>
             {% if message.solved and message.solver and message.status == 2 %}
             <div class="float-right">
                 <img src="https://image.flaticon.com/icons/svg/465/465269.svg" style="height: 25px;">
