@@ -271,6 +271,8 @@ class DormitoryService extends Service
                 $this->router->generate('passwordChange', [], UrlGeneratorInterface::ABSOLUTE_URL),
                 $this->router->generate('change_dormitory', [], UrlGeneratorInterface::ABSOLUTE_URL),
                 $this->router->generate('change_room', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->router->generate('achievements', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->router->generate('dormitory_leaderboard', [], UrlGeneratorInterface::ABSOLUTE_URL),
                 ],
             json_encode([
                 'content' => $message->getContent(),
