@@ -102,7 +102,6 @@ class UserController extends AbstractController
      * @Route("/user/changepassword", name="passwordChange")
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
-     * @param EntityManagerInterface $entityManager
      * @param UserInterface $user
      * @param UserService $userService
      * @return Response

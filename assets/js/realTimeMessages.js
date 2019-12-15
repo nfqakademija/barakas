@@ -4,7 +4,7 @@ u.searchParams.append('topic', encodeURI(window.location.href));
 const es = new EventSource(u);
 es.onmessage = e => {
     const ul = $("#realmessage");
-    const data = JSON.parse(e.data)
+    const data = JSON.parse(e.data);
     const html = '<li style="font-size: 17px; margin-left: 1%">\n' +
         '            <div class="float-left">\n' +
         '                                    <img src="https://image.flaticon.com/icons/png/128/753/753345.png" style="height: 25px">\n' +

@@ -365,15 +365,25 @@ class DormitoryService extends Service
     private function pushMessage(Message $message)
     {
         $update = new Update(
-            $this->router->generate(
-                'dormitory',
-                ['id' => $this->getUser()->getDormId()],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            ),
+            [
+                $this->router->generate(
+                    'dormitory',
+                    ['id' => $this->getUser()->getDormId()],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+                $this->router->generate('rules', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->router->generate('my-messages', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->router->generate('acceptHelp', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->router->generate('contacts', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->router->generate('passwordChange', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->router->generate('change_dormitory', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->router->generate('change_room', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                ],
             json_encode([
                 'content' => $message->getContent(),
                 'owner' => $this->getUser()->getOwner(),
-                'id' => $message->getId()
+                'id' => $message->getId(),
+                'room' => $this->getUser()->getRoomNr()
             ])
         );
         $this->bus->dispatch($update);

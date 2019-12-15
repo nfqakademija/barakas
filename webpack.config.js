@@ -26,6 +26,7 @@ Encore
     .addEntry('app', './assets/js/app.js')
     .addEntry('dormitory', './assets/js/dormitory.js')
     .addEntry('realTimeMessages', './assets/js/realTimeMessages.js')
+    .addEntry('navMessage', './assets/js/navMessage.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
