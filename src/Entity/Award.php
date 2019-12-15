@@ -18,7 +18,7 @@ class Award
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="awards")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="awards", cascade={"remove"})
      */
     private $user;
 
