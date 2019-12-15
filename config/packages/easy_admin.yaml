@@ -1,4 +1,5 @@
 easy_admin:
+    disabled_actions: ['new']
     entities:
         # List the entity class name you want to manage
         User:
@@ -9,7 +10,7 @@ easy_admin:
                     - 'owner'
                     - 'dorm_id'
                     - 'room_nr'
-                    - 'isDisabled'
+                    - { property: 'isDisabled', template: 'admin/super/block-status.html.twig' }
                     - { property: 'roles', template: 'admin/super/roles-type-read.html.twig' }
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'lastActivityAt', type: 'datetime' }
@@ -20,7 +21,7 @@ easy_admin:
                     - { property: 'roles', type: 'collection' }
                     - { property: 'dorm_id', type: 'number' }
                     - { property: 'room_nr', type: 'text' }
-                    - { property: 'isDisabled', type: 'number' }
+                    - 'isDisabled'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'lastActivityAt', type: 'datetime' }
 
