@@ -13,6 +13,7 @@
                 {% for award in user.awards %}
                     <img src="/awards/{{ award.achievement.img }}" title="{{ award.achievement.title }}">
                 {% endfor %}
+                {{ dump(user.awards) }}
             </div>
         </div>
         <ul class="list-unstyled list-group row" style="font-size: 20px; padding: 0px 30px 30px 30px">
