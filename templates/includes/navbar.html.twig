@@ -43,16 +43,18 @@
                 <a style="cursor: pointer" class="nav-link text-white" id="navbarDropdownMenuLink" data-toggle="dropdown">
                     <i class="fas fa-bell"></i> Bendrabučio pranešimai
                  {% if notifications() %}
-                    <span class="badge badge-danger">{{ notifications()|length }}</span>
+                    <span id="navCount"  class="badge badge-danger" data-count="{{ notifications()|length }}">{{ notifications()|length }}</span>
                 {% else %}
-
+                    <span id="navCount"  class="badge badge-danger" data-count="0"></span>
                 {% endif %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width: 25em; max-height: 250px; overflow-y: scroll;">
+                    <ul class="list-unstyled dropdown-item" id="navMessage" data-mercure-link="{{ link() }}" >
+                        <a href="{{ path('clear_notifications') }}" class="btn btn-sm btn-dark float-right"><i class="fas fa-check"></i> Perskaityta</a>
+                        <br>
+                        <div id="append"></div>
                     {% if notifications() %}
-                        <ul class="list-unstyled dropdown-item">
-                            <a href="{{ path('clear_notifications') }}" class="btn btn-sm btn-dark float-right"><i class="fas fa-check"></i> Perskaityta</a>
-                           <br>
+
                             {% for notification in notifications() %}
                                 <li>
                                     <small>
@@ -66,10 +68,11 @@
                                     <hr>
                                 </li>
                             {% endfor %}
-                        </ul>
+
                     {% else %}
                     <small style="padding: 5px">Šiuo metu naujų pranešimų nėra.</small>
                     {% endif %}
+                        </ul>
                 </div>
             </li>
             {% endif %}
@@ -114,3 +117,6 @@
         </ul>
     </div>
 </nav>
+{% block javascripts %}
+    {{ encore_entry_script_tags('navMessage') }}
+{% endblock %}
