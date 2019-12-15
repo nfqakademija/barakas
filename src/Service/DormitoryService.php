@@ -3,6 +3,8 @@
 
 namespace App\Service;
 
+use App\Entity\AchievementType;
+use App\Entity\Award;
 use App\Entity\Dormitory;
 use App\Entity\Help;
 use App\Entity\Message;
@@ -12,11 +14,31 @@ use App\Entity\StatusType;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DormitoryService extends Service
 {
+    private $achievementService;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Security $security,
+        EmailService $emailService,
+        UserPasswordEncoderInterface $encoder,
+        AchievementService $achievementService,
+        MessageBusInterface $bus,
+        UrlGeneratorInterface $router
+    ) {
+        parent::__construct($entityManager, $security, $emailService, $encoder, $bus, $router);
+        $this->achievementService = $achievementService;
+    }
+
     public function calculateRewardPoints(DateTime $created_at, int $maxPoints): int
     {
         $currentTime =  new DateTime();
@@ -94,6 +116,8 @@ class DormitoryService extends Service
 
     public function saveMessage(string $content): Message
     {
+        $messagesRepo = $this->getRepository(Message::class);
+
         $message = new Message();
         $message->setUser($this->getUser());
         $message->setDormId($this->getUser()->getDormId());
@@ -105,7 +129,35 @@ class DormitoryService extends Service
 
         $this->entityManager->persist($message);
         $this->entityManager->flush();
+
+        $userMessages = $messagesRepo->getUserMessages($this->getUser());
+        $messagesAchievements = $this->getMessagesAchievements($this->getUser());
+
+        if (!$messagesAchievements['tenMessagesAchievement'] && count($userMessages) === 10) {
+            $this->achievementService->giveTenMessagesAchievement($this->getUser());
+        }
+
+        if (!$messagesAchievements['twentyMessagesAchievement'] && count($userMessages) === 20) {
+            $this->achievementService->giveTwentyMessagesAchievement($this->getUser());
+        }
+
+        if (!$messagesAchievements['thirtyMessagesAchievement'] && count($userMessages) === 30) {
+            $this->achievementService->giveThirtyMessagesAchievement($this->getUser());
+        }
+
         return $message;
+    }
+
+    private function getMessagesAchievements($user): array
+    {
+        $awardsRepo = $this->getRepository(Award::class);
+        $tenMessagesAchievement = $awardsRepo->findTenMessagesAchievementByUser($user);
+        $twentyMessagesAchievement = $awardsRepo->findTwentyMessagesAchievementByUser($user);
+        $thirtyMessagesAchievement = $awardsRepo->findThirtyMessagesAchievementByUser($user);
+
+        return array('tenMessagesAchievement' => $tenMessagesAchievement,
+            'twentyMessagesAchievement' => $twentyMessagesAchievement,
+            'thirtyMessagesAchievement' => $thirtyMessagesAchievement);
     }
 
     public function findMessage(int $id)
@@ -126,7 +178,7 @@ class DormitoryService extends Service
         return $repository->getStudentsInDormitory($this->getUser()->getDormId());
     }
 
-    public function provideHelp(int $id): bool
+    public function provideHelp(int $id): void
     {
         $user = $this->getUser();
         $message = $this->getRepository(Message::class)->find($id);
@@ -138,7 +190,7 @@ class DormitoryService extends Service
         );
 
         if (!$message || $help) {
-            return false;
+            throw new Exception('Message or user was not found');
         }
 
         $help = new Help();
@@ -155,28 +207,34 @@ class DormitoryService extends Service
         $message->setSolver($user);
 
         $this->entityManager->flush();
-
-        return true;
     }
 
-    public function reportMessage(int $id): bool
+    public function reportMessage(int $id): void
     {
         $message = $this->getRepository(Message::class)->find($id);
 
         if (!$message) {
-            return false;
+            throw new Exception('Message not found.');
         }
 
         $message->setReported(true);
         $this->entityManager->flush();
-
-        return true;
     }
 
-    public function acceptHelpRequest(int $helpId, int $messageId): bool
+    public function acceptHelpRequest(int $helpId, int $messageId): void
     {
         $message = $this->getRepository(Message::class)->find($messageId);
+
+        if (!$message) {
+            throw new Exception('Message not found.');
+        }
+
         $userWhoHelped = $this->getRepository(Help::class)->findUserWhoProvidedHelp($helpId);
+
+        if (!$userWhoHelped) {
+            throw new Exception('User who provided help was not found.');
+        }
+
         $userWhoHelpedPoints = $userWhoHelped->getPoints();
         $newPoints = $userWhoHelpedPoints + $this->
             calculateRewardPoints($message->getCreatedAt(), 500);
@@ -189,60 +247,110 @@ class DormitoryService extends Service
         $this->entityManager->remove($help);
         $this->entityManager->flush();
 
-        return true;
+        $messagesRepo = $this->getRepository(Message::class);
+        $helps = $messagesRepo->getUserSolvedProblems($userWhoHelped);
+        $helpAchievements = $this->getHelpAchievements($userWhoHelped);
+
+        if (!$helpAchievements['firstAidAchievement'] && count($helps) === 1) {
+            $this->achievementService->giveFirstAidAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['tenHelpsAchievement'] && count($helps) === 10) {
+            $this->achievementService->giveTenHelpAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['twentyHelpsAchievement'] && count($helps) === 20) {
+            $this->achievementService->giveTwentyHelpAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['oneThousandPointsAchievement'] && $newPoints >= 1000 && $newPoints < 2500) {
+            $this->achievementService->giveOneThousandPointsAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['twoThousandPointsAchievement'] && $newPoints >= 2500 && $newPoints < 5000) {
+            $this->achievementService->giveTwoThousandPointsAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['fiveThousandPointsAchievement'] && $newPoints >= 5000 && $newPoints < 10000) {
+            $this->achievementService->giveFiveThousandPointsAchievement($userWhoHelped);
+        }
+        if (!$helpAchievements['tenThousandPointsAchievement'] && $newPoints >= 10000) {
+            $this->achievementService->giveTenThousandPointsAchievement($userWhoHelped);
+        }
     }
 
-    public function denyHelpRequest(int $id): bool
+    private function getHelpAchievements($userWhoHelped): array
+    {
+        $awardsRepo = $this->getRepository(Award::class);
+        $firstAidAchievement = $awardsRepo->findFirstAidAchievementByUser($userWhoHelped);
+        $tenHelpsAchievement = $awardsRepo->findTenHelpAchievementByUser($userWhoHelped);
+        $twentyHelpsAchievement = $awardsRepo->findTwentyHelpAchievementByUser($userWhoHelped);
+        $oneThousandPointsAchievement = $awardsRepo->findOneThousandPointsAchievementByUser($userWhoHelped);
+        $twoThousandPointsAchievement = $awardsRepo->findTwoThousandPointsAchievementByUser($userWhoHelped);
+        $fiveThousandPointsAchievement = $awardsRepo->findFiveThousandPointsAchievementByUser($userWhoHelped);
+        $tenThousandPointsAchievement = $awardsRepo->findTenThousandPointsAchievementByUser($userWhoHelped);
+
+        return array('firstAidAchievement' => $firstAidAchievement, 'tenHelpsAchievement' => $tenHelpsAchievement,
+            'twentyHelpsAchievement' => $twentyHelpsAchievement,
+            'oneThousandPointsAchievement' => $oneThousandPointsAchievement,
+            'twoThousandPointsAchievement' => $twoThousandPointsAchievement,
+            'fiveThousandPointsAchievement' => $fiveThousandPointsAchievement,
+            'tenThousandPointsAchievement' => $tenThousandPointsAchievement);
+    }
+
+    public function denyHelpRequest(int $id): void
     {
         $helpRepository = $this->getRepository(Help::class);
-
         $message = $helpRepository->findMessageFromHelp($id);
+
+        if (!$message) {
+            throw new Exception('Message not found.');
+        }
+
         $message->setSolved(SolvedType::notSolved());
         $message->setSolver(null);
 
         $help = $helpRepository->find($id);
 
         if (!$help) {
-            return false;
+            throw new Exception('Help request not found.');
         }
 
         $this->entityManager->remove($help);
         $this->entityManager->flush();
-
-        return true;
     }
 
-    public function getDormitoryWithStudents(User $user)
+    public function getDormitoryWithStudents($user): array
     {
         $dormitoryRepo = $this->getRepository(Dormitory::class);
 
         $dormitory = $dormitoryRepo->getLoggedInUserDormitory($user->getDormId());
-        $students = $dormitoryRepo->orderAllStudentsByPoints($user->getDormId());
 
         if (!$dormitory) {
-            return false;
+            throw new Exception('Dormitory not found.');
+        }
+
+        $students = $dormitoryRepo->orderAllStudentsByPoints($user->getDormId());
+
+        if (!$students) {
+            throw new Exception('Students not found.');
         }
 
         return array('dormitory' => $dormitory, 'students' => $students);
     }
 
-    public function getDormitoryInfo()
+    public function getDormitoryInfo(): array
     {
         $dormitory = $this->getDormitory();
-        $students = $this->getStudents();
-        $messages = $this->getMessages();
-
         if (!$dormitory) {
-            return false;
+            throw new Exception('Dormitory not found.');
         }
+        $students = $this->getStudents();
+
+        $messages = $this->getMessages();
 
         return array('dormitory' => $dormitory, 'students' => $students, 'messages' => $messages);
     }
 
-    public function postNewMessage($data): bool
+    public function postNewMessage($data): void
     {
         if (!$data) {
-            return false;
+            throw new Exception('No data was provided.');
         }
 
         $message = $this->saveMessage($data->getContent());
@@ -252,7 +360,6 @@ class DormitoryService extends Service
 
         $this->saveNotifications($students, $message);
         $this->pushMessage($message);
-        return true;
     }
 
     private function pushMessage(Message $message)

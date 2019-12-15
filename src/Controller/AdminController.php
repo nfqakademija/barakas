@@ -6,6 +6,7 @@ use App\Entity\Invite;
 use App\Form\SendInvitationType;
 use App\Service\AdminService;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,43 +21,44 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param AdminService $adminService
      * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function index(Request $request, AdminService $adminService)
     {
-        $id = $request->query->get('id');
-        $adminPageInfo = $adminService->indexPage($id);
+        try {
+            $id = $request->query->get('id');
+            $adminPageInfo = $adminService->indexPage($id);
 
-        if (!$adminPageInfo) {
-            return $this->redirectToRoute('home');
-        }
+            $organisationDormitory = $adminService->getOrganisationDormitory($id);
 
-        $organisationDormitory = $adminService->getOrganisationDormitory($id);
+            $invitation = new Invite();
+            $form = $this->createForm(SendInvitationType::class, $invitation);
+            $form->handleRequest($request);
 
-        $invitation = new Invite();
-        $form = $this->createForm(SendInvitationType::class, $invitation);
-        $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $dormitory = $adminService->getDormitory($id);
+                $sendInvitation = $adminService->addNewStudentToDormitory($form->getData(), $invitation, $dormitory);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $dormitory = $adminService->getDormitory($id);
-            $sendInvitation = $adminService->addNewStudentToDormitory($form->getData(), $invitation, $dormitory);
+                if (!$sendInvitation) {
+                    $this->addFlash('warning', 'El. pašto adresas jau užregistruotas.');
+                    return $this->redirectToRoute('admin_panel', ['id' => $id]);
+                }
 
-            if (!$sendInvitation) {
-                $this->addFlash('warning', 'El. pašto adresas jau užregistruotas.');
+                $this->addFlash('success', 'Pakvietimas studentui sėkmingai išsiųstas.');
+
                 return $this->redirectToRoute('admin_panel', ['id' => $id]);
             }
 
-            $this->addFlash('success', 'Pakvietimas studentui sėkmingai išsiųstas.');
-
-            return $this->redirectToRoute('admin_panel', ['id' => $id]);
+            return $this->render('admin/index.html.twig', [
+                'dormitoryInfo' => $adminPageInfo['dormitoryInfo'],
+                'invites' => $adminPageInfo['invites'],
+                'students' => $adminPageInfo['students'],
+                'dormitory' => $organisationDormitory,
+                'SendInvitationType' => $form->createView()
+            ]);
+        } catch (Exception $e) {
+            return $this->redirectToRoute('home');
         }
-
-        return $this->render('admin/index.html.twig', [
-            'dormitoryInfo' => $adminPageInfo['dormitoryInfo'],
-            'invites' => $adminPageInfo['invites'],
-            'students' => $adminPageInfo['students'],
-            'dormitory' => $organisationDormitory,
-            'SendInvitationType' => $form->createView()
-        ]);
     }
 
     /**
@@ -78,18 +80,19 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param AdminService $adminService
      * @return Response
+     * @throws Exception
      */
     public function approveDormitoryChangeRequest(Request $request, AdminService $adminService)
     {
-        $requestId = $request->query->get('id');
-        $request = $adminService->approveDormitoryChangeRequest($requestId);
-        
-        if (!$request) {
-            return $this->redirectToRoute('dormitory_change_req');
-        }
+        try {
+            $requestId = $request->query->get('id');
+            $adminService->approveDormitoryChangeRequest($requestId);
 
-        $this->addFlash('success', 'Prašymas patvirtintas sėkmingai.');
-        return $this->redirectToRoute('dormitory_change_req');
+            $this->addFlash('success', 'Prašymas patvirtintas sėkmingai.');
+            return $this->redirectToRoute('dormitory_change_req');
+        } catch (Exception $e) {
+            return $this->redirectToRoute('home');
+        }
     }
 
     /**
@@ -97,18 +100,19 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param AdminService $adminService
      * @return RedirectResponse
+     * @throws Exception
      */
     public function removeDormitoryChangeRequest(Request $request, AdminService $adminService)
     {
-        $requestId = $request->query->get('id');
-        $request = $adminService->removeDormitoryChangeRequest($requestId);
+        try {
+            $requestId = $request->query->get('id');
+            $adminService->removeDormitoryChangeRequest($requestId);
 
-        if (!$request) {
+            $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
             return $this->redirectToRoute('dormitory_change_req');
+        } catch (Exception $e) {
+            return $this->redirectToRoute('home');
         }
-
-        $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
-        return $this->redirectToRoute('dormitory_change_req');
     }
 
     /**
@@ -130,18 +134,19 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param AdminService $adminService
      * @return Response
+     * @throws Exception
      */
     public function approveRoomChangeRequest(Request $request, AdminService $adminService)
     {
-        $requestId = $request->query->get('id');
-        $request = $adminService->approveRoomChangeRequest($requestId);
+        try {
+            $requestId = $request->query->get('id');
+            $adminService->approveRoomChangeRequest($requestId);
 
-        if (!$request) {
-            $this->redirectToRoute('room_change_req');
+            $this->addFlash('success', 'Prašymas patvirtintas sėkmingai.');
+            return $this->redirectToRoute('room_change_req');
+        } catch (Exception $e) {
+            return $this->redirectToRoute('home');
         }
-
-        $this->addFlash('success', 'Prašymas patvirtintas sėkmingai.');
-        return $this->redirectToRoute('room_change_req');
     }
 
     /**
@@ -149,18 +154,19 @@ class AdminController extends AbstractController
      * @param Request $request
      * @param AdminService $adminService
      * @return RedirectResponse
+     * @throws Exception
      */
     public function removeRoomChangeRequest(Request $request, AdminService $adminService)
     {
-        $requestId = $request->query->get('id');
-        $request = $adminService->removeRoomChangeRequest($requestId);
+        try {
+            $requestId = $request->query->get('id');
+            $adminService->removeRoomChangeRequest($requestId);
 
-        if (!$request) {
-            $this->redirectToRoute('room_change_req');
+            $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
+            return $this->redirectToRoute('room_change_req');
+        } catch (Exception $e) {
+            return $this->redirectToRoute('home');
         }
-
-        $this->addFlash('success', 'Prašymas ištrintas sėkmingai.');
-        return $this->redirectToRoute('room_change_req');
     }
 
     /**
@@ -169,17 +175,22 @@ class AdminController extends AbstractController
      * @param AdminService $adminService
      * @param UserInterface $user
      * @return RedirectResponse
+     * @throws Exception
      */
     public function toggleAccount(Request $request, AdminService $adminService, UserInterface $user)
     {
-        $changeStudentStatus = $adminService->studentStatus($request->get('id'), $user);
+        try {
+            $changeStudentStatus = $adminService->studentStatus($request->get('id'), $user);
 
-        if (!$changeStudentStatus) {
+            if (!$changeStudentStatus) {
+                return $this->redirect($request->headers->get('referer'));
+            }
+
+            $this->addFlash('success', $changeStudentStatus['message']);
             return $this->redirect($request->headers->get('referer'));
+        } catch (Exception $e) {
+            return $this->redirectToRoute('home');
         }
-
-        $this->addFlash('success', $changeStudentStatus['message']);
-        return $this->redirect($request->headers->get('referer'));
     }
 
     /**
@@ -203,15 +214,15 @@ class AdminController extends AbstractController
      */
     public function closeReport(Request $request, AdminService $adminService)
     {
-        $messageId = $request->get('id');
-        $request = $adminService->closeReport($messageId);
+        try {
+            $messageId = $request->get('id');
+            $adminService->closeReport($messageId);
 
-        if (!$request) {
+            $this->addFlash('success', 'Įspėjimas apie blogą pranešimą pašalintas.');
             return $this->redirectToRoute('reportedMessages');
+        } catch (Exception $e) {
+            return $this->redirectToRoute('home');
         }
-
-        $this->addFlash('success', 'Įspėjimas apie blogą pranešimą pašalintas.');
-        return $this->redirectToRoute('reportedMessages');
     }
 
     /**
@@ -222,14 +233,14 @@ class AdminController extends AbstractController
      */
     public function acceptReport(Request $request, AdminService $adminService)
     {
-        $messageId = $request->get('id');
-        $request = $adminService->acceptReport($messageId);
+        try {
+            $messageId = $request->get('id');
+            $adminService->acceptReport($messageId);
 
-        if (!$request) {
+            $this->addFlash('success', 'Pranešimas buvo sėkmingai pašalintas.');
             return $this->redirectToRoute('reportedMessages');
+        } catch (Exception $e) {
+            return $this->redirectToRoute('home');
         }
-
-        $this->addFlash('success', 'Pranešimas buvo sėkmingai pašalintas.');
-        return $this->redirectToRoute('reportedMessages');
     }
 }

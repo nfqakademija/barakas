@@ -116,7 +116,7 @@ input {
 
 .nav-link {
   color: white !important;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   padding-left: 1rem;
 }
@@ -215,6 +215,10 @@ input {
 
 #postRequestForm label {
   font-size: 22px;
+}
+
+.table-text-center {
+  vertical-align: inherit !important;
 }
 
 .box {
