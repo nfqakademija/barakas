@@ -25,12 +25,14 @@
     <br>
     <div class="box">
         <h2>Prisijungę vartotojai</h2>
-        <div class="row" style="display: flex; justify-content: space-evenly;">
-            {% for user in loggedInUsers %}
-                <p>{{ user.owner }} | Nr. <strong>{{ user.roomNr }}</strong></p>
-                <br>
-            {% endfor %}
-        </div>
+            <ul>
+                {% for user in loggedInUsers %}
+                    <li>
+                        {{ user.owner }} |
+                        Nr. <strong>{{ user.roomNr }}</strong>
+                    </li>
+                {% endfor %}
+            </ul>
     </div>
 </div>
 
