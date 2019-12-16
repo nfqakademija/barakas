@@ -28,8 +28,8 @@
             <ul class="list-unstyled">
                 {% for user in loggedInUsers %}
                     <li style="display: flex; justify-content: space-between">
-                        {{ user.owner }} |
-                        Nr. <strong>{{ user.roomNr }}</strong>
+                        {{ user.owner }}
+                        <strong>Nr. {{ user.roomNr }}</strong>
                     </li>
                 {% endfor %}
             </ul>
