@@ -28,6 +28,7 @@
         <div class="row" style="display: flex; justify-content: space-evenly;">
             {% for user in loggedInUsers %}
                 <p>{{ user.owner }} | Nr. <strong>{{ user.roomNr }}</strong></p>
+                <br>
             {% endfor %}
         </div>
     </div>
