@@ -25,9 +25,9 @@
     <br>
     <div class="box">
         <h2>Prisijungę vartotojai</h2>
-            <ul>
+            <ul class="list-unstyled">
                 {% for user in loggedInUsers %}
-                    <li>
+                    <li style="display: flex; justify-content: space-between">
                         {{ user.owner }} |
                         Nr. <strong>{{ user.roomNr }}</strong>
                     </li>
