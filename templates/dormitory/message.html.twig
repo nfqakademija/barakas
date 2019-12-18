@@ -58,14 +58,13 @@
 
                 {% else %}
                     <br>
-                    <small>
-                        <a href="{{ path('dormitory_help', {'id': message.id}) }}" class="btn help-button">
-                            <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
-                            <span>Padėti</span>
-                        </a>
-                    </small>
-                    &nbsp;
                     {% if message.reported %}
+                        <small>
+                            <span class="isDisabled btn help-button">
+                                <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
+                                <span>Padėti</span>
+                            </span>
+                        </small>                    
                         <small>
                             <button class="isDisabled btn report-button">
                                 <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
@@ -73,6 +72,12 @@
                             </button>
                         </small>
                     {% else %}
+                        <small>
+                            <a href="{{ path('dormitory_help', {'id': message.id}) }}" class="btn help-button">
+                                <img src="https://image.flaticon.com/icons/svg/1264/1264878.svg">
+                                <span>Padėti</span>
+                            </a>
+                        </small>                   
                         <small>
                             <a href="{{ path('reportMessage', {'id': message.id}) }}" class="btn report-button">
                                 <img src="https://image.flaticon.com/icons/svg/196/196777.svg">
